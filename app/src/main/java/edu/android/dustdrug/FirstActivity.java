@@ -1,4 +1,4 @@
-package edu.android.blueprint_project02;
+package edu.android.dustdrug;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

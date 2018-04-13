@@ -1,4 +1,4 @@
-package edu.android.blueprint_project02;
+package edu.android.dustdrug;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

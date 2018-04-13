@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Blueprint_Project02</string>
+    <string name="app_name">dustdrug</string>
     <string-array name="items">
         <item>Songpa-gu Jamsil-dong</item>
         <item>Gangnam-gu Yeoksam-dong</item>
