@@ -87,7 +87,7 @@ public class LocationFragment extends Fragment {
         mListener = null;
     }
 
-    
+
 
     /**
      * This interface must be implemented by activities that contain this
