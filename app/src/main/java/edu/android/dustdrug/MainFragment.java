@@ -1,18 +1,15 @@
 package edu.android.dustdrug;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-
 import java.util.ArrayList;
 
 
@@ -24,6 +21,7 @@ public class MainFragment extends Fragment {
     private MainActivity mainActivity;
     private MainFragment mainFragment;
     private LineChart lineChart; // 그래프(jar 파일 사용) private LineChart lineChart; // 그래프(jar 파일 사용)
+
 
     public MainFragment() {
         // Required empty public constructor
@@ -93,4 +91,7 @@ public class MainFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
+
+
 }

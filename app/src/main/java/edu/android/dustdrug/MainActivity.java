@@ -1,11 +1,13 @@
 package edu.android.dustdrug;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Activity activity;
     private long lastTimeBackPressed = 0;
 
     @Override
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
             return;
 
         } else { // back 키 2번 누르면 앱 종료
+            finish();
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
 
