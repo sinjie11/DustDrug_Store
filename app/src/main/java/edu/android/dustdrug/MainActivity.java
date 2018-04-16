@@ -16,8 +16,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
     /* ↓ Back 버튼 누를 시 앱 종료 기능 */
     @Override
     public void onBackPressed() {

@@ -11,7 +11,6 @@ public class BackPressClose {
     private Fragment fragment;
     private Activity activity;
 
-
     public BackPressClose(Activity activity) {
         this.activity = activity;
 
