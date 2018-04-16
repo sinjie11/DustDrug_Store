@@ -100,11 +100,6 @@ public class LocationFragment extends Fragment {
     }
 
 
-//    public void removeFragment() {
-//        for(Fragment fragment : getSupportFragmentManager().getFragments()){
-//            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-//        }
-
 
     /**
      * This interface must be implemented by activities that contain this
@@ -126,8 +121,8 @@ public class LocationFragment extends Fragment {
     public void removeFragment(Fragment fragment) {
         FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
         FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
-        if(mainActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container) != null) {
-            mainActivity.getSupportFragmentManager().beginTransaction().remove(mainActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container)).commit();
+        if(fragmentManager.findFragmentById(R.id.fragment_container) != null) {
+            transaction.remove(fragmentManager.findFragmentById(R.id.fragment_container)).commit();
         }
     }
 }
