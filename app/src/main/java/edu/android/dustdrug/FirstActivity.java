@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 public class FirstActivity extends AppCompatActivity {
+
     public int cnt = 0;
     private TextView textView;
     private Thread loadingThread;

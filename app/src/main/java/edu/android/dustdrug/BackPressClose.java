@@ -1,22 +1,25 @@
 package edu.android.dustdrug;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 public class BackPressClose {
     private long backKeyPressedTime = 0;
     private Toast toast;
+    private Fragment fragment;
     private Activity activity;
-    private LocationFragment locationFragment;
 
-    public BackPressClose(Activity activity) {
-        this.activity = activity;
+
+    public BackPressClose(Fragment fragment) {
+        this.fragment = fragment;
+
     }
 
     public void onBackPressed() {
         if(isAfter1Second()) {
             backKeyPressedTime = System.currentTimeMillis();
-            Toast.makeText(activity, "\'뒤로\'버튼을 한 번 더 누르시면 종료됩니다", Toast.LENGTH_SHORT).show();
+            Toast.makeText(fragment.getContext(), "\'뒤로\'버튼을 한 번 더 누르시면 종료됩니다", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -40,5 +43,4 @@ public class BackPressClose {
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
     }
-
 }
