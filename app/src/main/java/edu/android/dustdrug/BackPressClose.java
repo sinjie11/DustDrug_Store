@@ -21,7 +21,7 @@ public class BackPressClose {
 
         if (isAfter1Second()) {
             backKeyPressedTime = System.currentTimeMillis();
-            Toast.makeText(fragment.getContext(), "\'뒤로\'버튼을 한 번 더 누르시면 종료됩니다", Toast.LENGTH_SHORT).show();
+            Toast.makeText(fragment.getContext(), "한 번 더 눌러 앱을 종료합니다.", Toast.LENGTH_SHORT).show();
             return;
         }
 

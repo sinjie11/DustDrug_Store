@@ -11,6 +11,8 @@ public class FirstActivity extends AppCompatActivity {
     private TextView textView;
     private Thread loadingThread;
 
+    public FirstActivity() {}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
