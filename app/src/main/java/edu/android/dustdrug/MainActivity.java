@@ -1,22 +1,39 @@
 package edu.android.dustdrug;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "MainActivity";
 
-    private Activity activity;
+
+    private FirstFragment firstFragment;
     private long lastTimeBackPressed = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+        if(fragment == null) {
+            FragmentTransaction transaction = manager.beginTransaction();
+            firstFragment = FirstFragment.newInstance();
+            transaction.replace(R.id.fragment_container, firstFragment);
+            transaction.commit();
+            Log.i(TAG, "first fragment call");
+        }
 
 
     }
+
+
 
     /* ↓ Back 버튼 누를 시 앱 종료 기능 */
     @Override

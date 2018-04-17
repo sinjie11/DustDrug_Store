@@ -20,6 +20,7 @@ public class BackPressClose {
 
         if (isAfter1Second()) {
             backKeyPressedTime = System.currentTimeMillis();
+
             Toast.makeText(fragment.getContext(), "한 번 더 눌러 앱을 종료합니다.", Toast.LENGTH_SHORT).show();
             return;
         }

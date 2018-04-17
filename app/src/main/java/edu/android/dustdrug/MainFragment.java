@@ -104,7 +104,7 @@ public class MainFragment extends Fragment {
 
         startLocationService();
 
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -171,6 +171,10 @@ public class MainFragment extends Fragment {
         super.onDetach();
     }
 
+    public static MainFragment newInstance() {
+        MainFragment mainFragment = new MainFragment();
+        return mainFragment;
+    }
 
 
 }
