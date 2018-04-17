@@ -31,13 +31,12 @@ import java.util.ArrayList;
 public class MainFragment extends Fragment {
     public static final String TAG = "MainFragment";
 
-    public double longtitude;
-    public double latitude;
+    public int longtitude;
+    public int latitude;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private FirstFragment firstFragment;
     private LocationManager locationManager;
     private Location location;
-    private MainActivity mainActivity;
-    private MainFragment mainFragment;
     private LineChart lineChart; // 그래프(jar 파일 사용) private LineChart lineChart; // 그래프(jar 파일 사용)
 
     private TextView textView;
@@ -102,64 +101,23 @@ public class MainFragment extends Fragment {
 
         textView = view.findViewById(R.id.textLocation);
 
-        startLocationService();
+
+        textView.setText("위치정보 : 경도 : " + longtitude + ", " + "위도 : " + latitude);
+
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                startLocationService();
-                longtitude = location.getLongitude();
-                latitude = location.getLatitude();
-                textView.setText("위치정보 : 위도 : " + longtitude + ", " + "경도 : " + latitude);
+                firstFragment.startLocationService();
+                longtitude = (int)location.getLongitude();
+                latitude = (int)location.getLatitude();
+                textView.setText("위치정보 : 경도 : " + firstFragment.longtitude + ", " + "위도 : " + firstFragment.latitude);
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
         return view;
     }
-
-    private void startLocationService() {
-       locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-    }
-
-    private LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.i(TAG, "onLocationChanged, location : " + location);
-            longtitude = location.getLongitude();
-            latitude = location.getLatitude();
-            textView.setText("위치정보 : 위도 : " + longtitude + ", " + "경도 : " + latitude);
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
 
     @Override
     public void onAttach(Context context) {
