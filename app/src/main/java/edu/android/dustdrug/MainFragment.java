@@ -1,27 +1,46 @@
 package edu.android.dustdrug;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+
 import java.util.ArrayList;
+
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment {
+    public static final String TAG = "MainFragment";
 
+    public double longtitude;
+    public double latitude;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private LocationManager locationManager;
+    private Location location;
     private MainActivity mainActivity;
     private MainFragment mainFragment;
     private LineChart lineChart; // 그래프(jar 파일 사용) private LineChart lineChart; // 그래프(jar 파일 사용)
 
+    private TextView textView;
 
     public MainFragment() {
         // Required empty public constructor
@@ -31,6 +50,8 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         lineChart = view.findViewById(R.id.chartValueEveryHour);
 
@@ -79,8 +100,66 @@ public class MainFragment extends Fragment {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
 
+        textView = view.findViewById(R.id.textLocation);
+
+        startLocationService();
+
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                startLocationService();
+                longtitude = location.getLongitude();
+                latitude = location.getLatitude();
+                textView.setText("위치정보 : 위도 : " + longtitude + ", " + "경도 : " + latitude);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         return view;
     }
+
+    private void startLocationService() {
+       locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+    }
+
+    private LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            Log.i(TAG, "onLocationChanged, location : " + location);
+            longtitude = location.getLongitude();
+            latitude = location.getLatitude();
+            textView.setText("위치정보 : 위도 : " + longtitude + ", " + "경도 : " + latitude);
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     @Override
     public void onAttach(Context context) {
