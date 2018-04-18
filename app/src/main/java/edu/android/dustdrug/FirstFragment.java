@@ -83,14 +83,12 @@ public class FirstFragment extends Fragment {
                     }
 
                 }
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                Fragment fragment = manager.findFragmentById(R.id.fragment_container);
-                FragmentTransaction transaction = manager.beginTransaction();
-                mainFragment = MainFragment.newInstance();
-                transaction.replace(R.id.fragment_container, mainFragment);
-                transaction.commit();
-
-
+//                FragmentManager manager = getActivity().getSupportFragmentManager();
+//                Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+//                FragmentTransaction transaction = manager.beginTransaction();
+//                mainFragment = MainFragment.newInstance();
+//                transaction.replace(R.id.fragment_container, mainFragment);
+//                transaction.commit();
             }
 
         };
@@ -102,7 +100,7 @@ public class FirstFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        loadingThread.start();
+ //       loadingThread.start();
     }
 
     public static FirstFragment newInstance() {
