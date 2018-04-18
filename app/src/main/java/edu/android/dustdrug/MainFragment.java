@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -31,6 +33,7 @@ import java.util.ArrayList;
  */
 public class MainFragment extends Fragment {
     public static final String TAG = "MainFragment";
+    private static final int REQ_CODE_PERMISSION = 1;
 
     private double longtitude;
     private double latitude;
@@ -102,19 +105,27 @@ public class MainFragment extends Fragment {
 
         textView = view.findViewById(R.id.textLocation);
 
-
         textView.setText("위치정보 : 경도 : " + longtitude + ", " + "위도 : " + latitude);
-
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                startLocationService();
-                longtitude = location.getLongitude();
-                latitude = location.getLatitude();
-                textView.setText("위치정보 : 경도 : " + longtitude + ", " + "위도 : " + latitude);
-                swipeRefreshLayout.setRefreshing(false);
+                try {
+                    if(hasPermissions(permissions)) {
+                        startLocationService();
+                        longtitude = location.getLongitude();
+                        latitude = location.getLatitude();
+                        textView.setText("위치정보 : 경도 : " + longtitude + ", " + "위도 : " + latitude);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+
+                } catch(NullPointerException e) {
+                    e.getMessage();
+                    Toast.makeText(getContext(), "위치정보를 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
 
@@ -149,10 +160,7 @@ public class MainFragment extends Fragment {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-//            if(Build.VERSION.SDK_INT < 20)
-//
-//            else
-                return;
+            return;
         }
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
@@ -183,4 +191,29 @@ public class MainFragment extends Fragment {
         }
     };
 
+    String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.i(TAG, "onRequestPermissionsResult start");
+        if (requestCode == REQ_CODE_PERMISSION) {
+            if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                return;
+            } else {
+                Toast.makeText(getContext(), "Make the authorization get allowed", Toast.LENGTH_SHORT).show();
+            }
+        }
+        Log.i(TAG, "onRequestPermissionsResult end");
+
+    }
+
+    private boolean hasPermissions(String[] permissions) {
+        boolean result = true;
+        for(String p : permissions) {
+            if (ActivityCompat.checkSelfPermission(getContext(), p) != PackageManager.PERMISSION_GRANTED) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
 }
