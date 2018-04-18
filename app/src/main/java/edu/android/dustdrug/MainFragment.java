@@ -54,6 +54,13 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+        if (ActivityCompat
+                .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
+            Toast.makeText(getContext(), "GPS 권한이 필요합니다",Toast.LENGTH_LONG).show();
+        } else if (ActivityCompat
+                .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
+            Toast.makeText(getContext(),"GPS가 안되서 근접한 거리라도...",Toast.LENGTH_LONG).show();
+        } ActivityCompat.requestPermissions(getActivity(), permissions,REQ_CODE_PERMISSION);
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         lineChart = view.findViewById(R.id.chartValueEveryHour);
@@ -118,6 +125,15 @@ public class MainFragment extends Fragment {
                         latitude = location.getLatitude();
                         textView.setText("위치정보 : 경도 : " + longtitude + ", " + "위도 : " + latitude);
                         swipeRefreshLayout.setRefreshing(false);
+                    } else {
+                        if (ActivityCompat
+                                .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
+                            Toast.makeText(getContext(), "GPS 권한이 필요합니다",Toast.LENGTH_LONG).show();
+                        } else if (ActivityCompat
+                                .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
+                            Toast.makeText(getContext(),"GPS가 안되서 근접한 거리라도...",Toast.LENGTH_LONG).show();
+                        } swipeRefreshLayout.setRefreshing(false);
+                        ActivityCompat.requestPermissions(getActivity(), permissions,REQ_CODE_PERMISSION);
                     }
 
 
@@ -191,7 +207,8 @@ public class MainFragment extends Fragment {
         }
     };
 
-    String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+    String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION};
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionsResult start");
