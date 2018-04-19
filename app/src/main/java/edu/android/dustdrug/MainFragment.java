@@ -105,7 +105,7 @@ public class MainFragment extends Fragment {
 
         textView.setText("Location");
 
-//        if(hasPermissions(permissions)) {  위치가 꺼져있을 경우 앱을 실행시키자마자 바로 위치 권한 수락여부 다이얼로그를 띄우게 함
+//        if(hasPermissions(permissions)) { // 위치가 꺼져있을 경우 앱을 실행시키자마자 바로 위치 권한 수락여부 다이얼로그를 띄우게 함
 //            showLocationInfo();
 //        } else {
 //            if (ActivityCompat
@@ -212,7 +212,7 @@ public class MainFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionsResult start");
         if (requestCode == REQ_CODE_PERMISSION) {
-            if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length == 3 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 return;
             } else {
                 Toast.makeText(getContext(), "Make the authorization get allowed", Toast.LENGTH_SHORT).show();

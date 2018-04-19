@@ -1,6 +1,7 @@
 package edu.android.dustdrug;
 
-import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,10 +10,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.Set;
+
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = "MainActivity";
-
-
+    public static final String TAG = "mainactivity";
+    private static final int REQUEST_ENABLE_BLUETOOTH = 3;
+    private BluetoothAdapter bluetoothAdapter = null;
     private FirstFragment firstFragment;
     private long lastTimeBackPressed = 0;
 
@@ -30,10 +33,22 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "first fragment call");
         }
 
-
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(bluetoothAdapter == null) {
+            Toast.makeText(this, "블루투스를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
     }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(bluetoothAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
+        }
+    }
 
     /* ↓ Back 버튼 누를 시 앱 종료 기능 */
     @Override
