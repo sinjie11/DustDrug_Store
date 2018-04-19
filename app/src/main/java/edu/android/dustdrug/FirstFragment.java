@@ -26,7 +26,6 @@ import android.widget.TextView;
  * to handle interaction events.
  */
 public class FirstFragment extends Fragment {
-
     public int cnt = 0;
     private TextView textView;
     private Thread loadingThread;
