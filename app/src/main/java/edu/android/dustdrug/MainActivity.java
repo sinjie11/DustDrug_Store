@@ -44,12 +44,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(bluetoothAdapter.isEnabled()) {
+        if(bluetoothAdapter.isEnabled()) { // insert ! in front of bluetoothadapter.isENnabled
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
         }
     }
-
+    
+    
+    // TODO: 
+    // Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+    // discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+    // startActivity(discoverableIntent);
+    
+    
     /* ↓ Back 버튼 누를 시 앱 종료 기능 */
     @Override
     public void onBackPressed() {
