@@ -27,7 +27,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import java.util.ArrayList;
 
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -35,15 +34,15 @@ public class MainFragment extends Fragment {
     public static final String TAG = "MainFragment";
     private static final int REQ_CODE_PERMISSION = 1;
 
-    private double longtitude;
-    private double latitude;
+    public double longtitude;
+    public double latitude;
     private SwipeRefreshLayout swipeRefreshLayout;
-//    private FirstFragment firstFragment;
+    //    private FirstFragment firstFragment;
     private LocationManager locationManager;
     private Location location;
     private LineChart lineChart; // 그래프(jar 파일 사용) private LineChart lineChart; // 그래프(jar 파일 사용)
 
-    private TextView textView;
+    public TextView textView;
 
     public MainFragment() {
         // Required empty public constructor
@@ -56,11 +55,12 @@ public class MainFragment extends Fragment {
 
         if (ActivityCompat
                 .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
-            Toast.makeText(getContext(), "GPS 권한이 필요합니다",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "아래로 끌어 새로고침이 필요합니다.", Toast.LENGTH_LONG).show();
         } else if (ActivityCompat
                 .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
-            Toast.makeText(getContext(),"GPS가 안되서 근접한 거리라도...",Toast.LENGTH_LONG).show();
-        } ActivityCompat.requestPermissions(getActivity(), permissions,REQ_CODE_PERMISSION);
+            Toast.makeText(getContext(), "GPS가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
+        }
+        ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         lineChart = view.findViewById(R.id.chartValueEveryHour);
@@ -112,41 +112,35 @@ public class MainFragment extends Fragment {
 
         textView = view.findViewById(R.id.textLocation);
 
-        textView.setText("위치정보 : 경도 : " + longtitude + ", " + "위도 : " + latitude);
+        textView.setText("Location");
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 try {
-                    if(hasPermissions(permissions)) {
-                        startLocationService();
-                        longtitude = location.getLongitude();
-                        latitude = location.getLatitude();
-                        textView.setText("위치정보 : 경도 : " + longtitude + ", " + "위도 : " + latitude);
+                    if (hasPermissions(permissions)) {
+                        showLocationInfo();
                         swipeRefreshLayout.setRefreshing(false);
                     } else {
                         if (ActivityCompat
                                 .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
-                            Toast.makeText(getContext(), "GPS 권한이 필요합니다",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "GPS 권한이 필요합니다", Toast.LENGTH_LONG).show();
                         } else if (ActivityCompat
                                 .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
-                            Toast.makeText(getContext(),"GPS가 안되서 근접한 거리라도...",Toast.LENGTH_LONG).show();
-                        } swipeRefreshLayout.setRefreshing(false);
-                        ActivityCompat.requestPermissions(getActivity(), permissions,REQ_CODE_PERMISSION);
+                            Toast.makeText(getContext(), "GPS가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
+                        }
+                        swipeRefreshLayout.setRefreshing(false);
+                        ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
                     }
-
-
-                } catch(NullPointerException e) {
+                } catch (NullPointerException e) {
                     e.getMessage();
                     Toast.makeText(getContext(), "위치정보를 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
-
         startLocationService();
-
         return view;
     }
 
@@ -209,6 +203,7 @@ public class MainFragment extends Fragment {
 
     String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION};
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionsResult start");
@@ -225,12 +220,19 @@ public class MainFragment extends Fragment {
 
     private boolean hasPermissions(String[] permissions) {
         boolean result = true;
-        for(String p : permissions) {
+        for (String p : permissions) {
             if (ActivityCompat.checkSelfPermission(getContext(), p) != PackageManager.PERMISSION_GRANTED) {
                 result = false;
                 break;
             }
         }
         return result;
+    }
+
+    public void showLocationInfo() {
+        startLocationService();
+        longtitude = location.getLongitude();
+        latitude = location.getLatitude();
+        textView.setText("경도 : " + longtitude + "\n" + "위도 : " + latitude);
     }
 }
