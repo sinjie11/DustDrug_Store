@@ -53,15 +53,6 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        if (ActivityCompat
-                .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
-            Toast.makeText(getContext(), "아래로 끌어 새로고침이 필요합니다.", Toast.LENGTH_LONG).show();
-        } else if (ActivityCompat
-                .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
-            Toast.makeText(getContext(), "GPS가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
-        }
-        ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
-
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         lineChart = view.findViewById(R.id.chartValueEveryHour);
 
@@ -114,6 +105,19 @@ public class MainFragment extends Fragment {
 
         textView.setText("Location");
 
+//        if(hasPermissions(permissions)) {  위치가 꺼져있을 경우 앱을 실행시키자마자 바로 위치 권한 수락여부 다이얼로그를 띄우게 함
+//            showLocationInfo();
+//        } else {
+//            if (ActivityCompat
+//                    .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
+//                Toast.makeText(getContext(), "아래로 끌어 새로고침이 필요합니다.", Toast.LENGTH_LONG).show();
+//            } else if (ActivityCompat
+//                    .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
+//                Toast.makeText(getContext(), "GPS가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
+//            }
+//            ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
+//        }
+
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -125,7 +129,7 @@ public class MainFragment extends Fragment {
                     } else {
                         if (ActivityCompat
                                 .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
-                            Toast.makeText(getContext(), "GPS 권한이 필요합니다", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "아래로 끌어 새로고침이 필요합니다.", Toast.LENGTH_LONG).show();
                         } else if (ActivityCompat
                                 .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
                             Toast.makeText(getContext(), "GPS가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
