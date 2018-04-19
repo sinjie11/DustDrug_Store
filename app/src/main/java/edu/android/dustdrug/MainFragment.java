@@ -97,6 +97,7 @@ public class MainFragment extends Fragment {
 
         lineChart.setData(data);
         lineChart.animateY(5000);
+        lineChart.setScaleEnabled(false);
 
         view.setFocusableInTouchMode(true);
         view.requestFocus();
