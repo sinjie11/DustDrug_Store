@@ -1,7 +1,6 @@
 package edu.android.dustdrug;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,22 +10,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import java.util.Set;
-
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = "mainactivity";
-    private static final int REQUEST_ENABLE_BLUETOOTH = 3;
-    private BluetoothAdapter bluetoothAdapter;
+    public static final String TAG = "MainActivity";
+
+    private MainFragment mainFragment;
     private FirstFragment firstFragment;
     private long lastTimeBackPressed = 0;
-
+    int x = 0;// 쓰레드 테스트용
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentById(R.id.fragment_container);
-        if (fragment == null) {
+        if(fragment == null) {
             FragmentTransaction transaction = manager.beginTransaction();
             firstFragment = FirstFragment.newInstance();
             transaction.replace(R.id.fragment_container, firstFragment);
@@ -34,31 +31,10 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "first fragment call");
         }
 
-//        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//        if (bluetoothAdapter == null) {
-//            Toast.makeText(this, "블루투스를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
-//
-//            /**  에뮬레이터 죽음  그래서 아래코드 주석처리함*/
-//            finish();
-//            return;
-//        }
+
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // 필요없음.........;;;;
-        // public void blueToothPairing(View view) 쓰면 권한 주는 단계 뛰어 넘어짐
-//        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//        if(bluetoothAdapter == null) {
-//            Toast.makeText(this, "블루투스를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
-//        }
-//
-//        if(!bluetoothAdapter.isEnabled()) { // insert ! in front of bluetoothadapter.isENnabled
-//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
-//        }
-    }
+
 
     /* ↓ Back 버튼 누를 시 앱 종료 기능 */
     @Override
@@ -77,12 +53,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    public void getMainfragment(){
 
-    // 블루투스 승인 요청 코드
-    // fragment_main에 btn_onclick 사용
-    public void blueToothPairing(View view) {
-        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-        startActivity(discoverableIntent);
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+        FragmentTransaction transaction = manager.beginTransaction();
+        mainFragment = MainFragment.newInstance();
+        transaction.replace(R.id.fragment_container, mainFragment);
+        transaction.commit();
+
     }
+    public void lodingUpdate(){// 로딩 넘버 올려줌
+        int x = 0;
+        if (x == 0) {
+            firstFragment.onLoding0();
+            x++;
+        } else if (x == 1) {
+            firstFragment.onLoding1();
+            x++;
+        } else if (x == 2) {
+            firstFragment.onLoding2();
+            x++;
+        } else if (x == 3) {
+            firstFragment.onLoding3();
+            x++;
+        } else if (x == 4) {
+            firstFragment.onLoding4();
+            x++;
+        } else if (x == 5) {
+            firstFragment.endLoding();
+        }
+    }
+
 }
