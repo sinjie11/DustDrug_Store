@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.Set;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentById(R.id.fragment_container);
-        if(fragment == null) {
+        if (fragment == null) {
             FragmentTransaction transaction = manager.beginTransaction();
             firstFragment = FirstFragment.newInstance();
             transaction.replace(R.id.fragment_container, firstFragment);
@@ -33,43 +34,32 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "first fragment call");
         }
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(bluetoothAdapter == null) {
-            Toast.makeText(this, "블루투스를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+//        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        if (bluetoothAdapter == null) {
+//            Toast.makeText(this, "블루투스를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+//
+//            /**  에뮬레이터 죽음  그래서 아래코드 주석처리함*/
 //            finish();
 //            return;
-        }
-        //TODO:
-//        public boolean getDeviceState() {
-//            Log.d(TAG, "Check the Bluetooth support");
-//            if(bluetoothAdapter == null) {
-//                Log.d(TAG, "Bluetooth is not available");
-//                return false;
-//            } else { Log.d(TAG, "Bluetooth is available");
-//                return true;
 //        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        // 필요없음.........;;;;
+        // public void blueToothPairing(View view) 쓰면 권한 주는 단계 뛰어 넘어짐
+//        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 //        if(bluetoothAdapter == null) {
 //            Toast.makeText(this, "블루투스를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
 //        }
-        if(!bluetoothAdapter.isEnabled()) { // insert ! in front of bluetoothadapter.isENnabled
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
-        }
+//
+//        if(!bluetoothAdapter.isEnabled()) { // insert ! in front of bluetoothadapter.isENnabled
+//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
+//        }
     }
-    
-    
-    // TODO: 
-//     Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//     discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-//     startActivity(discoverableIntent);
-    
-    
+
     /* ↓ Back 버튼 누를 시 앱 종료 기능 */
     @Override
     public void onBackPressed() {
@@ -88,4 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // 블루투스 승인 요청 코드
+    // fragment_main에 btn_onclick 사용
+    public void blueToothPairing(View view) {
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        startActivity(discoverableIntent);
+    }
 }
