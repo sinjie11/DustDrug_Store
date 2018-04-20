@@ -206,8 +206,12 @@ public class MainFragment extends Fragment {
         }
     };
 
-    String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION};
+    String[] permissions = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+    };
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -235,6 +239,7 @@ public class MainFragment extends Fragment {
     }
 
     public void showLocationInfo() {
+
         startLocationService();
         longtitude = location.getLongitude();
         latitude = location.getLatitude();
