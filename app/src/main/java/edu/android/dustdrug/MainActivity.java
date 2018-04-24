@@ -3,6 +3,8 @@ package edu.android.dustdrug;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,32 +15,35 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = "mainactivity";
+    public static final String TAG = "edu.android";
     private static final int REQUEST_ENABLE_BLUETOOTH = 3;
     private BluetoothAdapter bluetoothAdapter;
     private FirstFragment firstFragment;
+    private MainFragment mainFragment;
     private long lastTimeBackPressed = 0;
-
+    final Geocoder geocoder = new Geocoder(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "MainActivity - onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-        FragmentManager manager = getSupportFragmentManager();
-        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
-        if (fragment == null) {
-            FragmentTransaction transaction = manager.beginTransaction();
-            firstFragment = FirstFragment.newInstance();
-            transaction.replace(R.id.fragment_container, firstFragment);
-            transaction.commit();
-            Log.i(TAG, "first fragment call");
-        }
+//        FragmentManager manager = getSupportFragmentManager();
+//        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+//        if (fragment == null) {
+//            Log.i(TAG, "fragment == null");
+//            FragmentTransaction transaction = manager.beginTransaction();
+//            firstFragment = FirstFragment.newInstance();
+//            transaction.replace(R.id.fragment_container, firstFragment);
+//            transaction.commit();
+//            Log.i(TAG, "first fragment call");
+//        }
 
 //        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 //        if (bluetoothAdapter == null) {
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.i(TAG, "MainActivity onStart");
         // 필요없음.........;;;;
         // public void blueToothPairing(View view) 쓰면 권한 주는 단계 뛰어 넘어짐
 //        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -96,7 +102,36 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void geoConvert(View view) {
+        Log.i(TAG, "MainActivity - geoConvert");
+        //GeoCoding geoCoding = new GeoCoding();
+//        GeoCoding geoCoding = GeoCoding.newInstance();
+        GeoCoding geoCoding = GeoCoding.getInstance();
+        geoCoding.getGeocoder(geocoder);
+        geoCoding.test();
+        String str = geoCoding.setText();
+        Log.i(TAG, "Main str : " + str);
+        mainFragment.txtGeo.setText(str);
+        //txtGeo.setText(str);
+//        Coding.ConvertLatiLongToAddress();
+    }
 
+
+    public void addressConvert(View view) {
+        Log.i(TAG, "MainActivity - addressConvert");
+    }
+
+    public Object getMainfragment() {
+        Log.i(TAG, "MainActivity - getMainfragment");
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+        if (fragment != mainFragment) {
+            FragmentTransaction transaction = manager.beginTransaction();
+            mainFragment = MainFragment.newInstance();
+            transaction.replace(R.id.fragment_container, mainFragment);
+            transaction.commit();
+            Log.i(TAG, "main fragment call");
+        }
+        return mainFragment;
     }
 
     // TODO: 블루투스 페어링

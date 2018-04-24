@@ -1,143 +1,161 @@
 package edu.android.dustdrug;
 
-//import android.content.Intent;
-//import android.location.Address;
-//import android.location.Geocoder;
-//import android.net.Uri;
-//import android.util.Log;
-//import android.view.View;
-//import android.widget.Button;
-//import android.widget.EditText;
-//import android.widget.TextView;
-//
-//import java.io.IOException;
-//import java.util.List;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.net.Uri;
+import android.provider.CalendarContract;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 //
 
-public class GeoCoding {
-//    // 지오코딩(GeoCoding) : 주소,지명 => 위도,경도 좌표로 변환
-//    //     위치정보를 얻기위한 권한을 획득, AndroidManifest.xml
-//    //    ACCESS_FINE_LOCATION : 현재 나의 위치를 얻기 위해서 필요함
-//    //    INTERNET : 구글서버에 접근하기위해서 필요함
-//
-//    final TextView tv = (TextView) findViewById(R.id.textView4); // 결과창
-//
-//    Button b1 = (Button)findViewById(R.id.button1);
-//    Button b2 = (Button)findViewById(R.id.button2);
-//    Button b3 = (Button)findViewById(R.id.button3);
-//    Button b4 = (Button)findViewById(R.id.button4);
-//
-//    final EditText et1 = (EditText)findViewById(R.id.editText1);
-//    final EditText et2 = (EditText)findViewById(R.id.editText2);
-//    final EditText et3 = (EditText)findViewById(R.id.editText3);
-//
-//    final Geocoder geocoder = new Geocoder(this);
-//        b1.setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            // 위도,경도 입력 후 변환 버튼 클릭
-//            List<Address> list = null;
-//            try {
-//                double d1 = Double.parseDouble(et1.getText().toString());
-//                double d2 = Double.parseDouble(et2.getText().toString());
-//
-//                list = geocoder.getFromLocation(
-//                        d1, // 위도
-//                        d2, // 경도
-//                        10); // 얻어올 값의 개수
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
-//            }
-//            if (list != null) {
-//                if (list.size()==0) {
-//                    tv.setText("해당되는 주소 정보는 없습니다");
-//                } else {
-//                    tv.setText(list.get(0).toString());
-//                }
-//            }
-//        }
-//    });
-//
-//        b2.setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            List<Address> list = null;
-//
-//
-//            String str = et3.getText().toString();
-//            try {
-//                list = geocoder.getFromLocationName(
-//                        str, // 지역 이름
-//                        10); // 읽을 개수
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                Log.e("test","입출력 오류 - 서버에서 주소변환시 에러발생");
-//            }
-//
-//            if (list != null) {
-//                if (list.size() == 0) {
-//                    tv.setText("해당되는 주소 정보는 없습니다");
-//                } else {
-//                    tv.setText(list.get(0).toString());
-//                    //          list.get(0).getCountryName();  // 국가명
-//                    //          list.get(0).getLatitude();        // 위도
-//                    //          list.get(0).getLongitude();    // 경도
-//                }
-//            }
-//        }
-//    });
-//
-//        b3.setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            // 위도,경도 입력 후 지도 버튼 클릭 => 지도화면으로 인텐트 날리기
-//            double d1 = Double.parseDouble(et1.getText().toString());
-//            double d2 = Double.parseDouble(et2.getText().toString());
-//
-//            Intent intent = new Intent(
-//                    Intent.ACTION_VIEW,
-//                    Uri.parse("geo:" + d1 + "," + d2));
-//            startActivity(intent);
-//        }
-//    });
-//
-//        b4.setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            // 주소입력후 지도2버튼 클릭시 해당 위도경도값의 지도화면으로 이동
-//            List<Address> list = null;
-//
-//            String str = et3.getText().toString();
-//            try {
-//                list = geocoder.getFromLocationName
-//                        (str, // 지역 이름
-//                                10); // 읽을 개수
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                Log.e("test","입출력 오류 - 서버에서 주소변환시 에러발생");
-//            }
-//
-//            if (list != null) {
-//                if (list.size() == 0) {
-//                    tv.setText("해당되는 주소 정보는 없습니다");
-//                } else {
-//                    // 해당되는 주소로 인텐트 날리기
-//                    Address addr = list.get(0);
-//                    double lat = addr.getLatitude();
-//                    double lon = addr.getLongitude();
-//
-//                    String sss = String.format("geo:%f,%f", lat, lon);
-//
-//                    Intent intent = new Intent(
-//                            Intent.ACTION_VIEW,
-//                            Uri.parse(sss));
-//                    startActivity(intent);
-//                }
-//            }
-//        }
-//    });
-//
-//}
+public class GeoCoding extends MainFragment{
+    List<Address> list = null;
+    public static final String TAG = "edu.android";
+    private static GeoCoding instance = null;
+    public static Geocoder geocoder = null;
+    public double d1 = latitude;
+    public double d2 = longtitude;
+    public String str;
+    // 지오코딩(GeoCoding) : 주소,지명 => 위도,경도 좌표로 변환
 
+    //Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+
+    public static GeoCoding newInstance() {
+        GeoCoding geoCoding = new GeoCoding();
+        Log.i(TAG,"GeoCoding - GeoCoding newInstance()");
+        return geoCoding;
+    }
+    public static GeoCoding getInstance() {
+        if (instance == null) {
+            Log.i(TAG, "getInstance");
+            instance = new GeoCoding();
+        }
+        return instance;
+    }
+
+    public GeoCoding() {
+        Log.i(TAG,"GeoCoding - GeoCoding");
+        d1 = latitude;
+        d2 = longtitude;
+        List<Address> list = null;
+        //Geocoder geocoder = new Geocoder(getContext(), Locale.KOREA);
+        // 위도,경도 입력 후 변환 버튼 클릭
+
+//        try {
+//            d1 = latitude;
+//            d2 = longtitude;
+//
+//            list = geocoder.getFromLocation(
+//                    d1, // 위도
+//                    d2, // 경도
+//                    10); // 얻어올 값의 개수
+//            Log.i(TAG,"위도" + d1 + "경도" + d2);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            Log.e(TAG, "입출력 오류 - 서버에서 주소변환시 에러발생");
+//        }
+
+//        if (list != null) {
+//            if (list.size() == 0) {
+//                Log.i(TAG,"MainFragment - lineChart 생성");
+//                txtGeo.setText("해당되는 주소 정보는 없습니다");
+//            } else {
+//                Log.i(TAG,"GeoCoding - 위도경도 변환 성공");
+//                txtGeo.setText(list.get(0).toString());
+////                String admin = list.get(0).getAdminArea();
+////                String local = list.get(0).getLocality();
+////                txtGeo.setText(admin);
+////                txtGeo.setText(local);
+//            }
+//        }
+
+    }
+    public static void getGeocoder(Geocoder ingeocoder){
+        geocoder = ingeocoder;
+    }
+
+    public void test(){
+        try {
+            //d1// = latitude;
+            //d2// = longtitude;
+
+            list = geocoder.getFromLocation(
+                    d1, // 위도
+                    d2, // 경도
+                    10); // 얻어올 값의 개수
+            Log.i(TAG,"정말로 되는거? 위도" + d1 + "    경도" + d2);
+            //Log.i(TAG, "latitude : " + latitude + "\t" + "longtitude : " + longtitude);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "입출력 오류 - 서버에서 주소변환시 에러발생");
+        }
+        if (list != null) {
+            if (list.size() == 0) {
+                Log.i(TAG,"MainFragment - lineChart 생성");
+                //txtGeo.setText("해당되는 주소 정보는 없습니다");
+            } else {
+                Log.i(TAG,"GeoCoding - 위도경도 변환 성공");
+                //txtGeo.setText(list.get(0).toString());
+
+                String Locality = list.get(0).getLocality();
+                String Thoroughfare = list.get(1).getThoroughfare();
+                //String Thoroughfare = list.get(0).getThoroughfare();
+                Log.i(TAG,"Locality : " + Locality );//+ "\t Thoroughfare : " + Thoroughfare);
+                str = Locality;
+                str += Thoroughfare;
+                Log.i(TAG, "Str : " + str);
+                //txtGeo.setText(Locality);// + Thoroughfare);
+//                txtGeo.setText(local);
+            }
+        }
+    }
+
+    public void getlatitude(double latitude, double longtitude){
+        Log.i(TAG, "latitude : " + latitude + "\t" + "longtitude : " + longtitude);
+        this.d1 = latitude;
+        this.d2 = longtitude;
+    }
+
+    public String setText(){
+        return str;
+    }
 }
+
+
+
+
+//    {
+//        List<Address> list = null;
+//        String str = txtGeo.getText().toString();
+//        try {
+//            list = geocoder.getFromLocationName(
+//                    str, // 지역 이름
+//                    10); // 읽을 개수
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            Log.e("test","입출력 오류 - 서버에서 주소변환시 에러발생");
+//        }
+//
+//        if (list != null) {
+//            if (list.size() == 0) {
+//                txtGeo.setText("해당되는 주소 정보는 없습니다");
+//            } else {
+//                txtGeo.setText(list.get(0).toString());
+//                //          list.get(0).getCountryName();  // 국가명
+//                //          list.get(0).getLatitude();        // 위도
+//                //          list.get(0).getLongitude();    // 경도
+//            }
+//        }
+//    }
+
+
+
+

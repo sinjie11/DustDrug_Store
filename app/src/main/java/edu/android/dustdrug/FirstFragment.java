@@ -47,7 +47,7 @@ public class FirstFragment extends Fragment {
 
 
 
-    public static final String TAG = "FirstFragment";
+    public static final String TAG = "edu.android";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,16 +55,16 @@ public class FirstFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         textView = view.findViewById(R.id.textView);
-        Log.i(TAG, "스레드 전");
+        Log.i(TAG, "FirstFragment - 스레드 전");
         return view;
     }
 
     @Override
     public void onStart() {
+        super.onStart();
         FackMB fackMB = new FackMB();
         fackMB.execute();
-        super.onStart();
-
+        Log.i(TAG, "FirstFragment - fackMB execute");
 
 //        loadingThread.start();
     }
@@ -104,29 +104,36 @@ public class FirstFragment extends Fragment {
     }
 
     public void onLoding0() {
-        textView.setText("Loading...");
+        textView.setText("Loading");
+        Log.i(TAG, "FirstFragment - onLoding0");
     }
 
     public void onLoding1() {
-        textView.setText("Loading");
+        textView.setText("Loading.");
+        Log.i(TAG, "FirstFragment - onLoding1");
     }
 
     public void onLoding2() {
-        textView.setText("Loading.");
+        textView.setText("Loading..");
+        Log.i(TAG, "FirstFragment - onLoding2");
     }
 
     public void onLoding3() {
-        textView.setText("Loading..");
+        textView.setText("Loading...");
+        Log.i(TAG, "FirstFragment - onLoding3");
     }
 
     public void onLoding4() {
-        textView.setText("Loading...");
+        textView.setText("Complete");
+        Log.i(TAG, "FirstFragment - onLoding4");
     }
 
     public void endLoding() {
         mainActivity = (MainActivity) getActivity();
         mainActivity.getMainfragment();
+        Log.i(TAG, "FirstFragment - endLoding");
     }
+
 
 
     public void startLocationService() {
@@ -149,7 +156,7 @@ public class FirstFragment extends Fragment {
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            Log.i(TAG, "onLocationChanged, location : " + location);
+            Log.i(TAG, "FirstFragment - onLocationChanged, location : " + location);
             longtitude = (int) location.getLongitude();
             latitude = (int) location.getLatitude();
             //TODO : 저장;
@@ -181,15 +188,30 @@ public class FirstFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnFragmentInteractionListener{
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    class FackMB  extends AsyncTask<Void,Void , Void>{
+    class FackMB  extends AsyncTask<Void, Integer , Void>{
 
         @Override
         protected Void doInBackground(Void... voids) {// 예시 이부분에 imple 을 생성하면됨
 
+            try {
+                Thread.sleep(1000);
+                publishProgress(0);
+                Thread.sleep(1000);
+                publishProgress(1);
+                Thread.sleep(1000);
+                publishProgress(2);
+                Thread.sleep(1000);
+                publishProgress(3);
+                Thread.sleep(1000);
+                publishProgress(4);
+                endLoding();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
@@ -203,37 +225,66 @@ public class FirstFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             // doInBackground()가 끝났을 때 UI 업데이트
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+//            try {
+//                Thread.sleep(1000);
+//                Log.i(TAG, "FirstFragment - 1초");
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            onLoding0();
+//            try {
+//                Thread.sleep(1000);
+//                Log.i(TAG, "FirstFragment - 2초");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }onLoding1();
+//            try {
+//                Thread.sleep(1000);
+//                Log.i(TAG, "FirstFragment - 3초");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }onLoding2();
+//            try {
+//                Thread.sleep(1000);
+//                Log.i(TAG, "FirstFragment - 4초");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }onLoding3();
+//            try {
+//                Thread.sleep(1000);
+//                Log.i(TAG, "FirstFragment - 5초");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }onLoding4();
+//            try {
+//                Thread.sleep(1000);
+//                Log.i(TAG, "FirstFragment - 6초");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            endLoding();
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {//publishProgress(4); 를 호출 했을때 UI 작업
+            switch (values[0]) {
+                case 0:
+                    onLoding0();
+                    break;
+                case 1:
+                    onLoding1();
+                    break;
+                case 2:
+                    onLoding2();
+                    break;
+                case 3:
+                    onLoding3();
+                    break;
+                case 4:
+                    onLoding4();
+                    break;
             }
-            onLoding0();
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }onLoding1();
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }onLoding2();
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }onLoding3();
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }onLoding4();
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }endLoding();
         }
     } // 문제 발생 기술적으로 구현 불가능합니다..
 

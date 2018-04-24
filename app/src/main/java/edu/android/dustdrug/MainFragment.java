@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 
 
@@ -31,7 +33,7 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment {
-    public static final String TAG = "MainFragment";
+    public static final String TAG = "edu.android";
     private static final int REQ_CODE_PERMISSION = 1;
 
     public double longtitude;
@@ -44,10 +46,13 @@ public class MainFragment extends Fragment {
 
     public TextView textView;
     public TextView txtGeo;
+    public Button btnGeo;
+    public Button btnAddress;
 
 
     public MainFragment() {
         // Required empty public constructor
+
     }
 
     @Override
@@ -104,8 +109,12 @@ public class MainFragment extends Fragment {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
 
-        textView = view.findViewById(R.id.textLocation);
+        Log.i(TAG,"MainFragment - lineChart 생성");
 
+        textView = view.findViewById(R.id.textLocation);
+        btnGeo = view.findViewById(R.id.btnGeo);
+        btnAddress = view.findViewById(R.id.btnAddress);
+        txtGeo = view.findViewById(R.id.txtViewAddress);
         textView.setText("Location");
 
 //        if(hasPermissions(permissions)) { // 위치가 꺼져있을 경우 앱을 실행시키자마자 바로 위치 권한 수락여부 다이얼로그를 띄우게 함
@@ -190,6 +199,7 @@ public class MainFragment extends Fragment {
             longtitude = location.getLongitude();
             latitude = location.getLatitude();
             //TODO : 저장;
+            Log.i(TAG,"MainFragment - onLocationChanged");
         }
 
         @Override
@@ -217,7 +227,7 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionsResult start");
+        Log.i(TAG, "MainFragment - onRequestPermissionsResult start");
         if (requestCode == REQ_CODE_PERMISSION) {
             if (grantResults.length == 3 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 return;
@@ -225,7 +235,7 @@ public class MainFragment extends Fragment {
                 Toast.makeText(getContext(), "Make the authorization get allowed", Toast.LENGTH_SHORT).show();
             }
         }
-        Log.i(TAG, "onRequestPermissionsResult end");
+        Log.i(TAG, "MainFragment - onRequestPermissionsResult end");
 
     }
 
@@ -245,6 +255,9 @@ public class MainFragment extends Fragment {
         startLocationService();
         longtitude = location.getLongitude();
         latitude = location.getLatitude();
+        GeoCoding geoCoding = GeoCoding.getInstance();
+        geoCoding.getlatitude(latitude,longtitude);
         textView.setText("경도 : " + longtitude + "\n" + "위도 : " + latitude);
+        Log.i(TAG,"MainFragment - showLocationInfo");
     }
 }
