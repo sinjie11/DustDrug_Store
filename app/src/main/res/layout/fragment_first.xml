@@ -33,7 +33,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Loading..."
+        android:text="Loading"
         android:textSize="40sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,4 +42,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.718" />
+
 </android.support.constraint.ConstraintLayout>
