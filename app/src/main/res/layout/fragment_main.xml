@@ -88,14 +88,41 @@
         <Button
             android:id="@+id/btnPairing"
             style="@android:style/Widget.Button.Small"
-            android:layout_width="129dp"
-            android:onClick="blueToothPairing"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:onClick="blueToothPairing"
             android:text="BlueTooth Pairing"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fragment_container" />
+
+        <Button
+            android:id="@+id/btngeo"
+            android:onClick="geoConvert"
+            style="@android:style/Widget.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="주소/위도,경도 변환"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fragment_container" />
+
+        <TextView
+            android:id="@+id/txtViewAddress"
+            android:layout_width="368dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="292dp"
+            android:text="주소 :"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/fragment_container" />
 

@@ -43,6 +43,8 @@ public class MainFragment extends Fragment {
     private LineChart lineChart; // 그래프(jar 파일 사용) private LineChart lineChart; // 그래프(jar 파일 사용)
 
     public TextView textView;
+    public TextView txtGeo;
+
 
     public MainFragment() {
         // Required empty public constructor
