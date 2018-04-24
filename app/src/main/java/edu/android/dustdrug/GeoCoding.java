@@ -1,5 +1,5 @@
-//package edu.android.dustdrug;
-//
+package edu.android.dustdrug;
+
 //import android.content.Intent;
 //import android.location.Address;
 //import android.location.Geocoder;
@@ -13,7 +13,8 @@
 //import java.io.IOException;
 //import java.util.List;
 //
-//public class GeoData {
+
+public class GeoCoding {
 //    // 지오코딩(GeoCoding) : 주소,지명 => 위도,경도 좌표로 변환
 //    //     위치정보를 얻기위한 권한을 획득, AndroidManifest.xml
 //    //    ACCESS_FINE_LOCATION : 현재 나의 위치를 얻기 위해서 필요함
@@ -138,3 +139,5 @@
 //    });
 //
 //}
+
+}
