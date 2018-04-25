@@ -35,7 +35,7 @@ public class GeoCoding extends MainFragment{
     }
     public static GeoCoding getInstance() {
         if (instance == null) {
-            Log.i(TAG, "getInstance");
+            Log.i(TAG, "GeoCoding - getInstance");
             instance = new GeoCoding();
         }
         return instance;
@@ -91,7 +91,7 @@ public class GeoCoding extends MainFragment{
                     d1, // 위도
                     d2, // 경도
                     10); // 얻어올 값의 개수
-            Log.i(TAG,"정말로 되는거? 위도" + d1 + "    경도" + d2);
+            Log.i(TAG,"GeoCoding - 정말로 되는거? 위도" + d1 + "    경도" + d2);
             //Log.i(TAG, "latitude : " + latitude + "\t" + "longtitude : " + longtitude);
         } catch (IOException e) {
             e.printStackTrace();
@@ -99,7 +99,7 @@ public class GeoCoding extends MainFragment{
         }
         if (list != null) {
             if (list.size() == 0) {
-                Log.i(TAG,"MainFragment - lineChart 생성");
+                Log.i(TAG,"GeoCoding - lineChart 생성");
                 //txtGeo.setText("해당되는 주소 정보는 없습니다");
             } else {
                 Log.i(TAG,"GeoCoding - 위도경도 변환 성공");
@@ -118,7 +118,7 @@ public class GeoCoding extends MainFragment{
     }
 
     public void getlatitude(double latitude, double longtitude){
-        Log.i(TAG, "latitude : " + latitude + "\t" + "longtitude : " + longtitude);
+        Log.i(TAG, "GeoCoding - latitude : " + latitude + "\t" + "longtitude : " + longtitude);
         this.d1 = latitude;
         this.d2 = longtitude;
     }

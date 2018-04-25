@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i(TAG, "MainActivity onStart");
+        Log.i(TAG, "MainActivity - onStart");
         // 필요없음.........;;;;
         // public void blueToothPairing(View view) 쓰면 권한 주는 단계 뛰어 넘어짐
 //        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
