@@ -11,28 +11,31 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ServiceConfigurationError;
 import java.util.Set;
 
+
 public class MainActivity extends AppCompatActivity {
+
     public static final String TAG = "mainactivity";
     private static final int REQUEST_ENABLE_BLUETOOTH = 3;
     private BluetoothAdapter bluetoothAdapter;
-    private FirstFragment firstFragment;
     private long lastTimeBackPressed = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FragmentManager manager = getSupportFragmentManager();
-        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
-        if (fragment == null) {
-            FragmentTransaction transaction = manager.beginTransaction();
-            firstFragment = FirstFragment.newInstance();
-            transaction.replace(R.id.fragment_container, firstFragment);
-            transaction.commit();
-            Log.i(TAG, "first fragment call");
-        }
+
+//        FragmentManager manager = getSupportFragmentManager();
+//        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+//        if (fragment == null) {
+//            FragmentTransaction transaction = manager.beginTransaction();
+//            firstFragment = FirstFragment.newInstance();
+//            transaction.replace(R.id.fragment_container, firstFragment);
+//            transaction.commit();
+//            Log.i(TAG, "first fragment call");
+//        }
 
 //        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 //        if (bluetoothAdapter == null) {

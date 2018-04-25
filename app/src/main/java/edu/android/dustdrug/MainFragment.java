@@ -11,11 +11,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +26,8 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -37,15 +42,20 @@ public class MainFragment extends Fragment {
     public double longtitude;
     public double latitude;
     private SwipeRefreshLayout swipeRefreshLayout;
-    //    private FirstFragment firstFragment;
     private LocationManager locationManager;
     private Location location;
     private LineChart lineChart; // 그래프(jar 파일 사용) private LineChart lineChart; // 그래프(jar 파일 사용)
-
     public TextView textView;
+    private ImageButton imageButton;
+    private SearchFragment searchFragment;
 
     public MainFragment() {
         // Required empty public constructor
+    }
+
+    public static MainFragment newInstance() {
+        MainFragment mainFragment = new MainFragment();
+        return mainFragment;
     }
 
     @Override
@@ -102,7 +112,8 @@ public class MainFragment extends Fragment {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
 
-        textView = view.findViewById(R.id.textLocation);
+        textView = (TextView) view.findViewById(R.id.textLocation);
+        imageButton = (ImageButton) view.findViewById(R.id.imageButton);
 
         textView.setText("Location");
 
@@ -146,8 +157,22 @@ public class MainFragment extends Fragment {
             }
         });
         startLocationService();
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+                FragmentTransaction transaction = manager.beginTransaction();
+                searchFragment = SearchFragment.newInstance();
+                transaction.replace(R.id.fragment_container, searchFragment);
+                transaction.commit();
+                Log.i(TAG, "search fragment call");
+            }
+        });
         return view;
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -157,11 +182,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    public static MainFragment newInstance() {
-        MainFragment mainFragment = new MainFragment();
-        return mainFragment;
     }
 
     public void startLocationService() {
@@ -210,7 +230,8 @@ public class MainFragment extends Fragment {
             Manifest.permission.ACCESS_COARSE_LOCATION};
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionsResult start");
         if (requestCode == REQ_CODE_PERMISSION) {
             if (grantResults.length == 3 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
@@ -240,4 +261,6 @@ public class MainFragment extends Fragment {
         latitude = location.getLatitude();
         textView.setText("경도 : " + longtitude + "\n" + "위도 : " + latitude);
     }
+
+
 }

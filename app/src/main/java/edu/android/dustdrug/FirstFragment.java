@@ -43,7 +43,7 @@ public class FirstFragment extends Fragment {
     }
 
 
-    public static final String TAG = "FirstFragment";
+    public static final String TAG = "edu.android";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
