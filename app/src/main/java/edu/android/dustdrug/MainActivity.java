@@ -26,14 +26,14 @@ public class MainActivity extends AppCompatActivity {
     private FirstFragment firstFragment;
     private MainFragment mainFragment;
     private long lastTimeBackPressed = 0;
-    final Geocoder geocoder = new Geocoder(this);
+    Geocoder geocoder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "MainActivity - onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        geocoder = new Geocoder(this);
 //        FragmentManager manager = getSupportFragmentManager();
 //        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
 //        if (fragment == null) {

@@ -105,14 +105,13 @@ public class GeoCoding extends MainFragment{
                 Log.i(TAG,"GeoCoding - 위도경도 변환 성공");
                 //txtGeo.setText(list.get(0).toString());
 
-                String Locality = list.get(0).getLocality();
-                String Thoroughfare = list.get(1).getThoroughfare();
-                //String Thoroughfare = list.get(0).getThoroughfare();
-                Log.i(TAG,"Locality : " + Locality );//+ "\t Thoroughfare : " + Thoroughfare);
-                str = Locality;
-                str += Thoroughfare;
-                Log.i(TAG, "Str : " + str);
-                //txtGeo.setText(Locality);// + Thoroughfare);
+                String locality = list.get(0).getLocality();
+                String subLocality = list.get(0).getSubLocality();
+                String thoroughfare = list.get(0).getThoroughfare();
+                //String Thoroughfare = list.get(0).getThoroughfare();Thoroughfare);
+                str =  locality;
+                str += subLocality;
+                str += thoroughfare;               //txtGeo.setText(Locality);// + Thoroughfare);
 //                txtGeo.setText(local);
             }
         }
