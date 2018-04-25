@@ -199,14 +199,19 @@ public class FirstFragment extends Fragment {
 
             try {
                 Thread.sleep(1000);
+                Log.i(TAG, "FirstFragment - 1초");
                 publishProgress(0);
                 Thread.sleep(1000);
+                Log.i(TAG, "FirstFragment - 2초");
                 publishProgress(1);
                 Thread.sleep(1000);
+                Log.i(TAG, "FirstFragment - 3초");
                 publishProgress(2);
                 Thread.sleep(1000);
+                Log.i(TAG, "FirstFragment - 4초");
                 publishProgress(3);
                 Thread.sleep(1000);
+                Log.i(TAG, "FirstFragment - 5초");
                 publishProgress(4);
                 endLoding();
             } catch (InterruptedException e) {
