@@ -24,6 +24,23 @@
         app:layout_constraintVertical_bias="0.154"
         app:srcCompat="@drawable/logo" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleSmallTitle"
+        android:layout_width="81dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:indeterminateTint="#6A20CA"
+        android:indeterminateTintMode="src_atop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.132" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="178dp"
@@ -34,12 +51,25 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="Loading..."
-        android:textSize="40sp"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.773"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.718" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBar"
+        app:layout_constraintVertical_bias="0.181" />
+
+    <!-- 색상표
+* 노랑 : #EAE674
+* 연두 : #7CE923 , #C6E5B6
+* 하늘 : #88CFEE
+* 파랑 : #070BF1
+* 보라 : #6A20CA
+* 주황 : #F4803D
+* 빨강 : #EF0A0A
+* 회색 : #CECACA
+* 흰색 : #FFFFFF
+
+-->
 </android.support.constraint.ConstraintLayout>

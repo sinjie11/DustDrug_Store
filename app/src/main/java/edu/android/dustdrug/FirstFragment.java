@@ -3,11 +3,14 @@ package edu.android.dustdrug;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -26,9 +30,12 @@ import android.widget.TextView;
  * to handle interaction events.
  */
 public class FirstFragment extends Fragment {
-    public int cnt = 0;
+
     private TextView textView;
     private Thread loadingThread;
+    private ProgressBar progressBar;
+    private int progress = 0;
+
     private MainFragment mainFragment;
     private OnFragmentInteractionListener mListener;
 
@@ -45,55 +52,81 @@ public class FirstFragment extends Fragment {
 
     public static final String TAG = "edu.android";
 
+
+    // Handler 클래스를 상속받는 클래스를 정의 및 생성 (ProgressBar)
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // Message 에서 데이터를 읽어서 ProgressBar 와 TextView 를 업데이트
+            Bundle data = msg.getData();
+            int progress = data.getInt(TAG);
+            progressBar.setProgress(progress);
+            textView.setTextColor(Color.parseColor("#F4803D"));  // textView 색상 변경
+            textView.setText(String.valueOf(progress) + "%");
+
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         textView = view.findViewById(R.id.textView);
+        progressBar = view.findViewById(R.id.progressBar);
+
         Log.i(TAG, "스레드 전");
 
-        loadingThread = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    if (cnt == 5)
-                        break;
-                    else {
-                        if (cnt % 4 == 0) {
-                            textView.setText("Loading   ");
-                            cnt++;
-                        } else if (cnt % 4 == 1) {
-                            textView.setText("Loading.  ");
-                            cnt++;
-                        } else if (cnt % 4 == 2) {
-                            textView.setText("Loading.. ");
-                            cnt++;
-                        } else {
-                            textView.setText("Loading...");
-                            cnt++;
-                        }
-                    }
+        if (loadingThread == null) {
+
+            loadingThread = new Thread() {
+                @Override
+                public void run() {
+
                     try {
-                        Thread.sleep(1000);
 
+                        while (progress <= 100) {
+                            // Handler 의 Message 를 사용해서 progress 정보를 보냄
+                            // progress 를 증가 -> 잠깐 대기
+                            Message msg = handler.obtainMessage();
+                            Bundle data = new Bundle();
+                            data.putInt(TAG, progress);
+                            msg.setData(data);
+                            handler.sendMessage(msg);
+
+                            progress += 5;
+
+                            synchronized (this) {
+                                wait(100); // 100 ms = 0.1초
+
+                                if (progress > 100) {
+                                    loadingThread = null;
+                                    progress = 0;
+                                    break;
+                                }
+                            }
+                        } // end while
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                        // 쓰레드를 interrupt 해서 종료시킬 때
 
-                }
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                mainFragment = MainFragment.newInstance();
-                transaction.replace(R.id.fragment_container, mainFragment);
-                transaction.commit();
-            }
+                    } // end try-catch
 
-        };
-        startLocationService();
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    mainFragment = MainFragment.newInstance();
+                    transaction.replace(R.id.fragment_container, mainFragment);
+                    transaction.commit();
+
+                } // end run()
+
+            };
+            startLocationService();
+        } // end if (loadingThread)
 
         return view;
-    }
+
+    } // end onCreateView
 
     @Override
     public void onStart() {
