@@ -17,8 +17,8 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "mainactivity";
-//    private static final int REQUEST_ENABLE_BLUETOOTH = 3;
+    public static final String TAG = "edu.android";
+    //    private static final int REQUEST_ENABLE_BLUETOOTH = 3;
 //    private BluetoothAdapter bluetoothAdapter;
     private Fragment fragment;
     private long lastTimeBackPressed = 0;

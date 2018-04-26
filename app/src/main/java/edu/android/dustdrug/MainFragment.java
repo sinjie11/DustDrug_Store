@@ -46,8 +46,8 @@ public class MainFragment extends Fragment {
     private Location location;
     private LineChart lineChart; // 그래프(jar 파일 사용) private LineChart lineChart; // 그래프(jar 파일 사용)
     public TextView textView;
-    private ImageButton imageButton;
-
+    public ImageButton imageButton;
+    private SearchFragment searchFragment;
 
     public MainFragment() {
         // Required empty public constructor
@@ -112,8 +112,8 @@ public class MainFragment extends Fragment {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
 
-        textView = (TextView) view.findViewById(R.id.textLocation);
-        imageButton = (ImageButton) view.findViewById(R.id.imageButton);
+        textView = view.findViewById(R.id.textLocation);
+        imageButton = view.findViewById(R.id.imageButton);
 
         textView.setText("Location");
 
@@ -130,7 +130,7 @@ public class MainFragment extends Fragment {
 //            ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
 //        }
 
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
+        swipeRefreshLayout = view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -161,15 +161,11 @@ public class MainFragment extends Fragment {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//        FragmentManager manager = getSupportFragmentManager();
-//        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
-//        if (fragment != null) {
-//            FragmentTransaction transaction = manager.beginTransaction();
-//            firstFragment = FirstFragment.newInstance();
-//            transaction.replace(R.id.fragment_container, firstFragment);
-//            transaction.commit();
-//            Log.i(TAG, "first fragment call");
-//        }
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                searchFragment = SearchFragment.newInstance();
+                transaction.replace(R.id.fragment_container, searchFragment);
+                transaction.commit();
                 Log.i(TAG, "search fragment call");
             }
         });
