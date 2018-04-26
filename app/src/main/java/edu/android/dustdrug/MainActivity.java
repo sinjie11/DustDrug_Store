@@ -18,9 +18,12 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "mainactivity";
-    private static final int REQUEST_ENABLE_BLUETOOTH = 3;
-    private BluetoothAdapter bluetoothAdapter;
+//    private static final int REQUEST_ENABLE_BLUETOOTH = 3;
+//    private BluetoothAdapter bluetoothAdapter;
+    private Fragment fragment;
     private long lastTimeBackPressed = 0;
+    private MainFragment mainFragment = new MainFragment();
+    private SearchFragment searchFragment = new SearchFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        FragmentManager manager = getSupportFragmentManager();
 //        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
-//        if (fragment == null) {
+//        if (fragment != null) {
 //            FragmentTransaction transaction = manager.beginTransaction();
 //            firstFragment = FirstFragment.newInstance();
 //            transaction.replace(R.id.fragment_container, firstFragment);
@@ -60,6 +63,18 @@ public class MainActivity extends AppCompatActivity {
 //        if(!bluetoothAdapter.isEnabled()) { // insert ! in front of bluetoothadapter.isENnabled
 //            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
+//        }
+    }
+
+    public void switchFragment(Fragment fragment) {
+        //        FragmentManager manager = getSupportFragmentManager();
+//        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+//        if (fragment != null) {
+//            FragmentTransaction transaction = manager.beginTransaction();
+//            firstFragment = FirstFragment.newInstance();
+//            transaction.replace(R.id.fragment_container, firstFragment);
+//            transaction.commit();
+//            Log.i(TAG, "first fragment call");
 //        }
     }
 

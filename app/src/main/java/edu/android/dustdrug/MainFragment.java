@@ -47,7 +47,7 @@ public class MainFragment extends Fragment {
     private LineChart lineChart; // 그래프(jar 파일 사용) private LineChart lineChart; // 그래프(jar 파일 사용)
     public TextView textView;
     private ImageButton imageButton;
-    private SearchFragment searchFragment;
+
 
     public MainFragment() {
         // Required empty public constructor
@@ -161,12 +161,15 @@ public class MainFragment extends Fragment {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                Fragment fragment = manager.findFragmentById(R.id.fragment_container);
-                FragmentTransaction transaction = manager.beginTransaction();
-                searchFragment = SearchFragment.newInstance();
-                transaction.replace(R.id.fragment_container, searchFragment);
-                transaction.commit();
+//        FragmentManager manager = getSupportFragmentManager();
+//        Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+//        if (fragment != null) {
+//            FragmentTransaction transaction = manager.beginTransaction();
+//            firstFragment = FirstFragment.newInstance();
+//            transaction.replace(R.id.fragment_container, firstFragment);
+//            transaction.commit();
+//            Log.i(TAG, "first fragment call");
+//        }
                 Log.i(TAG, "search fragment call");
             }
         });
@@ -261,6 +264,4 @@ public class MainFragment extends Fragment {
         latitude = location.getLatitude();
         textView.setText("경도 : " + longtitude + "\n" + "위도 : " + latitude);
     }
-
-
 }
