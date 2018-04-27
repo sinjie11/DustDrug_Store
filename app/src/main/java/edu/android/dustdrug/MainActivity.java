@@ -1,22 +1,28 @@
 package edu.android.dustdrug;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.ServiceConfigurationError;
 import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    private Toast toast;
     public static final String TAG = "edu.android";
     //    private static final int REQUEST_ENABLE_BLUETOOTH = 3;
 //    private BluetoothAdapter bluetoothAdapter;
@@ -24,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private long lastTimeBackPressed = 0;
     private MainFragment mainFragment = new MainFragment();
     private SearchFragment searchFragment = new SearchFragment();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 //            finish();
 //            return;
 //        }
+
     }
 
     @Override
@@ -78,29 +86,38 @@ public class MainActivity extends AppCompatActivity {
 //        }
     }
 
-    /* ↓ Back 버튼 누를 시 앱 종료 기능 */
+
+    /**
+     *  Back 버튼 누를 시 이전화면 및 앱 종료 기능
+     */
     @Override
     public void onBackPressed() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, mainFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
         if (System.currentTimeMillis() > lastTimeBackPressed + 2000) {
             lastTimeBackPressed = System.currentTimeMillis();
             Toast.makeText(this, "뒤로 버튼 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
             return;
-
         } else { // back 키 2번 누르면 앱 종료
             finish();
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
-
         }
 
     }
 
-    // 블루투스 승인 요청 코드
-    // fragment_main에 btn_onclick 사용
+
+    /**
+     *   - 블루투스 승인 요청 코드
+     *   - fragment_main에 btn_onclick 사용
+     */
     public void blueToothPairing(View view) {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
         startActivity(discoverableIntent);
     }
+
 }

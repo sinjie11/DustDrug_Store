@@ -44,7 +44,7 @@ public class MainFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private LocationManager locationManager;
     private Location location;
-    private LineChart lineChart; // 그래프(jar 파일 사용) private LineChart lineChart; // 그래프(jar 파일 사용)
+    private LineChart lineChart; // 그래프(jar 파일 사용)
     public TextView textView;
     public ImageButton imageButton;
     private SearchFragment searchFragment;
