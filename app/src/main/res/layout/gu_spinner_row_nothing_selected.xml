@@ -8,5 +8,5 @@
     android:gravity="center"
     android:ellipsize="marquee"
     android:textSize="18sp"
-    android:textColor="#808080"
-    android:text="[시.구를 선택하십시오.]" />
+    android:textColor="@android:color/holo_orange_dark"
+    android:text="[구를 선택하십시오.]" />

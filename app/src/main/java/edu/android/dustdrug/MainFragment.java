@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -26,8 +25,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -169,6 +166,9 @@ public class MainFragment extends Fragment {
                 Log.i(TAG, "search fragment call");
             }
         });
+
+
+
         return view;
     }
 

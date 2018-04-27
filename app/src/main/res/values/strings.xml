@@ -56,6 +56,12 @@
         <item>광산구</item>
     </string-array>
 
+    <string-array name="jeju_si_array">
+        <item></item>
+        <item>제주시</item>
+        <item>서귀포시</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
