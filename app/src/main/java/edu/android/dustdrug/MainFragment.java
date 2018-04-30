@@ -297,17 +297,13 @@ public class MainFragment extends Fragment {
         @Override
         protected Object doInBackground(Object[] objects) {//인터넷 사용을 위한 쓰래드
             if(list.get(0).getThoroughfare()==null) {//이름이 없을시 구로 검색
-                txtGeo.append("null"+"\n");
-
-                Log.i("s1",list.get(0).getThoroughfare().toString());
-                dustDrugDAOImple.fuckTM(
-                        list.get(0).getSubLocality());
+                Log.i("s1",list.get(0).getThoroughfare().toString()+" 동이름");
+                dustDrugDAOImple.fuckTM(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(),dustDrugDAOImple.data.getTmY());
                 dustDrugDAOImple.kimKwangSukInthespiritofforgetting(dustDrugDAOImple.data.getStationName());
             }else {//동으로 검색
-                txtGeo.append(list.get(0).getThoroughfare().toString());
                 Log.i("s1",list.get(0).getThoroughfare().toString()+" 동이름");
-                dustDrugDAOImple.fuckTM(list.get(0).getThoroughfare());
+                dustDrugDAOImple.fuckTM(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(),dustDrugDAOImple.data.getTmY());
                 dustDrugDAOImple.kimKwangSukInthespiritofforgetting(dustDrugDAOImple.data.getStationName());
             }
