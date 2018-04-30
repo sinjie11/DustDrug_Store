@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -65,6 +66,7 @@ public class SearchFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), 1)); // 시 구분선
         Si si = new Si();
         si.execute();
         return view;
@@ -192,7 +194,7 @@ public class SearchFragment extends Fragment {
         class ItemViewHolder extends RecyclerView.ViewHolder {// 뷰홀더 만듬
             TextView textView;
 
-            public ItemViewHolder(View itemView) {
+            public ItemViewHolder(final View itemView) {
                 super(itemView);
                 textView = (TextView) itemView;
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
@@ -200,6 +202,7 @@ public class SearchFragment extends Fragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {//리스트에서 적용
+                        recyclerView.addItemDecoration(new DividerItemDecoration(itemView.getContext(), 1)); // recyclerView 구,동 구분선
                         param1 = textView.getText().toString();
                         Gugun Gugun = new Gugun();
                         Gugun.execute(param1);

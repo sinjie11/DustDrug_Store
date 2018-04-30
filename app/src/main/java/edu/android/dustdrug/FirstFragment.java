@@ -107,7 +107,7 @@ public class FirstFragment extends Fragment {
                             msg.setData(data);
                             handler.sendMessage(msg);
 
-                            progress += 1;
+                            progress += 2;
 
                             synchronized (this) {
                                 wait(100); // 100 ms = 0.1초
