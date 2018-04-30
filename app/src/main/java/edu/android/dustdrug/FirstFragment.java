@@ -89,7 +89,7 @@ public class FirstFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        daoImple.getInstence(context);
+        daoImple.getInstence();
         super.onAttach(context);
     }
 
@@ -198,19 +198,19 @@ public class FirstFragment extends Fragment {
         protected Void doInBackground(Void... voids) {// 예시 이부분에 imple 을 생성하면됨
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 1초");
                 publishProgress(0);
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 2초");
                 publishProgress(1);
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 3초");
                 publishProgress(2);
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 4초");
                 publishProgress(3);
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 5초");
                 publishProgress(4);
                 endLoding();
@@ -223,51 +223,14 @@ public class FirstFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             // doInBackground() 시작하기 전에 UI 업데이트
-            daoImple  = DustDrugDAOImple.getInstence(getContext());
+            daoImple  = DustDrugDAOImple.getInstence();
             super.onPreExecute();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             // doInBackground()가 끝났을 때 UI 업데이트
-//            try {
-//                Thread.sleep(1000);
-//                Log.i(TAG, "FirstFragment - 1초");
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            onLoding0();
-//            try {
-//                Thread.sleep(1000);
-//                Log.i(TAG, "FirstFragment - 2초");
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }onLoding1();
-//            try {
-//                Thread.sleep(1000);
-//                Log.i(TAG, "FirstFragment - 3초");
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }onLoding2();
-//            try {
-//                Thread.sleep(1000);
-//                Log.i(TAG, "FirstFragment - 4초");
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }onLoding3();
-//            try {
-//                Thread.sleep(1000);
-//                Log.i(TAG, "FirstFragment - 5초");
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }onLoding4();
-//            try {
-//                Thread.sleep(1000);
-//                Log.i(TAG, "FirstFragment - 6초");
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            endLoding();
+
 
         }
 

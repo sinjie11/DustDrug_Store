@@ -3,12 +3,16 @@ package edu.android.dustdrug;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,6 +31,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -35,7 +40,7 @@ import java.util.ArrayList;
 public class MainFragment extends Fragment {
     public static final String TAG = "edu.android";
     private static final int REQ_CODE_PERMISSION = 1;
-
+    private DustDrugDAOImple dustDrugDAOImple;
     public double longtitude;
     public double latitude;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -43,7 +48,7 @@ public class MainFragment extends Fragment {
     private LocationManager locationManager;
     private Location location;
     private LineChart lineChart; // 그래프(jar 파일 사용) private LineChart lineChart; // 그래프(jar 파일 사용)
-
+    private List<Address> list;
     public TextView textView;
     public TextView txtGeo;
     public Button btnGeo;
@@ -56,10 +61,15 @@ public class MainFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+        dustDrugDAOImple = DustDrugDAOImple.getInstence();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         lineChart = view.findViewById(R.id.chartValueEveryHour);
 
@@ -133,26 +143,18 @@ public class MainFragment extends Fragment {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
-                try {
-                    if (hasPermissions(permissions)) {
-                        showLocationInfo();
-                        swipeRefreshLayout.setRefreshing(false);
-                    } else {
-                        if (ActivityCompat
-                                .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
-                            Toast.makeText(getContext(), "아래로 끌어 새로고침이 필요합니다.", Toast.LENGTH_LONG).show();
-                        } else if (ActivityCompat
-                                .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
-                            Toast.makeText(getContext(), "GPS가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
-                        }
-                        swipeRefreshLayout.setRefreshing(false);
-                        ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
-                    }
-                } catch (NullPointerException e) {
-                    e.getMessage();
-                    Toast.makeText(getContext(), "위치정보를 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
-                    swipeRefreshLayout.setRefreshing(false);
+            public void onRefresh() { //새로고침 시 권한부여 밑 좌표 받아오기
+                //TODO
+                showLocationInfo();//위도경도 불러오기
+                getAddress();//좌표 주소로 변환 시 구 동
+                if (list.size()>0) {
+                    txtGeo.setText(list.get(0).getLocality());
+                    txtGeo.append(list.get(0).getSubLocality());
+                    SexyAss sexyAss = new SexyAss();
+                    sexyAss.execute();
+
+                }else {
+                    Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -175,22 +177,7 @@ public class MainFragment extends Fragment {
         return mainFragment;
     }
 
-    public void startLocationService() {
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-    }
 
     private LocationListener locationListener = new LocationListener() {
         @Override
@@ -198,7 +185,6 @@ public class MainFragment extends Fragment {
             Log.i(TAG, "MainFragment - onLocationChanged, location : " + location);
             longtitude = location.getLongitude();
             latitude = location.getLatitude();
-            //TODO : 저장;
             Log.i(TAG,"MainFragment - onLocationChanged");
         }
 
@@ -249,15 +235,85 @@ public class MainFragment extends Fragment {
         }
         return result;
     }
+    //gps
+    public void startLocationService() { // gps 권한 채크여부
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-    public void showLocationInfo() {
-
-        startLocationService();
-        longtitude = location.getLongitude();
-        latitude = location.getLatitude();
-        GeoCoding geoCoding = GeoCoding.getInstance();
-        geoCoding.getlatitude(latitude,longtitude);
-        textView.setText("경도 : " + longtitude + "\n" + "위도 : " + latitude);
-        Log.i(TAG,"MainFragment - showLocationInfo");
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60*1000, 0, locationListener);
     }
+
+    public void showLocationInfo() {// 권한 부여밑 위도 경도 받아오는 메소드
+
+        try {
+            if (hasPermissions(permissions)) {
+
+                startLocationService();
+                longtitude = location.getLongitude();
+                latitude = location.getLatitude();
+//                GeoCoding geoCoding = GeoCoding.getInstance();
+//                geoCoding.getlatitude(latitude,longtitude,getContext());
+                textView.setText("경도 : " + longtitude + "\n" + "위도 : " + latitude);
+                Log.i(TAG,"MainFragment - showLocationInfo");
+
+                swipeRefreshLayout.setRefreshing(false);
+            } else {
+                if (ActivityCompat
+                        .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
+                    Toast.makeText(getContext(), "아래로 끌어 새로고침이 필요합니다.", Toast.LENGTH_LONG).show();
+                } else if (ActivityCompat
+                        .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
+                    Toast.makeText(getContext(), "GPS가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+                ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
+            }
+        } catch (NullPointerException e) {
+            e.getMessage();
+            Toast.makeText(getContext(), "위치정보를 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
+    }
+    //pgs 위도 경도 값 불러오기 끝
+
+    public void getAddress(){//주소값 불러오기
+        list = GeoCoding.getlatitude( latitude, longtitude,getContext());
+
+
+    }
+    class SexyAss extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {//인터넷 사용을 위한 쓰래드
+            if(list.get(0).getThoroughfare()==null) {//이름이 없을시 구로 검색
+                txtGeo.append("null"+"\n");
+
+                Log.i("s1",list.get(0).getThoroughfare().toString());
+                dustDrugDAOImple.fuckTM(
+                        list.get(0).getSubLocality());
+                dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(),dustDrugDAOImple.data.getTmY());
+                dustDrugDAOImple.kimKwangSukInthespiritofforgetting(dustDrugDAOImple.data.getStationName());
+            }else {//동으로 검색
+                txtGeo.append(list.get(0).getThoroughfare().toString());
+                Log.i("s1",list.get(0).getThoroughfare().toString()+" 동이름");
+                dustDrugDAOImple.fuckTM(list.get(0).getThoroughfare());
+                dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(),dustDrugDAOImple.data.getTmY());
+                dustDrugDAOImple.kimKwangSukInthespiritofforgetting(dustDrugDAOImple.data.getStationName());
+            }
+
+            return null;
+        }
+    }
+
 }

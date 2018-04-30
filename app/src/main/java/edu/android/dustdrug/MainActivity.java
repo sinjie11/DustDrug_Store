@@ -101,21 +101,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void geoConvert(View view) {
-        Log.i(TAG, "MainActivity - geoConvert");
-        //GeoCoding geoCoding = new GeoCoding();
-//        GeoCoding geoCoding = GeoCoding.newInstance();
-        GeoCoding geoCoding = GeoCoding.getInstance();
-        geoCoding.getGeocoder(geocoder);
-        geoCoding.test();
-        String str = geoCoding.setText();
-        Log.i(TAG, "Main str : " + str);
-        mainFragment.txtGeo.setText(str);
-        //txtGeo.setText(str);
-//        Coding.ConvertLatiLongToAddress();
-    }
-
-
     public void addressConvert(View view) {
         Log.i(TAG, "MainActivity - addressConvert");
     }
