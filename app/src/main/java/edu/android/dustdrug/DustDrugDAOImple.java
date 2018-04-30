@@ -1,8 +1,9 @@
 package edu.android.dustdrug;
 
+import android.location.Address;
 import android.util.Log;
-
 import java.util.ArrayList;
+import java.util.List;
 
 public class DustDrugDAOImple {
     private AirQulity_API airQulity_api = new AirQulity_API();
@@ -20,13 +21,24 @@ public class DustDrugDAOImple {
         return instance;
     }
 
-    public void fuckTM(String name) {//구또는 동을 TM 으로 변환
-        ArrayList<AirQulity_API.GetAPIGsonTM.List> list = airQulity_api.getFackTm(name);
-        data.setLocality(list.get(0).sidoName);
-        data.setSubLocality(list.get(0).sggName);
+    public void fuckTM(List<Address> addresses) {//구또는 동을 TM 으로 변환
+        Log.i("s1","Thoroughfare"+addresses.get(0).getThoroughfare());
+        ArrayList<AirQulity_API.GetAPIGsonTM.List> list;
+        if (addresses.get(0).getThoroughfare()==null){
+            list = airQulity_api.getFackTm(addresses.get(0).getSubLocality());
+        }else{
+            list = airQulity_api.getFackTm(addresses.get(0).getThoroughfare());
+        }
+        data.setLocality(addresses.get(0).getLocality());
+        data.setSubLocality(addresses.get(0).getSubLocality());
         data.setThoroughfare(list.get(0).umdName);
-        data.setTmX(list.get(0).tmX);
-        data.setTmY(list.get(0).tmY);
+        for (int i = 0 ; i<list.size();i++){
+        if(list.get(i).getSidoName().equals(data.getLocality())){
+            data.setTmX(list.get(i).tmX);
+            data.setTmY(list.get(i).tmY);
+            break;
+        }
+        }
     }
 
     public void getStationName(double tmx, double tmy) {//tm 좌표를 이용 하여 측정소명 획득
