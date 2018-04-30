@@ -10,6 +10,7 @@ public class BackPressClose {
     private Toast toast;
     private Fragment fragment;
     private Activity activity;
+    public static final String TAG = "edu.android";
 
     public BackPressClose(Activity activity) {
         this.activity = activity;
