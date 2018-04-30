@@ -31,7 +31,7 @@ import android.widget.TextView;
  */
 public class FirstFragment extends Fragment {
 
-    private TextView textView;
+    private TextView textView, textView2;
     private Thread loadingThread;
     private ProgressBar progressBar;
     private int progress = 0;
@@ -62,9 +62,20 @@ public class FirstFragment extends Fragment {
             Bundle data = msg.getData();
             int progress = data.getInt(TAG);
             progressBar.setProgress(progress);
-            textView.setTextColor(Color.parseColor("#F4803D"));  // textView 색상 변경
-            textView.setText(String.valueOf(progress) + "%");
-
+            textView2.setText(String.valueOf(progress) + "%");
+            if (progress < 10) {
+                textView.setText("Loading...");
+            } else if (progress < 20) {
+                textView.setText("GPS 정보를 수신중입니다.");
+            } else if (progress < 30) {
+                textView.setText("블루투스 정보를 수신 중입니다..");
+            } else if (progress < 40) {
+                textView.setText("미세먼지 정보를 수신 중입니다..");
+            } else if (progress < 50) {
+                textView.setText("주소 정보를 수신 중입니다...");
+            } else {
+                textView.setText("Loading...");
+            }
         }
     };
 
@@ -74,6 +85,7 @@ public class FirstFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         textView = view.findViewById(R.id.textView);
+        textView2 = view.findViewById(R.id.textView2);
         progressBar = view.findViewById(R.id.progressBar);
 
         Log.i(TAG, "스레드 전");
@@ -95,7 +107,7 @@ public class FirstFragment extends Fragment {
                             msg.setData(data);
                             handler.sendMessage(msg);
 
-                            progress += 5;
+                            progress += 1;
 
                             synchronized (this) {
                                 wait(100); // 100 ms = 0.1초
@@ -178,8 +190,8 @@ public class FirstFragment extends Fragment {
         @Override
         public void onLocationChanged(Location location) {
             Log.i(TAG, "onLocationChanged, location : " + location);
-            longtitude = (int)location.getLongitude();
-            latitude = (int)location.getLatitude();
+            longtitude = (int) location.getLongitude();
+            latitude = (int) location.getLatitude();
             //TODO : 저장;
         }
 
