@@ -3,6 +3,7 @@ package edu.android.dustdrug;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.EventLogTags;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +23,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 
@@ -40,8 +44,8 @@ public class MainFragment extends Fragment {
     public double latitude;
     private SwipeRefreshLayout swipeRefreshLayout;
     private LocationManager locationManager;
-    private Location location;
-    private LineChart lineChart; // 그래프(jar 파일 사용)
+    public Location location;
+    public LineChart lineChart; // 그래프(jar 파일 사용)
     public TextView textView;
     public ImageButton imageButton;
     private SearchFragment searchFragment;
@@ -63,51 +67,11 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         lineChart = view.findViewById(R.id.chartValueEveryHour);
 
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(40f, 0));
-        entries.add(new Entry(80f, 1));
-        entries.add(new Entry(60f, 2));
-        entries.add(new Entry(20f, 3));
-        entries.add(new Entry(180f, 4));
-        entries.add(new Entry(90f, 5));
-        entries.add(new Entry(160f, 6));
-        entries.add(new Entry(50f, 7));
-        entries.add(new Entry(30f, 8));
-        entries.add(new Entry(70f, 10));
-        entries.add(new Entry(90f, 11));
-        entries.add(new Entry(40f, 12));
-        entries.add(new Entry(80f, 13));
-        entries.add(new Entry(60f, 14));
-        entries.add(new Entry(20f, 15));
-        entries.add(new Entry(180f, 16));
-        entries.add(new Entry(90f, 17));
-        entries.add(new Entry(160f, 18));
-        entries.add(new Entry(50f, 19));
-        entries.add(new Entry(30f, 20));
-        entries.add(new Entry(70f, 21));
-        entries.add(new Entry(90f, 22));
-        entries.add(new Entry(70f, 23));
-
-
-        LineDataSet dataset = new LineDataSet(entries, "");
-
-        ArrayList<String> labels = new ArrayList<String>();
-        for (int i = 0; i < 10; i++)
-            labels.add("0" + i + "시");
-        for (int i = 10; i < 24; i++)
-            labels.add(i + "시");
-
-
-        LineData data = new LineData(labels, dataset);
-        dataset.setDrawCubic(true); //선 둥글게 만들기
-        dataset.setDrawFilled(true); //그래프 밑부분 색칠
-
-        lineChart.setData(data);
-        lineChart.animateY(5000);
-        lineChart.setScaleEnabled(false);
+        showLineChart(); // Line Graph를 보여주는 메소드를 불러옵니다.
 
         view.setFocusableInTouchMode(true);
         view.requestFocus();
+        lineChart.setDescription("");
 
         textView = view.findViewById(R.id.textLocation);
         imageButton = view.findViewById(R.id.imageButton);
@@ -154,20 +118,19 @@ public class MainFragment extends Fragment {
             }
         });
         startLocationService();
+        showLineChart(); // 새로고침을 할 때에도 해당 메소드를 호출해 Line Graph를 다시 보여줍니다.
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
-                searchFragment = SearchFragment.newInstance();
+                searchFragment = new SearchFragment();
                 transaction.replace(R.id.fragment_container, searchFragment);
                 transaction.commit();
                 Log.i(TAG, "search fragment call");
             }
         });
-
-
 
         return view;
     }
@@ -259,5 +222,91 @@ public class MainFragment extends Fragment {
         longtitude = location.getLongitude();
         latitude = location.getLatitude();
         textView.setText("경도 : " + longtitude + "\n" + "위도 : " + latitude);
+    }
+
+    public void showLineChart() {
+        int max = 0;
+
+        String[] xAxis = new String[]
+                {"0시", "1시", "2시", "3시", "4시",
+                        "5시", "6시", "7시", "8시", "9시",
+                        "10시", "11시", "12시", "13시", "14시",
+                        "15시", "16시", "17시", "18시", "19시",
+                        "20시", "21시", "22시", "23시"};
+
+        ArrayList<Entry> dataset1 = new ArrayList<Entry>();
+//        dataset1.add(new Entry(40f, 0));
+//        dataset1.add(new Entry(80f, 1));
+//        dataset1.add(new Entry(60f, 2));
+//        dataset1.add(new Entry(20f, 3));
+//        dataset1.add(new Entry(180f, 4));
+//        dataset1.add(new Entry(90f, 5));
+//        dataset1.add(new Entry(160f, 6));
+//        dataset1.add(new Entry(50f, 7));
+//        dataset1.add(new Entry(30f, 8));
+//        dataset1.add(new Entry(70f, 10));
+//        dataset1.add(new Entry(90f, 11));
+//        dataset1.add(new Entry(40f, 12));
+//        dataset1.add(new Entry(80f, 13));
+//        dataset1.add(new Entry(60f, 14));
+//        dataset1.add(new Entry(20f, 15));
+//        dataset1.add(new Entry(180f, 16));
+//        dataset1.add(new Entry(90f, 17));
+//        dataset1.add(new Entry(160f, 18));
+//        dataset1.add(new Entry(50f, 19));
+//        dataset1.add(new Entry(30f, 20));
+//        dataset1.add(new Entry(70f, 21));
+//        dataset1.add(new Entry(90f, 22));
+//        dataset1.add(new Entry(70f, 23));
+
+        for(int i = 0; i < xAxis.length; i++) {
+            dataset1.add(new Entry((i + 1) * 10f, i));
+                // TODO : 여기까지 하다 말았습니다.
+        }
+
+        ArrayList<Entry> dataset2 = new ArrayList<Entry>();
+        dataset2.add(new Entry(165f, 0));
+        dataset2.add(new Entry(55f, 1));
+        dataset2.add(new Entry(35f, 2));
+        dataset2.add(new Entry(75f, 3));
+        dataset2.add(new Entry(95f, 4));
+        dataset2.add(new Entry(45f, 5));
+        dataset2.add(new Entry(85f, 6));
+        dataset2.add(new Entry(65f, 7));
+        dataset2.add(new Entry(25f, 8));
+        dataset2.add(new Entry(75f, 9));
+        dataset2.add(new Entry(95f, 10));
+        dataset2.add(new Entry(45f, 11));
+        dataset2.add(new Entry(85f, 12));
+        dataset2.add(new Entry(65f, 13));
+        dataset2.add(new Entry(25f, 14));
+        dataset2.add(new Entry(185f, 15));
+        dataset2.add(new Entry(95f, 16));
+        dataset2.add(new Entry(165f, 17));
+        dataset2.add(new Entry(55f, 18));
+        dataset2.add(new Entry(35f, 19));
+        dataset2.add(new Entry(75f, 20));
+        dataset2.add(new Entry(95f, 21));
+        dataset2.add(new Entry(75f, 22));
+        dataset2.add(new Entry(75f, 23));
+
+        ArrayList<ILineDataSet> lines = new ArrayList<ILineDataSet>();
+
+        LineDataSet lineDataSet1 = new LineDataSet(dataset1, "미세먼지");
+        lineDataSet1.setColor(Color.parseColor("#cb1ad6"));
+        lineDataSet1.setCircleColor(Color.parseColor("#cb1ad6"));
+        lineDataSet1.setDrawCubic(true);
+        lines.add(lineDataSet1);
+        LineDataSet lineDataSet2 = new LineDataSet(dataset2, "초미세먼지");
+        lineDataSet2.setColor(Color.parseColor("#0deaf0"));
+        lineDataSet2.setCircleColor(Color.parseColor("#0deaf0"));
+        lineDataSet2.setDrawCubic(true);
+        lines.add(lineDataSet2);
+
+        lineChart.setData(new LineData(xAxis, lines));
+        lineChart.animateY(1500);
+        lineChart.setScaleEnabled(false);
+
+
     }
 }

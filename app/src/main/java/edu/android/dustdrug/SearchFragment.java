@@ -6,9 +6,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +30,8 @@ import static edu.android.dustdrug.MainActivity.TAG;
 public class SearchFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    public String sido;
+
+
     public MainFragment mainFragment;
     RecyclerView recyclerView;
     ArrayList<CityList> cityLists;
@@ -35,13 +39,20 @@ public class SearchFragment extends Fragment {
     ArrayList<CityList3> cityList3s;
     String param1;
     String param2;
+    String param3;
 
     public SearchFragment() {
         // Required empty public constructor
     }
 
-    public static SearchFragment newInstance() {
+    public SearchFragment newInstance(String sido, String gugun, String eupmyeondong) {
         SearchFragment searchFragment = new SearchFragment();
+        Bundle bundle = new Bundle(3);
+        bundle.putString("sido", sido);
+        bundle.putString("gugun", gugun);
+        bundle.putString("eupmyeondong", eupmyeondong);
+        MainFragment mainFragment = new MainFragment();
+        mainFragment.setArguments(bundle);
         return searchFragment;
     }
 
@@ -184,6 +195,8 @@ public class SearchFragment extends Fragment {
             public ItemViewHolder(View itemView) {
                 super(itemView);
                 textView = (TextView) itemView;
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {//리스트에서 적용
@@ -325,19 +338,20 @@ public class SearchFragment extends Fragment {
 
         class ItemViewHolder2 extends RecyclerView.ViewHolder {
             TextView textView;
-
             public ItemViewHolder2(View itemView) {
                 super(itemView);
                 textView = (TextView) itemView;
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         //TODO  눌렀을때 액션 추가
-                        FuckHongJP fuckHongJP = new FuckHongJP();
+                        EupMyeonDong eupMyeonDong = new EupMyeonDong();
                         param2 = textView.getText().toString();
                         String[] fuckYours = {param1, param2};
-                        fuckHongJP.execute(fuckYours);
+                        eupMyeonDong.execute(fuckYours);
                     }
                 });
 
@@ -417,7 +431,7 @@ public class SearchFragment extends Fragment {
         }
     }//읍/면/동 xml 받아오기끝
 
-    class FuckHongJP extends AsyncTask<String[], Void, Void> {//받아온 list 쓰기
+    class EupMyeonDong extends AsyncTask<String[], Void, Void> {//받아온 list 쓰기
 
         @Override
         protected Void doInBackground(String[]... strings) {
@@ -463,11 +477,16 @@ public class SearchFragment extends Fragment {
             public ItemViewHolder3(View itemView) {
                 super(itemView);
                 textView = (TextView) itemView;
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         //TODO  눌렀을때 액션 추가
+                        param3 = textView.getText().toString();
+
                     }
                 });
 

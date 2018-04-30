@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (System.currentTimeMillis() > lastTimeBackPressed + 2000) {
                 lastTimeBackPressed = System.currentTimeMillis();
- //               Toast.makeText(this, "뒤로 버튼 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "뒤로 버튼 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
             }
             else { // back 키 2번 누르면 앱 종료
                 finish();
