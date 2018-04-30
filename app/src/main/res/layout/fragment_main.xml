@@ -120,10 +120,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textLocation"
             app:srcCompat="@drawable/btn_search" />
-
-
-        <!--android:text="BlueTooth Pairing"-->
-        <!--android:onClick="blueToothPairing"-->
+        
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>
