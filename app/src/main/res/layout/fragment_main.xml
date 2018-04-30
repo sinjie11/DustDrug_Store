@@ -1,9 +1,9 @@
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/mainFragment"
     android:background="@android:color/white"
     tools:context=".MainActivity">
 
@@ -12,23 +12,22 @@
         android:layout_height="match_parent">
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/imageButton2"
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:background="@android:color/transparent"
-            android:padding="0sp"
+            android:onClick="blueToothPairing"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.975"
+            app:layout_constraintBottom_toTopOf="@+id/textLocation"
+            app:layout_constraintEnd_toEndOf="@+id/textLocation"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.043"
-            app:srcCompat="@drawable/pointer" />
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/btn_bluetooth" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chartValueEveryHour"
@@ -50,8 +49,8 @@
 
         <TextView
             android:id="@+id/textShowValue"
-            android:layout_width="313dp"
-            android:layout_height="155dp"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
@@ -62,10 +61,9 @@
             android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.509"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.237" />
+            app:layout_constraintVertical_bias="0.281" />
 
         <TextView
             android:id="@+id/textTime"
@@ -84,7 +82,7 @@
             app:layout_constraintHorizontal_bias="0.961"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.481" />
+            app:layout_constraintVertical_bias="0.528" />
 
         <TextView
             android:id="@+id/textLocation"
@@ -100,39 +98,32 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.031" />
-
-        <Button
-            android:id="@+id/btnPairing"
-            style="@android:style/Widget.Button.Small"
-            android:layout_width="129dp"
-            android:layout_height="30dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:onClick="blueToothPairing"
-            android:text="BlueTooth Pairing"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/fragment_container"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintVertical_bias="0.113" />
 
-        </FrameLayout>
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/transparent"
+            android:padding="0sp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/textLocation"
+            app:layout_constraintEnd_toEndOf="@+id/textLocation"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textLocation"
+            app:srcCompat="@drawable/btn_search" />
+
+
+        <!--android:text="BlueTooth Pairing"-->
+        <!--android:onClick="blueToothPairing"-->
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>
