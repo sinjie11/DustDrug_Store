@@ -28,4 +28,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation files('libs/mpandroidchartlibrary-2-2-4.jar')
     implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.google.code.gson:gson:2.8.2'
 }
