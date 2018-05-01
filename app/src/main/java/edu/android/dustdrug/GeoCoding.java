@@ -66,9 +66,3 @@ public class GeoCoding {
         return str;
     }
 }
-
-
-
-
-
-
