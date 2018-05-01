@@ -293,7 +293,6 @@ public class MainFragment extends Fragment {
 
         for (int i = 0; i < xAxis.length; i++) {
             dataset1.add(new Entry((i + 1) * 10f, i));
-            // TODO : 여기까지 하다 말았습니다.
         }
 
         ArrayList<Entry> dataset2 = new ArrayList<Entry>();
