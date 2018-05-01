@@ -8,7 +8,7 @@ import java.util.List;
 public class DustDrugDAOImple {
     private AirQulity_API airQulity_api = new AirQulity_API();
     private static DustDrugDAOImple instance = null;
-    public Data data = new Data();
+    public Data data ;
 
     private DustDrugDAOImple() {
     }
@@ -21,6 +21,7 @@ public class DustDrugDAOImple {
     }
 
     public void fuckTM(List<Address> addresses) {//구또는 동을 TM 으로 변환
+        data = new Data();
         Log.i("s1","Thoroughfare"+addresses.get(0).getThoroughfare());
         ArrayList<AirQulity_API.GetAPIGsonTM.List> list;
         if (addresses.get(0).getThoroughfare()==null){

@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private FirstFragment firstFragment;
     private MainFragment mainFragment;
     private long lastTimeBackPressed = 0;
+    private SearchFragment searchFragment;
     Geocoder geocoder = null;
 
     @Override
@@ -75,22 +76,42 @@ public class MainActivity extends AppCompatActivity {
     /* ↓ Back 버튼 누를 시 앱 종료 기능 */
     @Override
     public void onBackPressed() {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, mainFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
 
-        if (System.currentTimeMillis() > lastTimeBackPressed + 2000) {
-            lastTimeBackPressed = System.currentTimeMillis();
-            Toast.makeText(this, "뒤로 버튼 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-//            return;
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment instanceof SearchFragment){
+            int result = ((SearchFragment) fragment).taeyeonGaneung();
+            if(result==1){
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, mainFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                if (System.currentTimeMillis() > lastTimeBackPressed + 2000) {
+                    lastTimeBackPressed = System.currentTimeMillis();
+                    Toast.makeText(this, "뒤로 버튼 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
 
-        } else { // back 키 2번 누르면 앱 종료
-            finish();
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(0);
+                } else { // back 키 2번 누르면 앱 종료
+                    finish();
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(0);
 
+                }
+
+                }else if (result ==0){ }
+
+        }else if (fragment instanceof MainFragment){
+            if (System.currentTimeMillis() > lastTimeBackPressed + 2000) {
+                lastTimeBackPressed = System.currentTimeMillis();
+                Toast.makeText(this, "뒤로 버튼 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+
+            } else { // back 키 2번 누르면 앱 종료
+                finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(0);
+
+            }
         }
+
+
 
     }
 
@@ -104,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void backMainFtagment(List<Address> addressList){
+    public void backMainFtagment(List<Address> addressList) {//서치 에서 메인프레그 먼트로 주소를 보내줄때 사용
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, mainFragment);
         transaction.addToBackStack(null);
@@ -118,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "MainActivity - addressConvert");
     }
 
-    public Object getMainfragment() {
+    public Object getMainfragment() {//메인 프레그 먼트 생성
         Log.i(TAG, "MainActivity - getMainfragment");
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentById(R.id.fragment_container);
@@ -134,30 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: 블루투스 페어링
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //package edu.android.dustdrug;
