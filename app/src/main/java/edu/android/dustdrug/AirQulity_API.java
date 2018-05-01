@@ -21,10 +21,11 @@ public class AirQulity_API {
             original = original.replace(String.valueOf(i), "");
         }
 
-        String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getTMStdrCrdnt?umdName="+original+"&pageNo=1&numOfRows=10&ServiceKey="+AuthenticationKey+"&_returnType=json";
+        String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getTMStdrCrdnt?umdName="+original+"&pageNo=1&numOfRows=100&ServiceKey="+AuthenticationKey+"&_returnType=json";
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String json = null;
+        Log.i("s1","fuckTM " + uri);
         try {
             URL url = new URL(uri);
             connection = (HttpURLConnection) url.openConnection();
@@ -87,7 +88,7 @@ public class AirQulity_API {
     //tm좌표 받아오기 끝
 
     public ArrayList<GetAPIGsonMeasuringStation.List> getMeasuringStation (double tmX , double tmY){//tm 으로 가까운 측정소명 받아오기
-        String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?tmX="+tmX+"&tmY="+tmY+"&pageNo=1&numOfRows=10&ServiceKey="+AuthenticationKey+"&_returnType=json";
+        String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?tmX="+tmX+"&tmY="+tmY+"&pageNo=1&numOfRows=100&ServiceKey="+AuthenticationKey+"&_returnType=json";
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String json = null;
@@ -146,6 +147,7 @@ public class AirQulity_API {
         } catch (Exception e) {
             e.printStackTrace();
         }
+//        Log.i("s1",json);
         json=json.replace("-","-1");
         GetAPIGsonMainData getAPIGsonMainData = gson.fromJson(json,GetAPIGsonMainData.class);
         return getAPIGsonMainData.list;
@@ -153,26 +155,46 @@ public class AirQulity_API {
     class GetAPIGsonMainData{
         ArrayList<List> list;
         class List{
-            int coGrade;//일산화 등급
-            double coValue;//일산화 량
+            String coGrade;//일산화 등급
+            String coValue;//일산화 량
             String dataTime;//시간
-            int khaiGrade;// 통합대기환경 지수
-            int khaiValue;//  통합대기환경 수치
+            String khaiGrade;// 통합대기환경 지수
+            String khaiValue;//  통합대기환경 수치
             String mangName;// 측정망
-            int no2Grade;// 이산화 질소 등급
-            double no2Value;// 이산화 질소량
-            int o3Grade;//오존 등급
-            double o3Value;//오존 량
-            int pm10Gradel; //미먼 등급
-            int pm10Grade1h; //밈먼등급 1시간 등급
-            int pm10Value; //미먼 측정치
-            int pm10Value24; // 미먼 24 시간 등급
-            int pm25Grade; // 초미먼 등급
-            int pm25Grade1h;//초미먼 1시간 등급
-            int pm25Value;//초미먼 값
-            int pm25Value24;//초미먼 24시간 값
-            int so2Grade;//이산화황 등급
-            double so2Value; // 이산화황 량
+            String no2Grade;// 이산화 질소 등급
+            String no2Value;// 이산화 질소량
+            String o3Grade;//오존 등급
+            String o3Value;//오존 량
+            String pm10Gradel; //미먼 등급
+            String pm10Grade1h; //밈먼등급 1시간 등급
+            String pm10Value; //미먼 측정치
+            String pm10Value24; // 미먼 24 시간 등급
+            String pm25Grade; // 초미먼 등급
+            String pm25Grade1h;//초미먼 1시간 등급
+            String pm25Value;//초미먼 값
+            String pm25Value24;//초미먼 24시간 값
+            String so2Grade;//이산화황 등급
+            String so2Value; // 이산화황 량
+//            int coGrade;//일산화 등급
+//            double coValue;//일산화 량
+//            String dataTime;//시간
+//            int khaiGrade;// 통합대기환경 지수
+//            int khaiValue;//  통합대기환경 수치
+//            String mangName;// 측정망
+//            int no2Grade;// 이산화 질소 등급
+//            double no2Value;// 이산화 질소량
+//            int o3Grade;//오존 등급
+//            double o3Value;//오존 량
+//            int pm10Gradel; //미먼 등급
+//            int pm10Grade1h; //밈먼등급 1시간 등급
+//            int pm10Value; //미먼 측정치
+//            int pm10Value24; // 미먼 24 시간 등급
+//            int pm25Grade; // 초미먼 등급
+//            int pm25Grade1h;//초미먼 1시간 등급
+//            int pm25Value;//초미먼 값
+//            int pm25Value24;//초미먼 24시간 값
+//            int so2Grade;//이산화황 등급
+//            double so2Value; // 이산화황 량
         }
     }
 }

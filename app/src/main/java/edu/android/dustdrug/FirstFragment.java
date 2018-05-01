@@ -240,23 +240,23 @@ public class FirstFragment extends Fragment {
                 Log.i(TAG, "FirstFragment - 0.5초");
                 publishProgress(0);
 
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 1초");
                 publishProgress(1);
 
-                Thread.sleep(1500);
+                Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 1.5초");
                 publishProgress(2);
 
-                Thread.sleep(2000);
+                Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 2초");
                 publishProgress(3);
 
-                Thread.sleep(2500);
+                Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 2.5초");
                 publishProgress(4);
 
-                Thread.sleep(3000);
+                Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 3초");
                 publishProgress(5);
 

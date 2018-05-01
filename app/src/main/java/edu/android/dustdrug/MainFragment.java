@@ -77,7 +77,6 @@ public class MainFragment extends Fragment {
         dustDrugDAOImple = DustDrugDAOImple.getInstence();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         lineChart = view.findViewById(R.id.chartValueEveryHour);
-
         showLineChart(); // Line Graph를 보여주는 메소드를 불러옵니다.
 
         Log.i(TAG,"MainFragment - lineChart 생성");
@@ -354,6 +353,7 @@ public class MainFragment extends Fragment {
 
         @Override
         protected Object doInBackground(Object[] objects) { // 인터넷 사용을 위한 쓰래드
+//            list.get(0).setThoroughfare("송정동");//테스트용
             if(list.get(0).getThoroughfare()==null)  { // 이름이 없을 시 "구" 로 검색
                 dustDrugDAOImple.fuckTM(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(),dustDrugDAOImple.data.getTmY());
@@ -366,6 +366,16 @@ public class MainFragment extends Fragment {
 
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+        }
+    }
+    public void getSearchFragmentAddress(List<Address> list){
+        this.list=list;
+        SexyAss sexyAss = new SexyAss();
+        sexyAss.execute();
     }
 
 }

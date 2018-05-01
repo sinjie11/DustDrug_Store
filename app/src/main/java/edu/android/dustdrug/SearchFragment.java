@@ -1,6 +1,7 @@
 package edu.android.dustdrug;
 
 import android.content.Context;
+import android.location.Address;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,15 +26,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import static edu.android.dustdrug.MainActivity.TAG;
 
 public class SearchFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-
-
+    private DustDrugDAOImple dustDrugDAOImple;
+    private List<Address> list;
     public MainFragment mainFragment;
+    private Address address;
+    private MainActivity mainActivity;
     RecyclerView recyclerView;
     ArrayList<CityList> cityLists;
     ArrayList<CityList2> cityList2s;
@@ -61,6 +65,9 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mainActivity= (MainActivity) getActivity();
+        dustDrugDAOImple= dustDrugDAOImple.getInstence();
+        list = new ArrayList<>();
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -75,10 +82,10 @@ public class SearchFragment extends Fragment {
     public ArrayList<CityList> getXmlData1() {// 도시 이름 데이터 가져오기
         ArrayList<CityList> lists = new ArrayList<>();
         String api1 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getBorodCityList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D";
-        Log.i("s1", "트라이위");
+//        Log.i("s1", "트라이위");
         try {
             URL url = new URL(api1); // 문자열로 된 요청 totalUrl 을 URL 객체로 생성.
-            Log.i("s1", api1);
+//            Log.i("s1", api1);
             InputStream is = url.openStream(); // url 위치로 InputStream 연결
 
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -101,19 +108,19 @@ public class SearchFragment extends Fragment {
                         tag = xpp.getName();//태그 이름 얻어오기
 
                         if (tag.equals("brtcNm")) {
-                            Log.i("s1", "nm");
+//                            Log.i("s1", "nm");
                             xpp.next();
-                            Log.i("s1", xpp.getText() + "1");
+//                            Log.i("s1", xpp.getText() + "1");
                             cityList.setBrtcNm(xpp.getText());
-                            Log.i("s1", cityList.getBrtcNm() + "2");
+//                            Log.i("s1", cityList.getBrtcNm() + "2");
 
 
                         } else if (tag.equals("brtcCd")) {
-                            Log.i("s1", "cd");
+//                            Log.i("s1", "cd");
                             xpp.next();
-                            Log.i("s1", xpp.getText() + "1");
+//                            Log.i("s1", xpp.getText() + "1");
                             cityList.setBrtcCd(xpp.getText());
-                            Log.i("s1", cityList.getBrtcCd() + "2");
+//                            Log.i("s1", cityList.getBrtcCd() + "2");
                         }
 //                        Log.i("s1","Start Tag");
                         break;
@@ -122,16 +129,16 @@ public class SearchFragment extends Fragment {
                         break;
 
                     case XmlPullParser.END_TAG:
-                        Log.i("s1", "endTag");
+//                        Log.i("s1", "endTag");
 //                        Log.i("s1",cityList.getBrtcCd());
                         tag = xpp.getName(); // 태그 이름 얻어오기
 //                        Log.i("s1",tag);
                         if (tag.equals("borodCity")) {
 
-                            Log.i("s1", "저장");
+//                            Log.i("s1", "저장");
                             lists.add(cityList);
-                            Log.i("s1", cityList.getBrtcCd());
-                            Log.i("s1", cityList.getBrtcNm());
+//                            Log.i("s1", cityList.getBrtcCd());
+//                            Log.i("s1", cityList.getBrtcNm());
                             cityList = new CityList();
                         }
                         break;
@@ -206,7 +213,8 @@ public class SearchFragment extends Fragment {
                         param1 = textView.getText().toString();
                         Gugun Gugun = new Gugun();
                         Gugun.execute(param1);
-
+                        address=new Address(null);
+                        address.setLocality(param1);
                     }
                 });
 
@@ -349,12 +357,11 @@ public class SearchFragment extends Fragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        //TODO  눌렀을때 액션 추가
                         EupMyeonDong eupMyeonDong = new EupMyeonDong();
                         param2 = textView.getText().toString();
                         String[] fuckYours = {param1, param2};
                         eupMyeonDong.execute(fuckYours);
+                        address.setSubLocality(param2);
                     }
                 });
 
@@ -364,7 +371,7 @@ public class SearchFragment extends Fragment {
 
     public ArrayList<CityList3> getXmlData3(String cityname, String sigunguname) {//동 xml 받아오기
         String api3 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getEupMyunDongList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityname + "&signguCd=" + sigunguname;
-        Log.i("s1", api3);
+//        Log.i("s1", api3);
         ArrayList<CityList3> cityList3s = new ArrayList<>();
         try {
             URL url = new URL(api3); // 문자열로 된 요청 totalUrl 을 URL 객체로 생성.
@@ -486,9 +493,15 @@ public class SearchFragment extends Fragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        //TODO  눌렀을때 액션 추가
                         param3 = textView.getText().toString();
+                        address.setThoroughfare(param3);
+                        Log.i("s1",address.getLocality());
+                        list.add(address);
+                        Log.i("s1",list.get(0).getLocality()+"시");
+                        Log.i("s1",list.get(0).getSubLocality()+"구");
+                        Log.i("s1",list.get(0).getThoroughfare()+"동");
+                        //TODO 프래그먼트 불러오기?
+                        mainActivity.backMainFtagment(list);
 
                     }
                 });

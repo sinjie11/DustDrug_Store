@@ -75,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
     /* ↓ Back 버튼 누를 시 앱 종료 기능 */
     @Override
     public void onBackPressed() {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, mainFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
         if (System.currentTimeMillis() > lastTimeBackPressed + 2000) {
             lastTimeBackPressed = System.currentTimeMillis();
@@ -100,6 +104,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void backMainFtagment(List<Address> addressList){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, mainFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+        mainFragment.getSearchFragmentAddress(addressList);
+
+    }
+
 
     public void addressConvert(View view) {
         Log.i(TAG, "MainActivity - addressConvert");
@@ -121,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: 블루투스 페어링
 }
+
+
 
 
 
