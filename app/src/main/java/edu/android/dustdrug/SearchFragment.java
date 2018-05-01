@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -44,6 +45,8 @@ public class SearchFragment extends Fragment {
     String param2;
     String param3;
 
+    private EditText editText;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -56,6 +59,8 @@ public class SearchFragment extends Fragment {
         dustDrugDAOImple= dustDrugDAOImple.getInstence();
         list = new ArrayList<>();
         View view = inflater.inflate(R.layout.fragment_search, container, false);
+        editText = view.findViewById(R.id.editText);
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         Context context = view.getContext();
