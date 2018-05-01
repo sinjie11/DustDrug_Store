@@ -50,17 +50,6 @@ public class SearchFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public SearchFragment newInstance(String sido, String gugun, String eupmyeondong) {
-        SearchFragment searchFragment = new SearchFragment();
-        Bundle bundle = new Bundle(3);
-        bundle.putString("sido", sido);
-        bundle.putString("gugun", gugun);
-        bundle.putString("eupmyeondong", eupmyeondong);
-        MainFragment mainFragment = new MainFragment();
-        mainFragment.setArguments(bundle);
-        return searchFragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,7 +100,8 @@ public class SearchFragment extends Fragment {
 //                            Log.i("s1", "nm");
                             xpp.next();
 //                            Log.i("s1", xpp.getText() + "1");
-                            cityList.setBrtcNm(xpp.getText());
+                            String cityName=changeCityName(xpp.getText());
+                            cityList.setBrtcNm(cityName);
 //                            Log.i("s1", cityList.getBrtcNm() + "2");
 
 
@@ -211,10 +201,17 @@ public class SearchFragment extends Fragment {
                     public void onClick(View v) {//리스트에서 적용
                         recyclerView.addItemDecoration(new DividerItemDecoration(itemView.getContext(), 1)); // recyclerView 구,동 구분선
                         param1 = textView.getText().toString();
+                        address=new Address(null);
+                        if(param1.equals("세종특별자치시")){
+                            EupMyeonDong eupMyeonDong = new EupMyeonDong();
+                            String[] fuckYours = {param1, ""};
+                            eupMyeonDong.execute(fuckYours);
+                            address.setLocality(param1);
+                            address.setSubLocality("세종시");
+                        }else {
                         Gugun Gugun = new Gugun();
                         Gugun.execute(param1);
-                        address=new Address(null);
-                        address.setLocality(param1);
+                        address.setLocality(param1);}
                     }
                 });
 
@@ -238,7 +235,8 @@ public class SearchFragment extends Fragment {
     }//어씽크 끝
 
     public ArrayList<CityList2> getXmlData2(String cityname) {//시도 xml 받아오기
-        String api2 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getSiGunGuList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityname;
+        String cityName=changeCityName(cityname);
+        String api2 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getSiGunGuList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityName;
         ArrayList<CityList2> cityList2s = new ArrayList<>();
         try {
             URL url = new URL(api2); // 문자열로 된 요청 totalUrl 을 URL 객체로 생성.
@@ -370,7 +368,8 @@ public class SearchFragment extends Fragment {
     }
 
     public ArrayList<CityList3> getXmlData3(String cityname, String sigunguname) {//동 xml 받아오기
-        String api3 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getEupMyunDongList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityname + "&signguCd=" + sigunguname;
+        String cityName=changeCityName(cityname);
+        String api3 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getEupMyunDongList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityName + "&signguCd=" + sigunguname;
 //        Log.i("s1", api3);
         ArrayList<CityList3> cityList3s = new ArrayList<>();
         try {
@@ -500,7 +499,6 @@ public class SearchFragment extends Fragment {
                         Log.i("s1",list.get(0).getLocality()+"시");
                         Log.i("s1",list.get(0).getSubLocality()+"구");
                         Log.i("s1",list.get(0).getThoroughfare()+"동");
-                        //TODO 프래그먼트 불러오기?
                         mainActivity.backMainFtagment(list);
 
                     }
@@ -532,4 +530,62 @@ public class SearchFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    String changeCityName(String name){
+        if (name.equals("서울")){name="서울특별시";}
+        else if (name.equals("서울특별시")){name="서울";}
+        else if (name.equals("세종")){name="세종특별자치시";}
+        else if (name.equals("세종특별자치시")){name="세종";}
+        else if (name.equals("전남")){name="전라남도";}
+        else if (name.equals("전라남도")){name="잔남";}
+        else if (name.equals("전북")){name="전라북도";}
+        else if (name.equals("전라북도")){name="전북";}
+        else if (name.equals("충남")){name="충청남도";}
+        else if (name.equals("충청남도")){name="충남";}
+        else if (name.equals("충북")){name="충청북도";}
+        else if (name.equals("충청북도")){name="충북";}
+        else if (name.equals("강원")){name="강원도";}
+        else if (name.equals("강원도")){name="강원";}
+        else if (name.equals("인천")){name="인천광역시";}
+        else if (name.equals("인천광역시")){name="인천";}
+        else if (name.equals("경기")){name="경기도";}
+        else if (name.equals("경기도")){name="경기";}
+        else if (name.equals("경남")){name="경상남도";}
+        else if (name.equals("경상남도")){name="경남";}
+        else if (name.equals("경북")){name="경상북도";}
+        else if (name.equals("경상북도")){name="경북";}
+        else if (name.equals("대전")){name="대전광역시";}
+        else if (name.equals("대전광역시")){name="대전";}
+        else if (name.equals("대구")){name="대구광역시";}
+        else if (name.equals("대구광역시")){name="대구";}
+        else if (name.equals("울산")){name="울산광역시";}
+        else if (name.equals("울산광역시")){name="울산";}
+        else if (name.equals("광주")){name="광주광역시";}
+        else if (name.equals("광주광역시")){name="광주";}
+        else if (name.equals("부산")){name="부산광역시";}
+        else if (name.equals("부산광역시")){name="부산";}
+        else if (name.equals("제주")){name="제주특별자치도";}
+        else if (name.equals("제주특별자치도")){name="제주";}
+        return name;
+    }
+
+    public int taeyeonGaneung(){
+
+        if(param1==null){
+            return 1;
+        }else if(param1!=null&&param2==null){
+            Si si = new Si();
+            si.execute();
+            param1=null;
+            return 0;
+        }else if(param2!=null){
+            Gugun Gugun = new Gugun();
+            Gugun.execute(param1);
+            param2=null;
+            return 0;
+        }else {
+            return 0;
+        }
+    }
+
 }
