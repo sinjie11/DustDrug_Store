@@ -101,8 +101,8 @@ public class MainFragment extends Fragment {
                 getAddress(); // 좌표 주소로 변환 시 구 동
                 if (list.size() > 0) {
                     textLocation.setText(list.get(0).getLocality()); // 시,도 정보
-                    textLocation.append(" ");
-                    textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
+                    textLocation.setText(" ");
+                    textLocation.setText(list.get(0).getSubLocality()); // 구,군 정보
                     SexyAss sexyAss = new SexyAss();
                     sexyAss.execute();
 
@@ -332,7 +332,7 @@ public class MainFragment extends Fragment {
         lineChart.setData(new LineData(xAxis, lines));
         lineChart.animateY(1500);
         lineChart.setScaleEnabled(false);
-
+        lineChart.getData().setHighlightEnabled(false);
 
     }
 
@@ -365,13 +365,13 @@ public class MainFragment extends Fragment {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
 
-            textTime.append(dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
+            textTime.setText(dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
             Log.i(TAG, "DATE = " + dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
 
-            textShowValue.append(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ug/m3");
+            textShowValue.setText(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ug/m3");
             Log.i(TAG, "DAO = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value());
 
-            textValueGrade.append(dustDrugDAOImple.data.getDetailData().get(0).getPm10Gradel() + "");
+            textValueGrade.setText(dustDrugDAOImple.data.getDetailData().get(0).getPm10Gradel() + "");
             Log.i(TAG, "Grade = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Gradel());
         }
     }
@@ -380,7 +380,6 @@ public class MainFragment extends Fragment {
         SexyAss sexyAss = new SexyAss();
         sexyAss.execute();
     }
-
 }
 
 
