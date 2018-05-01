@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -34,11 +36,12 @@ import android.widget.TextView;
 public class FirstFragment extends Fragment {
 
     private TextView textView, textView2;
+    private static final int REQ_CODE_PERMISSION = 1;
     private Thread loadingThread;
     private DustDrugDAOImple daoImple;
     private OnFragmentInteractionListener mListener;
-    public int longtitude;
-    public int latitude;
+    public double longtitude;
+    public double latitude;
     private MainActivity mainActivity;
     private LocationManager locationManager;
     private Location location;
@@ -97,6 +100,7 @@ public class FirstFragment extends Fragment {
         fackMB.execute();
         Log.i(TAG, "FirstFragment - fackMB execute");
 
+
 //        loadingThread.start();
     }
 
@@ -143,6 +147,7 @@ public class FirstFragment extends Fragment {
 
     public void onLoding1() {
         textView.setText("GPS 정보를 수신중입니다.");
+        showLocationInfo();
         Log.i(TAG, "FirstFragment - onLoding1");
     }
 
@@ -165,7 +170,6 @@ public class FirstFragment extends Fragment {
         textView.setText("Loading...");
         Log.i(TAG, "FirstFragment - onLoding5");
     }
-
 
     public void endLoding() {
         mainActivity = (MainActivity) getActivity();
@@ -215,6 +219,65 @@ public class FirstFragment extends Fragment {
 
         }
     };
+
+    String[] permissions = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+    };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.i(TAG, "MainFragment - onRequestPermissionsResult start");
+        if (requestCode == REQ_CODE_PERMISSION) {
+            if (grantResults.length == 3 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                return;
+            } else {
+                Toast.makeText(getContext(), "Make the authorization get allowed", Toast.LENGTH_SHORT).show();
+            }
+        }
+        Log.i(TAG, "MainFragment - onRequestPermissionsResult end");
+
+    }
+
+    private boolean hasPermissions(String[] permissions) {
+        boolean result = true;
+        for (String p : permissions) {
+            if (ActivityCompat.checkSelfPermission(getContext(), p) != PackageManager.PERMISSION_GRANTED) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public void showLocationInfo() { // 권한 부여 및 위도, 경도 받아오는 메소드
+
+        try {
+            if (hasPermissions(permissions)) {
+
+                startLocationService();
+                longtitude = location.getLongitude();
+                latitude = location.getLatitude();
+//                GeoCoding geoCoding = GeoCoding.getInstance();
+//                geoCoding.getlatitude(latitude,longtitude,getContext());
+                Log.i(TAG,"MainFragment - showLocationInfo");
+
+            } else {
+                if (ActivityCompat
+                        .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
+      //              Toast.makeText(getContext(), "아래로 끌어 새로고침이 필요합니다.", Toast.LENGTH_LONG).show();
+                } else if (ActivityCompat
+                        .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
+     //               Toast.makeText(getContext(), "GPS가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
+                }
+                ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
+
+            }
+        } catch (NullPointerException e) {
+            e.getMessage();
+            Toast.makeText(getContext(), "위치정보를 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     /**
      * This interface must be implemented by activities that contain this
