@@ -9,8 +9,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -21,7 +19,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +43,6 @@ public class FirstFragment extends Fragment {
     private LocationManager locationManager;
     private Location location;
     private ProgressBar progressBar;
-    private int progress = 0;
 
     private MainFragment mainFragment;
 
@@ -70,6 +66,7 @@ public class FirstFragment extends Fragment {
         return view;
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -77,8 +74,6 @@ public class FirstFragment extends Fragment {
         fackMB.execute();
         Log.i(TAG, "FirstFragment - fackMB execute");
 
-
-//        loadingThread.start();
     }
 
     @Override
@@ -275,6 +270,7 @@ public class FirstFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {// 예시 이부분에 imple 을 생성하면됨
+
             try {
                 Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 0.5초");
@@ -305,6 +301,8 @@ public class FirstFragment extends Fragment {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+
             return null;
         }
 
@@ -313,6 +311,7 @@ public class FirstFragment extends Fragment {
             // doInBackground() 시작하기 전에 UI 업데이트
             daoImple = DustDrugDAOImple.getInstence();
             super.onPreExecute();
+
         }
 
         @Override
@@ -323,7 +322,6 @@ public class FirstFragment extends Fragment {
             mainFragment = MainFragment.newInstance();
             transaction.replace(R.id.fragment_container, mainFragment);
             transaction.commit();
-
         }
 
         @Override
@@ -350,6 +348,5 @@ public class FirstFragment extends Fragment {
             }
         }
     } // 문제 발생 기술적으로 구현 불가능합니다..
-
 
 }

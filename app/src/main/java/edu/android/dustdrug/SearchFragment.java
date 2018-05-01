@@ -7,8 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -499,6 +497,7 @@ public class SearchFragment extends Fragment {
                         Log.i("s1",list.get(0).getLocality()+"시");
                         Log.i("s1",list.get(0).getSubLocality()+"구");
                         Log.i("s1",list.get(0).getThoroughfare()+"동");
+                        //TODO 프래그먼트 불러오기?
                         mainActivity.backMainFtagment(list);
 
                     }
