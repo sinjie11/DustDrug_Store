@@ -160,8 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
 //package edu.android.dustdrug;
 //
 //import android.bluetooth.BluetoothAdapter;

@@ -147,7 +147,6 @@ public class AirQulity_API {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        Log.i("s1",json);
         json=json.replace("-","-1");
         GetAPIGsonMainData getAPIGsonMainData = gson.fromJson(json,GetAPIGsonMainData.class);
         return getAPIGsonMainData.list;

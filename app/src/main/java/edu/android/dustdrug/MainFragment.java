@@ -84,7 +84,6 @@ public class MainFragment extends Fragment {
 
         textLocation = view.findViewById(R.id.textLocation);
         textShowValue = view.findViewById(R.id.textShowValue);
-        btnAddress = view.findViewById(R.id.btnAddress);
         btnBlueTooth = view.findViewById(R.id.btnBlueTooth);
         btnSearch = view.findViewById(R.id.btnSearch);
         textValueGrade = view.findViewById(R.id.textValueGrade);
@@ -104,12 +103,6 @@ public class MainFragment extends Fragment {
                     textLocation.setText(list.get(0).getLocality()); // 시,도 정보
                     textLocation.append(" ");
                     textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
-                    textValueGrade.append(detailDatakk.getPm10Gradel() + " ");
-                    Log.i(TAG, "Grade = " + detailDatakk.getPm10Gradel());
-                    textTime.append(detailDatakk.getDataTime() + " ");
-                    Log.i(TAG, "DATE = " + detailDatakk.getDataTime());
-                    textShowValue.append(detailDatakk.getPm10Value() + " ug/m3");
-                    Log.i(TAG, "DAO = " + "" + detailDatakk.getPm10Value());
                     SexyAss sexyAss = new SexyAss();
                     sexyAss.execute();
 
@@ -295,7 +288,6 @@ public class MainFragment extends Fragment {
 
         for (int i = 0; i < xAxis.length; i++) {
             dataset1.add(new Entry((i + 1) * 10f, i));
-            // TODO : 여기까지 하다 말았습니다.
         }
 
         ArrayList<Entry> dataset2 = new ArrayList<Entry>();
@@ -372,6 +364,15 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+
+            textTime.append(dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
+            Log.i(TAG, "DATE = " + dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
+
+            textShowValue.append(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ug/m3");
+            Log.i(TAG, "DAO = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value());
+
+            textValueGrade.append(dustDrugDAOImple.data.getDetailData().get(0).getPm10Gradel() + "");
+            Log.i(TAG, "Grade = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Gradel());
         }
     }
     public void getSearchFragmentAddress(List<Address> list){

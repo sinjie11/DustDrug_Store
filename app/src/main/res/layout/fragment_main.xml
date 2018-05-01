@@ -11,23 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/btnBlueTooth"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@android:color/transparent"
-            android:onClick="blueToothPairing"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@+id/textLocation"
-            app:layout_constraintEnd_toEndOf="@+id/textLocation"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@drawable/btn_bluetooth" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chartValueEveryHour"
@@ -50,52 +33,45 @@
         <TextView
             android:id="@+id/textLocation"
             android:layout_width="0dp"
-            android:layout_height="57dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="60dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:hint="주소"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toStartOf="@+id/btnSearch"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.113" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnBlueTooth"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/transparent"
+            android:onClick="blueToothPairing"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/textLocation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textLocation"
+            app:srcCompat="@drawable/btn_bluetooth" />
 
         <ImageButton
             android:id="@+id/btnSearch"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="8dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@android:color/transparent"
             android:padding="0sp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/textLocation"
-            app:layout_constraintEnd_toEndOf="@+id/textLocation"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnBlueTooth"
             app:layout_constraintTop_toTopOf="@+id/textLocation"
             app:srcCompat="@drawable/btn_search" />
 
-        <Button
-            android:id="@+id/btnAddress"
-            style="@android:style/Widget.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:onClick="addressConvert"
-            android:text="주소 => 위도,경도"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textShowValue"
@@ -105,11 +81,11 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:foregroundGravity="center"
             android:gravity="center"
             android:hint="미세먼지 값(PM10)"
             android:textSize="32sp"
             android:textStyle="italic"
-            android:foregroundGravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
