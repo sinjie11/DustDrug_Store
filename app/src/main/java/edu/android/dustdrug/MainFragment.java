@@ -77,6 +77,7 @@ public class MainFragment extends Fragment {
         dustDrugDAOImple = DustDrugDAOImple.getInstence();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         lineChart = view.findViewById(R.id.chartValueEveryHour);
+        lineChart.setDescription("");
         showLineChart(); // Line Graph를 보여주는 메소드를 불러옵니다.
 
         Log.i(TAG,"MainFragment - lineChart 생성");
@@ -96,6 +97,8 @@ public class MainFragment extends Fragment {
             public void onRefresh() { // 새로고침 시 권한부여 밑 좌표 받아오기
                 //TODO
                 showLocationInfo(); // 위도경도 불러오기
+                startLocationService();
+                showLineChart(); // 새로 고침시에도 LineChart 메소드 다시 불러옴
                 getAddress(); // 좌표 주소로 변환 시 구 동
                 if (list.size() > 0) {
                     textLocation.setText(list.get(0).getLocality()); // 시,도 정보
@@ -353,7 +356,6 @@ public class MainFragment extends Fragment {
 
         @Override
         protected Object doInBackground(Object[] objects) { // 인터넷 사용을 위한 쓰래드
-//            list.get(0).setThoroughfare("송정동");//테스트용
             if(list.get(0).getThoroughfare()==null)  { // 이름이 없을 시 "구" 로 검색
                 dustDrugDAOImple.fuckTM(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(),dustDrugDAOImple.data.getTmY());
