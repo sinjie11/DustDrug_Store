@@ -82,7 +82,7 @@ public class SearchFragment extends Fragment {
 
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is)); //InputStream 으로부터 xml 입력받음
+            xpp.setInput(new InputStreamReader(is, "UTF-8")); //InputStream 으로부터 xml 입력받음
             String tag = null;
             xpp.next();
             int eventType = xpp.getEventType();
@@ -247,7 +247,7 @@ public class SearchFragment extends Fragment {
             InputStream is = url.openStream(); // url 위치로 InputStream 연결
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is)); //InputStream 으로부터 xml 입력받음
+            xpp.setInput(new InputStreamReader(is, "UTF-8")); //InputStream 으로부터 xml 입력받음
             String tag = null;
             xpp.next();
             int eventType = xpp.getEventType();
@@ -381,7 +381,7 @@ public class SearchFragment extends Fragment {
             InputStream is = url.openStream(); // url 위치로 InputStream 연결
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is)); //InputStream 으로부터 xml 입력받음
+            xpp.setInput(new InputStreamReader(is, "UTF-8")); //InputStream 으로부터 xml 입력받음
             String tag = null;
             xpp.next();
             int eventType = xpp.getEventType();

@@ -31,7 +31,7 @@ public class AirQulity_API {
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             InputStream is = url.openStream();
-            reader = new BufferedReader(new InputStreamReader(is));
+            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             StringBuffer buffer = new StringBuffer();
             String line = "";
             while ((line = reader.readLine()) != null) {
@@ -97,7 +97,7 @@ public class AirQulity_API {
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             InputStream is = url.openStream();
-            reader = new BufferedReader(new InputStreamReader(is));
+            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             StringBuffer buffer = new StringBuffer();
             String line = "";
             while ((line = reader.readLine()) != null) {
@@ -136,7 +136,7 @@ public class AirQulity_API {
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             InputStream is = url.openStream();
-            reader = new BufferedReader(new InputStreamReader(is));
+            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             StringBuffer buffer = new StringBuffer();
             String line = "";
             while ((line = reader.readLine()) != null) {

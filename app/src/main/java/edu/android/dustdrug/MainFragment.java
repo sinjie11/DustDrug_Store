@@ -159,8 +159,10 @@ public class MainFragment extends Fragment {
                 getAddress(); // 좌표 주소로 변환 시 구 동
                 if (list.size() > 0) {
                     textLocation.setText(list.get(0).getLocality()); // 시,도 정보
+//                    Log.i(TAG, "refreshLocation = " + list.get(0).getLocality());
                     textLocation.append(" ");
                     textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
+//                    Log.i(TAG, "refreshSub = " + list.get(0).getSubLocality());
 
                     SexyAss sexyAss = new SexyAss();
                     sexyAss.execute();
@@ -453,7 +455,7 @@ public class MainFragment extends Fragment {
 //            Log.i("TAG", "현재 hour : " + calendar + "시");
 
             textTime.setText("※ " + year + "년 " + month + "월 " + date + "일 " + calendar + "시 기준"); // 날짜, 시간 출력
-//            textTime.setText(dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
+//            textTime.setText(dustDrugDAOImple.data.getDetailData().get(0).getDataTime()); // 날짜, 시간 (형태: 2018-05-02 13:00)
 //            Log.i(TAG, "DATE = " + dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
 
             textShowValue.setText("미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
