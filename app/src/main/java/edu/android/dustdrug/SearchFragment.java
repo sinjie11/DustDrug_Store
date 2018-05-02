@@ -12,12 +12,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -42,10 +46,12 @@ public class SearchFragment extends Fragment {
     ArrayList<CityList> cityLists;
     ArrayList<CityList2> cityList2s;
     ArrayList<CityList3> cityList3s;
+    ArrayList<AirQulity_API.GetAPIGsonTM.List> lists;
     String param1;
     String param2;
     String param3;
-
+    EditText editText;
+    AirQulity_API airQulity_api;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -60,11 +66,29 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
+        editText=view.findViewById(R.id.editText);
         Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), 1)); // 시 구분선
         Si si = new Si();
         si.execute();
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                IsFuckingCandy isFuckingCandy = new IsFuckingCandy();
+                isFuckingCandy.execute();
+            }
+        });
         return view;
     }
 
@@ -212,6 +236,8 @@ public class SearchFragment extends Fragment {
                         Gugun Gugun = new Gugun();
                         Gugun.execute(param1);
                         address.setLocality(param1);}
+                        Log.i("s1",param1+"리사이클러뷰 1 선택 ");
+
                     }
                 });
 
@@ -236,11 +262,11 @@ public class SearchFragment extends Fragment {
 
     public ArrayList<CityList2> getXmlData2(String cityname) {//시도 xml 받아오기
         String cityName=changeCityName(cityname);
+
         String api2 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getSiGunGuList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityName;
         ArrayList<CityList2> cityList2s = new ArrayList<>();
         try {
             URL url = new URL(api2); // 문자열로 된 요청 totalUrl 을 URL 객체로 생성.
-//            Log.i("s1",api2);
             InputStream is = url.openStream(); // url 위치로 InputStream 연결
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
@@ -249,10 +275,9 @@ public class SearchFragment extends Fragment {
             xpp.next();
             int eventType = xpp.getEventType();
             CityList2 cityList2 = new CityList2();
-//            Log.i("s1","파싱S");
+            int x= 0;
             while (eventType != XmlPullParser.END_DOCUMENT) {
-
-//                Log.i("s1","와일");
+                x++;
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT://파싱 시작
 //                        Log.i("s1","시작 ");
@@ -260,24 +285,17 @@ public class SearchFragment extends Fragment {
 
                     case XmlPullParser.START_TAG:
                         tag = xpp.getName();//태그 이름 얻어오기
-
                         if (tag.equals("signguCd")) {
-//                            Log.i("s1", "nm");
                             xpp.next();
                             cityList2.setName(xpp.getText());
                         }
                         break;
                     case XmlPullParser.TEXT:
-//                        Log.i("s1","pull Parser");
                         break;
 
                     case XmlPullParser.END_TAG:
-//                        Log.i("s1","endTag");
-//                        Log.i("s1",cityList.getBrtcCd());
                         tag = xpp.getName(); // 태그 이름 얻어오기
-//                        Log.i("s1",tag);
                         if (tag.equals("siGunGuList")) {
-//                            Log.i("s1","저장");
                             cityList2s.add(cityList2);
                             cityList2 = new CityList2();
                         }
@@ -290,11 +308,18 @@ public class SearchFragment extends Fragment {
             e.printStackTrace();
         }
 
-
+        Log.i("s1",cityList2s.toString());
         return cityList2s;
     }
 
     class CityList2 {
+        @Override
+        public String toString() {
+            return "CityList2{" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
+
         String name;
 
         public String getName() {
@@ -444,7 +469,6 @@ public class SearchFragment extends Fragment {
 
         @Override
         protected Void doInBackground(String[]... strings) {
-            //TODO
             cityList3s = getXmlData3(strings[0][0], strings[0][1]);
             return null;
         }
@@ -508,7 +532,6 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -527,7 +550,6 @@ public class SearchFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
@@ -569,7 +591,7 @@ public class SearchFragment extends Fragment {
         return name;
     }
 
-    public int taeyeonGaneung(){
+    public int taeyeonGaneung(){//백키 눌렀을때 1단계 전으로 돌려주는 메서드
 
         if(param1==null){
             return 1;
@@ -588,4 +610,66 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    public ArrayList<AirQulity_API.GetAPIGsonTM.List> taeyeonSatangMogajiNalagam(String fuckingCandy){//검색 시리스트 받아옴
+        airQulity_api=new AirQulity_API();
+        ArrayList<AirQulity_API.GetAPIGsonTM.List>lists=airQulity_api.getFackTm(fuckingCandy);
+        return lists;
+    }
+
+    class IsFuckingCandy extends AsyncTask{//서치 아이템 어씽크
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            lists=taeyeonSatangMogajiNalagam(editText.getText().toString());
+         return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            SearchItem searchItem = new SearchItem();
+            recyclerView.setAdapter(searchItem);
+        }
+    }
+    class SearchItem extends RecyclerView.Adapter<SerchItemViewHolder>{ //검색 리사이클러뷰 어댑터
+
+        @NonNull
+        @Override
+        public SerchItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {//뷰홀더 생성
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View itemView = inflater.inflate(
+                    android.R.layout.simple_list_item_1,
+                    parent, false);
+
+            SerchItemViewHolder serchItemViewHolder = new SerchItemViewHolder(itemView);
+            return serchItemViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull SerchItemViewHolder holder, int position) {//리스트에 개채 추가
+            holder.textView.setText(lists.get(position).getSidoName()+" "+lists.get(position).getSggName()+" "+lists.get(position).getUmdName());
+        }
+
+        @Override
+        public int getItemCount() {//리스트 사이드
+            return lists.size();
+        }
+    }
+
+    private class SerchItemViewHolder extends RecyclerView.ViewHolder{//서치아이템 뷰홀더
+        TextView textView;
+        public SerchItemViewHolder(View itemView) {
+            super(itemView);
+            textView=(TextView) itemView;
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO 검색 리스트 클릭시 작업
+                    Toast.makeText(getContext(), lists.get(getAdapterPosition()).sggName, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
 }
