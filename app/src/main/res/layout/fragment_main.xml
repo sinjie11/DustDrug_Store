@@ -37,7 +37,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/addressborder"
+            android:background="@drawable/address_border"
             android:gravity="center"
             android:hint="주소"
             android:textSize="24sp"
