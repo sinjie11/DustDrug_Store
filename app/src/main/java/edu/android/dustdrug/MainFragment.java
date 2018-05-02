@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -55,17 +56,17 @@ public class MainFragment extends Fragment {
     public static final String TAG = "edu.android";
 
     /**
-     *  # 참고 사항 #
-     *
+     * # 참고 사항 #
+     * <p>
      * - 실시간 정보 : 10분(매 시간 시간자료 갱신은 20분 전후로 반영됨)
-     *
+     * <p>
      * - 대기질 예보 정보 : 매 시간 22분, 57분
-     *
+     * <p>
      * - Grade 값 →   좋음    : 1   ( pm10 => 0 ~ 30 , pm2.5 => 0 ~ 15 )
-     *                보통   : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
-     *                나쁨   : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
-     *              매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
-     *
+     * 보통   : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
+     * 나쁨   : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
+     * 매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
+     * <p>
      * ※ JSON 방식 호출 방법 : URL 제일 뒷 부분에 다음 파라미터(&_returnType=json)를 추가하여 호출
      */
 
@@ -80,14 +81,16 @@ public class MainFragment extends Fragment {
     private LineChart lineChart; // 그래프(jar 파일 사용)
     private List<Address> list;
 
-    public TextView textLocation, textShowValue, textValueGrade, textTime, textShowValuePm25;
+    public TextView textLocation, textShowValue, textValueGrade, textTime, textShowValuePm25, textShowGraphDate;
     public ImageButton btnBlueTooth, btnSearch;
 
-    public int calendar;
     public int pm10value;
-    public int pm10Grade = 0;
+    public int pm10Grade;
 
-    public int[] list_calendar = new int[24];
+    public int calendar;
+    public int year;
+    public int month;
+    public int date;
     public int[] list_pm10value = new int[24];
 
 
@@ -121,6 +124,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -130,7 +134,7 @@ public class MainFragment extends Fragment {
         dustDrugDAOImple = DustDrugDAOImple.getInstence();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         lineChart = view.findViewById(R.id.chartValueEveryHour);
-        lineChart.setDescription("");
+        lineChart.setDescription(" ");
         showLineChart(); // Line Graph를 보여주는 메소드를 불러옵니다.
 
         Log.i(TAG, "MainFragment - lineChart 생성");
@@ -155,8 +159,8 @@ public class MainFragment extends Fragment {
                 getAddress(); // 좌표 주소로 변환 시 구 동
                 if (list.size() > 0) {
                     textLocation.setText(list.get(0).getLocality()); // 시,도 정보
-                    textLocation.setText("");
-                    textLocation.setText(list.get(0).getSubLocality()); // 구,군 정보
+                    textLocation.append(" ");
+                    textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
 
                     SexyAss sexyAss = new SexyAss();
                     sexyAss.execute();
@@ -168,6 +172,7 @@ public class MainFragment extends Fragment {
         });
         startLocationService();
         showLineChart(); // 새로 고침시에도 LineChart 메소드 다시 불러옴
+
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -277,7 +282,7 @@ public class MainFragment extends Fragment {
     }
 
     //gps
-    public void startLocationService() { // GPS 권한 채크여부
+    public void startLocationService() { // GPS 권한 체크여부
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -312,7 +317,7 @@ public class MainFragment extends Fragment {
                     Toast.makeText(getContext(), "아래로 끌어 새로고침이 필요합니다.", Toast.LENGTH_LONG).show();
                 } else if (ActivityCompat
                         .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
-                    Toast.makeText(getContext(), "GPS가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "GPS 가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
                 }
                 swipeRefreshLayout.setRefreshing(false);
                 ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
@@ -329,19 +334,28 @@ public class MainFragment extends Fragment {
         int max = 0;
 
         String[] xAxis = new String[]
-                {"0시", "1시", "2시", "3시", "4시",
+                {"", "1시", "2시", "3시", "4시",
                         "5시", "6시", "7시", "8시", "9시",
                         "10시", "11시", "12시", "13시", "14시",
                         "15시", "16시", "17시", "18시", "19시",
-                        "20시", "21시", "22시", "23시"};
+                        "20시", "21시", "22시", "23시", "24시"};
+
         ArrayList<Entry> dataset1 = new ArrayList<Entry>();
-        for (int i = 1; i < list_calendar.length; i++) {
-            dataset1.add(new Entry(list_pm10value[i], list_calendar[i]));
+
+        if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
+            for (int k = calendar; k < xAxis.length - 1; k++) {
+                list_pm10value[k] = 0;
+            }
+            for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                dataset1.add(new Entry(list_pm10value[i], i + 1));
+            }
+        } else {
+            for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                dataset1.add(new Entry(list_pm10value[i], i + 1));
+            }
         }
 
         ArrayList<Entry> dataset2 = new ArrayList<Entry>();
-
-        dataset2.add(new Entry(16, 0));
         dataset2.add(new Entry(55, 1));
         dataset2.add(new Entry(35, 2));
         dataset2.add(new Entry(25, 3));
@@ -365,6 +379,7 @@ public class MainFragment extends Fragment {
         dataset2.add(new Entry(45, 21));
         dataset2.add(new Entry(35, 22));
         dataset2.add(new Entry(25, 23));
+        dataset2.add(new Entry(16, 24));
 
         ArrayList<ILineDataSet> lines = new ArrayList<ILineDataSet>();
 
@@ -383,8 +398,8 @@ public class MainFragment extends Fragment {
         lineChart.animateY(1500);
         lineChart.setScaleEnabled(false);
         lineChart.getData().setHighlightEnabled(false);
-        //       returnMonth();
-
+        Legend legend = lineChart.getLegend();
+        legend.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
     }
 
 
@@ -400,10 +415,12 @@ public class MainFragment extends Fragment {
 
         @Override
         protected Object doInBackground(Object[] objects) { // 인터넷 사용을 위한 쓰래드
+
             if (list.get(0).getThoroughfare() == null) { // 이름이 없을 시 "구" 로 검색
                 dustDrugDAOImple.fuckTM(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(), dustDrugDAOImple.data.getTmY());
                 dustDrugDAOImple.kimKwangSukInthespiritofforgetting(dustDrugDAOImple.data.getStationName());
+
             } else { // "동" 으로 검색
                 dustDrugDAOImple.fuckTM(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(), dustDrugDAOImple.data.getTmY());
@@ -416,47 +433,60 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) { // 데이터 수치 갱신
             super.onPostExecute(o);
-
-            //TODO: 결과 값 갱신....해야됨..
             textLocation.setText(list.get(0).getLocality()); // 시, 도
-            Log.i(TAG, "location = " + list.get(0).getLocality());
+//            Log.i(TAG, "location = " + list.get(0).getLocality());
             textLocation.append(" ");
             textLocation.append(list.get(0).getSubLocality()); // 구,군
-            Log.i(TAG, "Sub = " + list.get(0).getSubLocality());
+//            Log.i(TAG, "Sub = " + list.get(0).getSubLocality());
 
 
-            textTime.setText(dustDrugDAOImple.data.getDetailData().get(0).getDataTime()); // 날짜, 시간
-            Log.i(TAG, "DATE = " + dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
+            year = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(0, 4)); // 년
+//            Log.i("TAG", year + "년");
+
+            month = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(5, 7)); // 월
+//            Log.i("TAG", month + "월");
+
+            date = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(8, 10)); // 일
+//            Log.i("TAG", date + "일");
+
+            calendar = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(11, 13)); // 시(時)
+//            Log.i("TAG", "현재 hour : " + calendar + "시");
+
+            textTime.setText("※ " + year + "년 " + month + "월 " + date + "일 " + calendar + "시 기준"); // 날짜, 시간 출력
+//            textTime.setText(dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
+//            Log.i(TAG, "DATE = " + dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
 
             textShowValue.setText("미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
-            Log.i(TAG, "PM10 = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value());
+//            Log.i(TAG, "PM10 = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value());
 
-            String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString();
+            String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
             if (gradePm10.equals("1")) {
                 textValueGrade.setText("좋음");
+
             } else if (gradePm10.equals("2")) {
                 textValueGrade.setText("보통");
+
             } else if (gradePm10.equals("3")) {
                 textValueGrade.setText("나쁨");
+
             } else if (gradePm10.equals("4")) {
                 textValueGrade.setText("매우나쁨");
+
             } else {
                 textValueGrade.setText("등급확인 불가");
             }
+//            Log.i(TAG, "Grade = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Gradel());
 
-            Log.i(TAG, "Grade = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Gradel());
 
             textShowValuePm25.setText("초미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
-            Log.i(TAG, "PM2.5 = " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value());
+//            Log.i(TAG, "PM2.5 = " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value());
 
-            for (int i = 0; i < 24; i++) {
-                list_calendar[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(i).getDataTime().substring(11, 13));
-                Log.i("s1", "현재 시각 : " + calendar);
 
-                list_pm10value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(i).getPm10Value());
-                Log.i("s1", "현재 수치 : " + pm10value);
-
+            for (int i = 0; i < 24; i++) { // 그래프 수치
+                list_pm10value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm10Value());
+//                Log.i("TAG", "현재 수치 : " + pm10value);
             }
+
         }
 
     } // end class SexyAss extends AsyncTask
