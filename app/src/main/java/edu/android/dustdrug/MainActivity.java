@@ -48,13 +48,17 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (fragment instanceof SearchFragment){
+
+        if (fragment instanceof SearchFragment) {
+
             int result = ((SearchFragment) fragment).taeyeonGaneung();
-            if(result==1){
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, mainFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+
+            if (result == 1) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, mainFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
                 if (System.currentTimeMillis() > lastTimeBackPressed + 2000) {
                     lastTimeBackPressed = System.currentTimeMillis();
                     Toast.makeText(this, "뒤로 버튼 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
@@ -66,9 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
-                }else if (result ==0){ }
+            } else if (result == 0) {
+            }
 
-        }else if (fragment instanceof MainFragment){
+        } else if (fragment instanceof MainFragment) {
             if (System.currentTimeMillis() > lastTimeBackPressed + 2000) {
                 lastTimeBackPressed = System.currentTimeMillis();
                 Toast.makeText(this, "뒤로 버튼 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();

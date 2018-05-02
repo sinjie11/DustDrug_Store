@@ -8,7 +8,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-//
+
 
 public class GeoCoding {
     private static List<Address> list = null;

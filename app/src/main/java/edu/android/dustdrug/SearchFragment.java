@@ -7,8 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +26,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -236,8 +236,6 @@ public class SearchFragment extends Fragment {
                         Gugun Gugun = new Gugun();
                         Gugun.execute(param1);
                         address.setLocality(param1);}
-                        Log.i("s1",param1+"리사이클러뷰 1 선택 ");
-
                     }
                 });
 
@@ -262,7 +260,7 @@ public class SearchFragment extends Fragment {
 
     public ArrayList<CityList2> getXmlData2(String cityname) {//시도 xml 받아오기
         String cityName=changeCityName(cityname);
-
+        cityName=iLoveYourAss(cityName);
         String api2 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getSiGunGuList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityName;
         ArrayList<CityList2> cityList2s = new ArrayList<>();
         try {
@@ -308,18 +306,11 @@ public class SearchFragment extends Fragment {
             e.printStackTrace();
         }
 
-        Log.i("s1",cityList2s.toString());
+
         return cityList2s;
     }
 
     class CityList2 {
-        @Override
-        public String toString() {
-            return "CityList2{" +
-                    "name='" + name + '\'' +
-                    '}';
-        }
-
         String name;
 
         public String getName() {
@@ -394,6 +385,8 @@ public class SearchFragment extends Fragment {
 
     public ArrayList<CityList3> getXmlData3(String cityname, String sigunguname) {//동 xml 받아오기
         String cityName=changeCityName(cityname);
+        cityName=iLoveYourAss(cityName);
+        sigunguname = iLoveYourAss(sigunguname);
         String api3 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getEupMyunDongList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityName + "&signguCd=" + sigunguname;
 //        Log.i("s1", api3);
         ArrayList<CityList3> cityList3s = new ArrayList<>();
@@ -469,6 +462,7 @@ public class SearchFragment extends Fragment {
 
         @Override
         protected Void doInBackground(String[]... strings) {
+            //TODO
             cityList3s = getXmlData3(strings[0][0], strings[0][1]);
             return null;
         }
@@ -532,6 +526,7 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -550,6 +545,7 @@ public class SearchFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
@@ -608,6 +604,15 @@ public class SearchFragment extends Fragment {
         }else {
             return 0;
         }
+    }
+    private String iLoveYourAss(String cityName){//String 변환 핵사어 로 변환 하는 메서드
+        String cityNameEncoded = null;
+        try {
+            cityNameEncoded = URLEncoder.encode(cityName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return cityNameEncoded;
     }
 
     public ArrayList<AirQulity_API.GetAPIGsonTM.List> taeyeonSatangMogajiNalagam(String fuckingCandy){//검색 시리스트 받아옴

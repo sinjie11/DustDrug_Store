@@ -33,12 +33,14 @@
         <TextView
             android:id="@+id/textLocation"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="70dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/address_border"
             android:gravity="center"
             android:hint="주소"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/btnSearch"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,8 +48,8 @@
 
         <ImageButton
             android:id="@+id/btnBlueTooth"
-            android:layout_width="50dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:background="@android:color/transparent"
@@ -56,52 +58,50 @@
             app:layout_constraintBottom_toBottomOf="@+id/textLocation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textLocation"
-            app:srcCompat="@drawable/btn_bluetooth" />
+            app:srcCompat="@drawable/btnimage_bluetooth" />
 
         <ImageButton
             android:id="@+id/btnSearch"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:background="@android:color/transparent"
-            android:padding="0sp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/textLocation"
             app:layout_constraintEnd_toStartOf="@+id/btnBlueTooth"
             app:layout_constraintTop_toTopOf="@+id/textLocation"
-            app:srcCompat="@drawable/btn_search" />
+            app:srcCompat="@drawable/btnimage_search" />
 
 
         <TextView
             android:id="@+id/textShowValue"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="380dp"
+            android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:foregroundGravity="center"
             android:gravity="center"
             android:hint="미세먼지 값(PM10)"
-            android:textSize="32sp"
-            android:textStyle="italic"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="#ea0f0c"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textLocation" />
+            app:layout_constraintTop_toBottomOf="@+id/textTime" />
 
         <TextView
             android:id="@+id/textValueGrade"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:hint="미세먼지 등급"
+            android:layout_marginTop="24dp"
             android:gravity="center"
-            android:textSize="24sp"
-            android:textStyle="italic"
+            android:hint="미세먼지 등급"
+            android:textColor="#02874b"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textShowValue" />
@@ -109,21 +109,47 @@
         <TextView
             android:id="@+id/textTime"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="240dp"
+            android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="40dp"
+            android:foregroundGravity="center"
             android:gravity="center"
             android:hint="날짜 및 시간"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:foregroundGravity="center"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="#996710"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textValueGrade"
-            app:layout_constraintVertical_bias="0.123" />
+            app:layout_constraintTop_toBottomOf="@+id/textLocation" />
+
+        <TextView
+            android:id="@+id/textShowValuePm25"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:hint="초미세먼지 값(PM2.5)"
+            android:textColor="#1317d7"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textValueGrade" />
+
+
+        <!-- 색상표
+    * 노랑 : #EAE674
+    * 연두 : #7CE923 , #C6E5B6
+    * 하늘 : #88CFEE
+    * 파랑 : #0529f5
+    * 보라 : #6A20CA
+    * 주황 : #F4803D
+    * 빨강 : #EF0A0A
+    * 회색 : #CECACA
+    * 흰색 : #FFFFFF
+
+    -->
 
     </android.support.constraint.ConstraintLayout>
 
