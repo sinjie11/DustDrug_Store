@@ -57,16 +57,17 @@ public class MainFragment extends Fragment {
 
     /**
      * # 참고 사항 #
-     * <p>
+     *
      * - 실시간 정보 : 10분(매 시간 시간자료 갱신은 20분 전후로 반영됨)
-     * <p>
+     *
      * - 대기질 예보 정보 : 매 시간 22분, 57분
-     * <p>
-     * - Grade 값 →   좋음    : 1   ( pm10 => 0 ~ 30 , pm2.5 => 0 ~ 15 )
-     * 보통   : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
-     * 나쁨   : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
-     * 매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
-     * <p>
+     *
+     *  ※ Grade 값
+     *    좋음    : 1   ( pm10 => 0 ~ 30 , pm2.5 => 0 ~ 15 )
+     *    보통   : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
+     *    나쁨   : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
+     *  매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
+     *
      * ※ JSON 방식 호출 방법 : URL 제일 뒷 부분에 다음 파라미터(&_returnType=json)를 추가하여 호출
      */
 
@@ -81,7 +82,7 @@ public class MainFragment extends Fragment {
     private LineChart lineChart; // 그래프(jar 파일 사용)
     private List<Address> list;
 
-    public TextView textLocation, textShowValue, textValueGrade, textTime, textShowValuePm25, textShowGraphDate;
+    public TextView textLocation, textShowValue, textValueGrade, textTime, textShowValuePm25;
     public ImageButton btnBlueTooth, btnSearch;
 
     public int pm10value;
@@ -137,8 +138,6 @@ public class MainFragment extends Fragment {
         lineChart.setDescription(" ");
         showLineChart(); // Line Graph를 보여주는 메소드를 불러옵니다.
 
-        Log.i(TAG, "MainFragment - lineChart 생성");
-
         textLocation = view.findViewById(R.id.textLocation);
         textShowValue = view.findViewById(R.id.textShowValue);
         btnBlueTooth = view.findViewById(R.id.btnBlueTooth);
@@ -147,23 +146,20 @@ public class MainFragment extends Fragment {
         textTime = view.findViewById(R.id.textTime);
         textShowValuePm25 = view.findViewById(R.id.textShowValuePm25);
 
-
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() { // 새로고침 시 권한부여 밑 좌표 받아오기
-                //TODO
+            public void onRefresh() { // 새로고침 시 권한부여 및 좌표 받아오기
+
                 showLocationInfo(); // 위도경도 불러오기
                 startLocationService();
-                showLineChart(); // 새로 고침시에도 LineChart 메소드 다시 불러옴
+                showLineChart(); // 새로고침 할때도 LineChart 메소드 다시 불러옴
                 getAddress(); // 좌표 주소로 변환 시 구 동
+
                 if (list.size() > 0) {
                     textLocation.setText(list.get(0).getLocality()); // 시,도 정보
-//                    Log.i(TAG, "refreshLocation = " + list.get(0).getLocality());
                     textLocation.append(" ");
                     textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
-//                    Log.i(TAG, "refreshSub = " + list.get(0).getSubLocality());
-
                     SexyAss sexyAss = new SexyAss();
                     sexyAss.execute();
 
@@ -183,7 +179,6 @@ public class MainFragment extends Fragment {
                 searchFragment = new SearchFragment();
                 transaction.replace(R.id.fragment_container, searchFragment);
                 transaction.commit();
-                Log.i(TAG, "search fragment call");
             }
         });
 
@@ -201,7 +196,7 @@ public class MainFragment extends Fragment {
                 };
                 if (getDeviceState()) {
                     enableBluetooth();
-                    Log.i(TAG, "btService => enableBT" + getDeviceState());
+
                 } else {
 
                 }
@@ -230,10 +225,8 @@ public class MainFragment extends Fragment {
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            Log.d(TAG, "MainFragment - onLocationChanged, location : " + location);
             longtitude = location.getLongitude();
             latitude = location.getLatitude();
-            Log.i(TAG, "MainFragment - onLocationChanged");
         }
 
         @Override
@@ -260,7 +253,6 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.i(TAG, "MainFragment - onRequestPermissionsResult start");
         if (requestCode == REQ_CODE_PERMISSION) {
             if (grantResults.length == 3 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 return;
@@ -268,8 +260,6 @@ public class MainFragment extends Fragment {
                 Toast.makeText(getContext(), "Make the authorization get allowed", Toast.LENGTH_SHORT).show();
             }
         }
-        Log.i(TAG, "MainFragment - onRequestPermissionsResult end");
-
     }
 
     private boolean hasPermissions(String[] permissions) {
@@ -283,25 +273,21 @@ public class MainFragment extends Fragment {
         return result;
     }
 
-    //gps
+    /**
+     *  GPS 관련...
+     */
     public void startLocationService() { // GPS 권한 체크여부
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60 * 1000, 0, locationListener);
     }
 
-    public void showLocationInfo() { // 권한 부여 및 위도, 경도 받아오는 메소드
+    public void showLocationInfo() { // 권한 부여, 위도, 경도 받아오는 메소드
 
         try {
             if (hasPermissions(permissions)) {
@@ -310,20 +296,20 @@ public class MainFragment extends Fragment {
                 longtitude = location.getLongitude();
                 latitude = location.getLatitude();
                 textLocation.setText("경도 : " + longtitude + "\n" + "위도 : " + latitude);
-                Log.i(TAG, "MainFragment - showLocationInfo");
 
                 swipeRefreshLayout.setRefreshing(false);
             } else {
                 if (ActivityCompat
                         .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
-                    Toast.makeText(getContext(), "아래로 끌어 새로고침이 필요합니다.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "새로고침이 필요합니다.(아래로 끌어당겨주세요)", Toast.LENGTH_LONG).show();
                 } else if (ActivityCompat
                         .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
-                    Toast.makeText(getContext(), "GPS 가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "GPS 가 안되면 근접거리라도 수신예정...", Toast.LENGTH_LONG).show();
                 }
                 swipeRefreshLayout.setRefreshing(false);
                 ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
             }
+
         } catch (NullPointerException e) {
             e.getMessage();
             Toast.makeText(getContext(), "위치정보를 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
@@ -333,6 +319,7 @@ public class MainFragment extends Fragment {
     }
 
     public void showLineChart() {
+
         int max = 0;
 
         String[] xAxis = new String[]
@@ -436,30 +423,20 @@ public class MainFragment extends Fragment {
         protected void onPostExecute(Object o) { // 데이터 수치 갱신
             super.onPostExecute(o);
             textLocation.setText(list.get(0).getLocality()); // 시, 도
-//            Log.i(TAG, "location = " + list.get(0).getLocality());
             textLocation.append(" ");
             textLocation.append(list.get(0).getSubLocality()); // 구,군
-//            Log.i(TAG, "Sub = " + list.get(0).getSubLocality());
-
 
             year = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(0, 4)); // 년
-//            Log.i("TAG", year + "년");
 
             month = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(5, 7)); // 월
-//            Log.i("TAG", month + "월");
 
             date = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(8, 10)); // 일
-//            Log.i("TAG", date + "일");
 
             calendar = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(11, 13)); // 시(時)
-//            Log.i("TAG", "현재 hour : " + calendar + "시");
 
             textTime.setText("※ " + year + "년 " + month + "월 " + date + "일 " + calendar + "시 기준"); // 날짜, 시간 출력
-//            textTime.setText(dustDrugDAOImple.data.getDetailData().get(0).getDataTime()); // 날짜, 시간 (형태: 2018-05-02 13:00)
-//            Log.i(TAG, "DATE = " + dustDrugDAOImple.data.getDetailData().get(0).getDataTime());
 
             textShowValue.setText("미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
-//            Log.i(TAG, "PM10 = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value());
 
             String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
             if (gradePm10.equals("1")) {
@@ -477,16 +454,11 @@ public class MainFragment extends Fragment {
             } else {
                 textValueGrade.setText("등급확인 불가");
             }
-//            Log.i(TAG, "Grade = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Gradel());
-
 
             textShowValuePm25.setText("초미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
-//            Log.i(TAG, "PM2.5 = " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value());
-
 
             for (int i = 0; i < 24; i++) { // 그래프 수치
                 list_pm10value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm10Value());
-//                Log.i("TAG", "현재 수치 : " + pm10value);
             }
 
         }
@@ -515,10 +487,10 @@ public class MainFragment extends Fragment {
 
     private boolean getDeviceState() {
         if (btAdapter == null) {
-            Toast.makeText(getActivity(), "블루투스 지원안함요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "블루투스를 지원하지 않습니다.", Toast.LENGTH_SHORT).show();
             return false;
         } else {
-            Toast.makeText(getActivity(), "블루투스 지원해요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "블루투스를 지원 합니다.", Toast.LENGTH_SHORT).show();
             return true;
 
         }
@@ -541,7 +513,7 @@ public class MainFragment extends Fragment {
                     scanDevice();
                     Log.i(TAG, "REQUEST_CONNECT_DEVICE = " + REQUEST_ENABLE_BT);
                 } else {
-                    Toast.makeText(getContext(), "블루투스를 활성화 해라...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "블루투스를 활성화 시켜주세요.", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

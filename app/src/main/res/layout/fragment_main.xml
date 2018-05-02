@@ -137,20 +137,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textValueGrade" />
 
-        <TextView
-            android:id="@+id/textShowGraphDate"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:gravity="center"
-            android:hint="그래프 날짜 표기"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/chartValueEveryHour"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
 
         <!-- 색상표
     * 노랑 : #EAE674
