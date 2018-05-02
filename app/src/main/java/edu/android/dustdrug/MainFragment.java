@@ -112,6 +112,12 @@ public class MainFragment extends Fragment {
     private static final int STATE_CONNECTING = 2; // now initiating an outgoing
     // connection
     private static final int STATE_CONNECTED = 3; // now connected to a remote device
+    //블루투스 관련
+    private char mCharDelimiter = '\n';
+    private String mStrDelimiter = "\n";
+    private int readBufferPosition;
+    private byte[] readBuffer;
+    private String dddata = null;
 
     // RFCOMM Protocol
     private static final UUID MY_UUID = UUID
@@ -724,6 +730,7 @@ public class MainFragment extends Fragment {
         }
     }
 
+
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
@@ -745,24 +752,70 @@ public class MainFragment extends Fragment {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+            readBuffer = new byte[1024];   // 수신 버퍼
+            readBufferPosition = 0;      // 버퍼 내 수신 문자 저장 위치
         }
 
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
             byte[] buffer = new byte[1024];
             int bytes;
-
-            // Keep listening to the InputStream while connected
-            while (true) {
+            String send = "z";
+            send += mStrDelimiter + mStrDelimiter;
+            Log.i(TAG, "Send : " + send);
+            try {
+                mmOutStream.write(send.getBytes());
+                Log.i(TAG, "데이터 보넴 성공1");
+                mmOutStream.write(send.getBytes());
+                Log.i(TAG, "데이터 보넴 성공2");
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i(TAG, "데이터 보넴 실패" + e.getMessage());
+            }
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    // InputStream으로부터 값을 받는 읽는 부분(값을 받는다)
-                    bytes = mmInStream.read(buffer);
+                    Log.i(TAG, "받기 시작2");
+                    int bytesAvailable = mmInStream.available();   // 수신 데이터 확인
+                    Log.i(TAG, "bytesAvailable : " + bytesAvailable);
+                    if(bytesAvailable > 0){      // 데이터가 수신된 경우
 
+                        Log.i(TAG, "bytesAvailable 뭘까?" + bytesAvailable);
+                        byte[] packetBytes = new byte[bytesAvailable];
+
+                        mmInStream.read(packetBytes);
+
+                        for(int i = 0; i < bytesAvailable; i++){
+                            Log.i(TAG, "For문이여 돌아라~~");
+                            byte b = packetBytes[i];
+                            if(b == mCharDelimiter){
+                                byte[] encodedBytes = new byte[readBufferPosition];
+                                System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
+                                final String data = new String(encodedBytes, "UTF-8");
+                                readBufferPosition = 0;
+                                Log.i(TAG, "DATA : " + data);
+                                if(!data.equals("")){
+                                    dddata = data;
+                                    Log.i(TAG, "dddata : " + dddata);
+                                    interrupt();
+                                }
+                            }
+                            else{
+                                readBuffer[readBufferPosition++] = b;
+                            }
+                        }
+                    }
+                    Log.i(TAG, "받기 끝");
+//                    try {
+//                        sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
                     break;
                 }
+                //break;
             }
         }
 
@@ -789,5 +842,4 @@ public class MainFragment extends Fragment {
             }
         }
     }
-
 } // end MainFragment
