@@ -230,7 +230,7 @@ public class MainFragment extends Fragment {
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            Log.i(TAG, "MainFragment - onLocationChanged, location : " + location);
+            Log.d(TAG, "MainFragment - onLocationChanged, location : " + location);
             longtitude = location.getLongitude();
             latitude = location.getLatitude();
             Log.i(TAG, "MainFragment - onLocationChanged");

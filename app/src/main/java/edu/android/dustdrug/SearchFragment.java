@@ -23,7 +23,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +84,7 @@ public class SearchFragment extends Fragment {
 
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is, "UTF-8")); //InputStream 으로부터 xml 입력받음
+            xpp.setInput(new InputStreamReader(is)); //InputStream 으로부터 xml 입력받음
             String tag = null;
             xpp.next();
             int eventType = xpp.getEventType();
@@ -239,6 +241,7 @@ public class SearchFragment extends Fragment {
 
     public ArrayList<CityList2> getXmlData2(String cityname) {//시도 xml 받아오기
         String cityName=changeCityName(cityname);
+        cityName=iLoveYourAss(cityName);
         String api2 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getSiGunGuList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityName;
         ArrayList<CityList2> cityList2s = new ArrayList<>();
         try {
@@ -247,7 +250,7 @@ public class SearchFragment extends Fragment {
             InputStream is = url.openStream(); // url 위치로 InputStream 연결
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is, "UTF-8")); //InputStream 으로부터 xml 입력받음
+            xpp.setInput(new InputStreamReader(is)); //InputStream 으로부터 xml 입력받음
             String tag = null;
             xpp.next();
             int eventType = xpp.getEventType();
@@ -307,6 +310,7 @@ public class SearchFragment extends Fragment {
         public void setName(String name) {
             this.name = name;
         }
+
     }//시도 xml 받아오기끝
 
     class Gugun extends AsyncTask<String, Void, Void> {//받아온 list 쓰기
@@ -372,6 +376,8 @@ public class SearchFragment extends Fragment {
 
     public ArrayList<CityList3> getXmlData3(String cityname, String sigunguname) {//동 xml 받아오기
         String cityName=changeCityName(cityname);
+        cityName=iLoveYourAss(cityName);
+        sigunguname = iLoveYourAss(sigunguname);
         String api3 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getEupMyunDongList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityName + "&signguCd=" + sigunguname;
 //        Log.i("s1", api3);
         ArrayList<CityList3> cityList3s = new ArrayList<>();
@@ -381,7 +387,7 @@ public class SearchFragment extends Fragment {
             InputStream is = url.openStream(); // url 위치로 InputStream 연결
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is, "UTF-8")); //InputStream 으로부터 xml 입력받음
+            xpp.setInput(new InputStreamReader(is)); //InputStream 으로부터 xml 입력받음
             String tag = null;
             xpp.next();
             int eventType = xpp.getEventType();
@@ -573,7 +579,7 @@ public class SearchFragment extends Fragment {
         return name;
     }
 
-    public int taeyeonGaneung(){
+    public int taeyeonGaneung(){//백키가 눌렸을때 호출되는메서드
 
         if(param1==null){
             return 1;
@@ -590,6 +596,15 @@ public class SearchFragment extends Fragment {
         }else {
             return 0;
         }
+    }
+    private String iLoveYourAss(String cityName){//String 변환 핵사어 로 변환 하는 메서드
+        String cityNameEncoded = null;
+        try {
+            cityNameEncoded = URLEncoder.encode(cityName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return cityNameEncoded;
     }
 
 }

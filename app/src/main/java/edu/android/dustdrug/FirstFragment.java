@@ -166,7 +166,7 @@ public class FirstFragment extends Fragment {
             return;
         }
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10*60*1000, 0, locationListener);
     }
 
     private LocationListener locationListener = new LocationListener() {
