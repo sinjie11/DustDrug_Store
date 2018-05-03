@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -133,6 +134,26 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "main fragment call");
         }
         return mainFragment;
+    }
+     void iWantGoHomeSave(String si ,String gu , String gun){ //셰어 프래 퍼런스 저장
+        SharedPreferences pref = getPreferences(MODE_PRIVATE);
+        boolean result1 = pref.edit().putString("si", si).commit(); // SharedPreference에 데이터 저장
+        boolean result2 = pref.edit().putString("gu", gu).commit(); // SharedPreference에 데이터 저장
+        boolean result3 = pref.edit().putString("gun", gun) // SharedPreference에 데이터 저장
+                .commit();
+    }
+     List<Address> iWantGoHomeRead(){   //읽기
+        SharedPreferences pref = getPreferences(MODE_PRIVATE);
+        String si = pref.getString("si", null);
+        String gu = pref.getString("gu", null);
+        String gun = pref.getString("gun", null);
+        List<Address> list = new ArrayList<>();
+        Address address = new Address(null);
+        address.setLocality(si);
+        address.setSubLocality(gu);
+        address.setThoroughfare(gun);
+        list.add(address);
+        return list;
     }
 
     // TODO: 블루투스 페어링

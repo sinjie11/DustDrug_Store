@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -44,7 +45,9 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,7 +58,6 @@ import java.util.UUID;
 
 public class MainFragment extends Fragment {
     public static final String TAG = "edu.android";
-
     /**
      * # 참고 사항 #
      *
@@ -82,7 +84,7 @@ public class MainFragment extends Fragment {
     private Location location;
     private LineChart lineChart; // 그래프(jar 파일 사용)
     private List<Address> list;
-
+    private MainActivity mainActivity;
     public TextView textLocation, textShowValue, textValueGrade, textTime, textShowValuePm25;
     public ImageButton btnBlueTooth, btnSearch;
 
@@ -145,7 +147,7 @@ public class MainFragment extends Fragment {
         lineChart = view.findViewById(R.id.chartValueEveryHour);
         lineChart.setDescription(" ");
         showLineChart(); // Line Graph를 보여주는 메소드를 불러옵니다.
-
+        mainActivity=(MainActivity) getContext();
         textLocation = view.findViewById(R.id.textLocation);
         textShowValue = view.findViewById(R.id.textShowValue);
         btnBlueTooth = view.findViewById(R.id.btnBlueTooth);
@@ -153,8 +155,8 @@ public class MainFragment extends Fragment {
         textValueGrade = view.findViewById(R.id.textValueGrade);
         textTime = view.findViewById(R.id.textTime);
         textShowValuePm25 = view.findViewById(R.id.textShowValuePm25);
-
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() { // 새로고침 시 권한부여 및 좌표 받아오기
@@ -212,6 +214,13 @@ public class MainFragment extends Fragment {
                 }
             }
         });
+        try{
+        if(dustDrugDAOImple.data.getStationName()!=null){
+            soohyungHatesDujin();
+        }}catch (Exception e){
+
+        }
+       list=mainActivity.iWantGoHomeRead();//세어 프레퍼런트 불러오기
 
         return view;
     }
@@ -331,7 +340,9 @@ public class MainFragment extends Fragment {
     public void showLineChart() {
 
         int max = 0;
-
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH");
+        int x = Integer.parseInt(simpleDateFormat.toString());
         String[] xAxis = new String[]
                 {"", "1시", "2시", "3시", "4시",
                         "5시", "6시", "7시", "8시", "9시",
@@ -420,55 +431,7 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) { // 데이터 수치 갱신
             super.onPostExecute(o);
-            try {
-                textLocation.setText(list.get(0).getLocality()); // 시, 도
-                Log.i(TAG, "textLocation : " +  list.get(0).getLocality());
-                textLocation.append(" ");
-                textLocation.append(list.get(0).getSubLocality()); // 구,군
-                Log.i(TAG, "textSubLocation : " +  list.get(0).getSubLocality());
-
-            year = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(0, 4)); // 년
-
-            month = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(5, 7)); // 월
-
-            date = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(8, 10)); // 일
-
-                calendar = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(11, 13)); // 시(時)
-
-                textTime.setText("※ " + year + "년 " + month + "월 " + date + "일 " + calendar + "시 기준"); // 날짜, 시간 출력
-
-                textShowValue.setText("미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
-
-            String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
-            if (gradePm10.equals("1")) {
-                textValueGrade.setText("좋음");
-
-                } else if (gradePm10.equals("2")) {
-                    textValueGrade.setText("보통");
-
-                } else if (gradePm10.equals("3")) {
-                    textValueGrade.setText("나쁨");
-
-                } else if (gradePm10.equals("4")) {
-                    textValueGrade.setText("매우나쁨");
-
-                } else {
-                    textValueGrade.setText("등급확인 불가");
-                }
-
-                textShowValuePm25.setText("초미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
-
-            for (int i = 0; i < 24; i++) { // 그래프 수치
-                list_pm10value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm10Value());
-            }
-
-                for (int i = 0; i < 24; i++) { // 그래프 수치 pm25
-                    list_pm25value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm25Value());
-                    Log.i("TAG", "현재 수치 : " + list_pm25value[i]);
-                }
-            } catch (IndexOutOfBoundsException e) {
-                e.getMessage();
-            }
+            soohyungHatesDujin();//수치를 갱신해주는 메서드
         }
 
     } // end class SexyAss extends AsyncTask
@@ -844,4 +807,77 @@ public class MainFragment extends Fragment {
             }
         }
     }
-} // end MainFragment
+    public void soohyungHatesDujin(){ //수치 갱신
+        try {
+            if(dustDrugDAOImple.data.getStationName()!=null) {
+                textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
+                Log.i(TAG, "textLocation : " + list.get(0).getLocality());
+                textLocation.append(" ");
+                textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
+                Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
+            }else if(dustDrugDAOImple.data.getStationName()==null){
+                textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
+                Log.i(TAG, "textLocation : " + list.get(0).getLocality());
+                textLocation.append(" ");
+                textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
+                Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
+            }
+
+
+            year = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(0, 4)); // 년
+
+            month = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(5, 7)); // 월
+
+            date = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(8, 10)); // 일
+
+            calendar = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(11, 13)); // 시(時)
+
+            textTime.setText("※ " + year + "년 " + month + "월 " + date + "일 " + calendar + "시 기준"); // 날짜, 시간 출력
+
+            textShowValue.setText("미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
+
+            String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
+
+            mainActivity.iWantGoHomeSave(dustDrugDAOImple.data.getLocality(),dustDrugDAOImple.data.getSubLocality(),dustDrugDAOImple.data.getThoroughfare());//셰어 프레퍼런스저장
+            if (gradePm10.equals("1")) {
+                textValueGrade.setText("좋음");
+
+            } else if (gradePm10.equals("2")) {
+                textValueGrade.setText("보통");
+
+            } else if (gradePm10.equals("3")) {
+                textValueGrade.setText("나쁨");
+
+            } else if (gradePm10.equals("4")) {
+                textValueGrade.setText("매우나쁨");
+
+            } else {
+                if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())<30 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())>0){
+                    textValueGrade.setText("좋음");
+                }else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())<80 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())>31){
+                    textValueGrade.setText("보통");
+                }else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())<150 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())>81){
+                    textValueGrade.setText("나쁨");
+                }else if ( Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())>151){
+                    textValueGrade.setText("매우나쁨");
+                }
+            }
+
+            textShowValuePm25.setText("초미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
+
+            for (int i = 0; i < 24; i++) { // 그래프 수치
+                list_pm10value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm10Value());
+            }
+
+            for (int i = 0; i < 24; i++) { // 그래프 수치 pm25
+                list_pm25value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm25Value());
+                Log.i("TAG", "현재 수치 : " + list_pm25value[i]);
+            }
+
+            showLineChart();
+        } catch (IndexOutOfBoundsException e) {
+            e.getMessage();
+        }
+    }
+
+}
