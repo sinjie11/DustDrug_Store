@@ -2,7 +2,9 @@ package edu.android.dustdrug;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.Fragment;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private long lastTimeBackPressed = 0;
     private SearchFragment searchFragment;
     Geocoder geocoder = null;
+    String storedTime;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "MainActivity - onStart");
     }
 
+    // TODO:
+
+
     /* ↓ Back 버튼 누를 시 앱 종료 기능 */
     @Override
     public void onBackPressed() {
@@ -54,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
             int result = ((SearchFragment) fragment).taeyeonGaneung();
 
             if (result == 1) {
+                sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+                String time = sharedPreferences.getString("time", "");
+
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, mainFragment);
                 transaction.addToBackStack(null);
@@ -67,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                     android.os.Process.killProcess(android.os.Process.myPid());
                     System.exit(0);
-
                 }
 
             } else if (result == 0) {
@@ -96,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
         startActivity(discoverableIntent);
-
-
     }
 
     public void backMainFtagment(List<Address> addressList) {//서치 에서 메인프레그 먼트로 주소를 보내줄때 사용
