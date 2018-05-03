@@ -116,58 +116,43 @@ public class SearchFragment extends Fragment {
 
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is)); //InputStream 으로부터 xml 입력받음
+            xpp.setInput(new InputStreamReader(is)); // InputStream 으로부터 xml 입력받음
             String tag = null;
             xpp.next();
             int eventType = xpp.getEventType();
             CityList cityList = new CityList();
-//            Log.i("s1","파싱S");
+
             while (eventType != XmlPullParser.END_DOCUMENT) {
 
-//                Log.i("s1","와일");
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT://파싱 시작
-//                        Log.i("s1","시작 ");
                         break;
 
                     case XmlPullParser.START_TAG:
                         tag = xpp.getName();//태그 이름 얻어오기
 
                         if (tag.equals("brtcNm")) {
-//                            Log.i("s1", "nm");
                             xpp.next();
-//                            Log.i("s1", xpp.getText() + "1");
-                            String cityName=changeCityName(xpp.getText());
+                            String cityName = changeCityName(xpp.getText());
                             cityList.setBrtcNm(cityName);
-//                            Log.i("s1", cityList.getBrtcNm() + "2");
-
 
                         } else if (tag.equals("brtcCd")) {
-//                            Log.i("s1", "cd");
                             xpp.next();
-//                            Log.i("s1", xpp.getText() + "1");
                             cityList.setBrtcCd(xpp.getText());
-//                            Log.i("s1", cityList.getBrtcCd() + "2");
                         }
-//                        Log.i("s1","Start Tag");
+
                         break;
                     case XmlPullParser.TEXT:
-//                        Log.i("s1","pull Parser");
                         break;
 
                     case XmlPullParser.END_TAG:
-//                        Log.i("s1", "endTag");
-//                        Log.i("s1",cityList.getBrtcCd());
                         tag = xpp.getName(); // 태그 이름 얻어오기
-//                        Log.i("s1",tag);
-                        if (tag.equals("borodCity")) {
 
-//                            Log.i("s1", "저장");
+                        if (tag.equals("borodCity")) {
                             lists.add(cityList);
-//                            Log.i("s1", cityList.getBrtcCd());
-//                            Log.i("s1", cityList.getBrtcNm());
                             cityList = new CityList();
                         }
+
                         break;
                 }
                 eventType = xpp.next();
@@ -648,7 +633,8 @@ public class SearchFragment extends Fragment {
             recyclerView.setAdapter(searchItem);
         }
     }
-    class SearchItem extends RecyclerView.Adapter<SerchItemViewHolder>{ //검색 리사이클러뷰 어댑터
+
+    class SearchItem extends RecyclerView.Adapter<SerchItemViewHolder>{ // 검색 리사이클러뷰 어댑터
 
         @NonNull
         @Override

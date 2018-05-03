@@ -16,12 +16,12 @@ public class AirQulity_API {
     private Gson gson = new Gson();
 
 
-    public ArrayList<GetAPIGsonTM.List> getFackTm(String original) {//동이름이 있을 시 동을 tm 주소로 바꿔주는 메서드  검색 시 원하는 위차를 tm 좌표로 받아오는 메서드
+    public ArrayList<GetAPIGsonTM.List> getFackTm(String original) { // 동이름이 있을 시 동을 tm 주소로 바꿔주는 메서드  검색 시 원하는 위차를 tm 좌표로 받아오는 메서드
         for (int i = 0; i <= 9; i++) {//동 이름에 숫자가 있을때 바꿔줌
             original = original.replace(String.valueOf(i), "");
         }
 
-        String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getTMStdrCrdnt?umdName="+original+"&pageNo=1&numOfRows=1000&ServiceKey="+AuthenticationKey+"&_returnType=json";
+        String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getTMStdrCrdnt?umdName=" + original + "&pageNo=1&numOfRows=1000&ServiceKey=" + AuthenticationKey + "&_returnType=json";
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String json = null;
@@ -37,16 +37,16 @@ public class AirQulity_API {
             while ((line = reader.readLine()) != null) {
                 buffer.append(line+"\n");
             }
-            json=buffer.toString();
+            json = buffer.toString();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(json==null){Log.i("s1","json null임");}
-        GetAPIGsonTM getAPIGsonTM =gson.fromJson(json,GetAPIGsonTM.class);
+        if(json == null){Log.i("s1","json null임");}
+        GetAPIGsonTM getAPIGsonTM = gson.fromJson(json,GetAPIGsonTM.class);
 
 
-        if(getAPIGsonTM==null){
+        if(getAPIGsonTM == null){
             Log.i("s1","여기1");
         }
         return getAPIGsonTM.list;
@@ -126,7 +126,7 @@ public class AirQulity_API {
     public ArrayList<GetAPIGsonMainData.List> getDataclass(String stationName){
         String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstn" +
                 "AcctoRltmMesureDnsty?stationName=" + stationName +
-                "&dataTerm=month&pageNo=1&numOfRows=24&ServiceKey="+AuthenticationKey+
+                "&dataTerm=month&pageNo=1&numOfRows=24&ServiceKey=" + AuthenticationKey +
                 "&ver=1.3&_returnType=json";
         HttpURLConnection connection = null;
         BufferedReader reader = null;
@@ -151,9 +151,9 @@ public class AirQulity_API {
         GetAPIGsonMainData getAPIGsonMainData = gson.fromJson(json,GetAPIGsonMainData.class);
         return getAPIGsonMainData.list;
     }
-    class GetAPIGsonMainData{
+    class GetAPIGsonMainData {
         ArrayList<List> list;
-        class List{
+        class List {
             String coGrade;//일산화 등급
             String coValue;//일산화 량
             String dataTime;//시간
