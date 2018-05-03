@@ -59,17 +59,17 @@ public class MainFragment extends Fragment {
 
     /**
      * # 참고 사항 #
-     *
+     * <p>
      * - 실시간 정보 : 10분(매 시간 시간자료 갱신은 20분 전후로 반영됨)
-     *
+     * <p>
      * - 대기질 예보 정보 : 매 시간 22분, 57분
-     *
+     * <p>
      * ※ Grade 값
-     *      좋음     : 1   ( pm10 => 0 ~ 30 , pm2.5 => 0 ~ 15 )
-     *      보통     : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
-     *      나쁨     : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
-     *      매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
-     *
+     * 좋음     : 1   ( pm10 => 0 ~ 30 , pm2.5 => 0 ~ 15 )
+     * 보통     : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
+     * 나쁨     : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
+     * 매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
+     * <p>
      * ※ JSON 방식 호출 방법 : URL 제일 뒷 부분에 다음 파라미터(&_returnType=json)를 추가하여 호출
      */
 
@@ -365,56 +365,51 @@ public class MainFragment extends Fragment {
                         "15시", "16시", "17시", "18시", "19시",
                         "20시", "21시", "22시", "23시", "24시"};
 
+
+        int cnt = 24 - calendar;
+
+        Log.i(TAG, "calendar : " + cnt);
+        for (int x = 0; x < cnt; x++) {
+            for (int k = 25; k >= 2; --k) {
+                if (k == 25)
+                    xAxis[1] = xAxis[k - 1];
+                else
+                    xAxis[k] = xAxis[k - 1];
+            }
+        }
+
         ArrayList<ILineDataSet> lines = new ArrayList<ILineDataSet>();
+        ArrayList<Entry> dataset1 = new ArrayList<Entry>();
+        ArrayList<Entry> dataset2 = new ArrayList<Entry>();
+        LineDataSet lineDataSet1 = new LineDataSet(dataset1, "미세먼지");
+        lineDataSet1.setColor(Color.parseColor("#cb1ad6"));
+        lineDataSet1.setCircleColor(Color.parseColor("#cb1ad6"));
+        lineDataSet1.setDrawCubic(true);
+        lines.add(lineDataSet1);
+
+        LineDataSet lineDataSet2 = new LineDataSet(dataset2, "초미세먼지");
+        lineDataSet2.setColor(Color.parseColor("#0deaf0"));
+        lineDataSet2.setCircleColor(Color.parseColor("#0deaf0"));
+        lineDataSet2.setDrawCubic(true);
+        lines.add(lineDataSet2);
 
         if (!bluetoothOn) { //bluetoothOn 연결이 되어 있지 않을때
-            ArrayList<Entry> dataset1 = new ArrayList<Entry>();
-            if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
-                for (int k = calendar; k < xAxis.length - 1; k++) {
+            for (int k = 0; k < 24; k++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                if (list_pm10value[k] == -1)
                     list_pm10value[k] = 0;
-                }
-
-                for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                    dataset1.add(new Entry(list_pm10value[i], i + 1));
-                }
-
-            } else {
-
-                for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                    dataset1.add(new Entry(list_pm10value[i], i + 1));
-                }
+                else
+                    dataset1.add(new Entry(list_pm10value[k], k + 1));
             }
 
-            ArrayList<Entry> dataset2 = new ArrayList<Entry>();
-            if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
-                for (int k = calendar; k < xAxis.length - 1; k++) {
-                    list_pm25value[k] = 0;
-                }
-
-                for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+            for (int i = 0; i < 24; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                if (list_pm25value[i] == -1)
+                    list_pm25value[i] = 0;
+                else
                     dataset2.add(new Entry(list_pm25value[i], i + 1));
-                }
-
-            } else {
-
-                for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                    dataset2.add(new Entry(list_pm25value[i], i + 1));
-                }
             }
 
-            LineDataSet lineDataSet1 = new LineDataSet(dataset1, "미세먼지");
-            lineDataSet1.setColor(Color.parseColor("#cb1ad6"));
-            lineDataSet1.setCircleColor(Color.parseColor("#cb1ad6"));
-            lineDataSet1.setDrawCubic(true);
-            lines.add(lineDataSet1);
-
-            LineDataSet lineDataSet2 = new LineDataSet(dataset2, "초미세먼지");
-            lineDataSet2.setColor(Color.parseColor("#0deaf0"));
-            lineDataSet2.setCircleColor(Color.parseColor("#0deaf0"));
-            lineDataSet2.setDrawCubic(true);
-            lines.add(lineDataSet2);
-
-        } else { // bluetoothOn 연결이 되어 있지 않을때
+        }
+         else{ // bluetoothOn 연결이 되어 있지 않을때
 
             ArrayList<Entry> blueDataSet = new ArrayList<Entry>();
 
@@ -437,7 +432,6 @@ public class MainFragment extends Fragment {
         Legend legend = lineChart.getLegend();
         legend.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
     }
-
 
     // GPS 위도 경도 값 불러오기 끝
 
@@ -877,10 +871,14 @@ public class MainFragment extends Fragment {
             date = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(8, 10)); // 일
 
             calendar = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(11, 13)); // 시(時)
-
+            Log.i(TAG, "calendar 수형헤이트두진 : " + calendar);
             textTime.setText("※ " + year + "년 " + month + "월 " + date + "일 " + calendar + "시 기준"); // 날짜, 시간 출력
 
-            textShowValue.setText("미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
+            if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) == -1)
+                textShowValue.setText("미세먼지 데이터를 찾을 수 없습니다"); // 미세먼지(PM10)
+            else
+                textShowValue.setText("미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
+
 
             String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
 
@@ -909,7 +907,12 @@ public class MainFragment extends Fragment {
                 }
             }
 
-            textShowValuePm25.setText("초미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
+            if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm25Value()) == -1)
+                textShowValuePm25.setText("초미세먼지 데이터를 찾을 수 없습니다"); // 초미세먼지(PM2.5)
+            else
+                textShowValuePm25.setText("초미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
+
+
             for (int i = 0; i < 24; i++) { // 그래프 수치
                 list_pm10value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm10Value());
             }
