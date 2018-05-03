@@ -45,6 +45,7 @@
 
     <TextView
         android:id="@+id/textView"
+        android:fontFamily="@font/nanumgothic"
         android:layout_width="300dp"
         android:layout_height="30dp"
         android:layout_marginBottom="8dp"

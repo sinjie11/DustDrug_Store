@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private long lastTimeBackPressed = 0;
     private SearchFragment searchFragment;
     Geocoder geocoder = null;
-    String storedTime;
     private SharedPreferences sharedPreferences;
 
     @Override

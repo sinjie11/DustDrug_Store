@@ -33,120 +33,128 @@
         <TextView
             android:id="@+id/textLocation"
             android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/address_border"
+            android:background="@drawable/rounded_edittext"
+            android:fontFamily="@font/maplestorylight"
             android:gravity="center"
             android:hint="주소"
-            android:textSize="24sp"
+            android:textSize="17sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/btnSearch"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/btnSearch" />
 
         <ImageButton
             android:id="@+id/btnBlueTooth"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
             android:background="@android:color/transparent"
             android:onClick="blueToothPairing"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="@+id/textLocation"
+            app:layout_constraintBottom_toTopOf="@+id/textLocation"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textLocation"
             app:srcCompat="@drawable/btnimage_bluetooth" />
 
         <ImageButton
             android:id="@+id/btnSearch"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@android:color/transparent"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="@+id/textLocation"
             app:layout_constraintEnd_toStartOf="@+id/btnBlueTooth"
-            app:layout_constraintTop_toTopOf="@+id/textLocation"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/btnimage_search" />
 
 
         <TextView
             android:id="@+id/textShowValue"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_width="184dp"
+            android:layout_height="90dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/maplestorylight"
             android:foregroundGravity="center"
             android:gravity="center"
             android:hint="미세먼지 값(PM10)"
             android:textColor="#cb1ad6"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
+            android:textSize="27sp"
+            app:layout_constraintEnd_toStartOf="@+id/textValueGrade"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textTime" />
+            app:layout_constraintTop_toBottomOf="@+id/textLocation" />
 
         <TextView
             android:id="@+id/textValueGrade"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="114dp"
+            android:layout_height="172dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/maplestorylight"
             android:gravity="center"
             android:hint="미세먼지 등급"
             android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/textTime"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textShowValue" />
+            app:layout_constraintTop_toBottomOf="@+id/textLocation"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/textTime"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_width="160dp"
+            android:layout_height="20dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="40dp"
+            android:fontFamily="@font/maplestorylight"
             android:foregroundGravity="center"
-            android:gravity="center"
             android:hint="날짜 및 시간"
-            android:textSize="20sp"
+            android:textAlignment="textEnd"
             android:textColor="#f70000"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toTopOf="@+id/textMeasuring"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textLocation" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent" />
         <!--#996710-->
         <TextView
             android:id="@+id/textShowValuePm25"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_width="184dp"
+            android:layout_height="90dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:fontFamily="@font/maplestorylight"
             android:gravity="center"
             android:hint="초미세먼지 값(PM2.5)"
             android:textColor="#0deaf0"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="27sp"
+            app:layout_constraintEnd_toStartOf="@+id/textValueGrade"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textValueGrade" />
+            app:layout_constraintTop_toBottomOf="@+id/textShowValue" />
 
         <TextView
             android:id="@+id/textMeasuring"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/maplestorylight"
             android:text="( 기준 : 근접 측정소 )"
             android:textColor="#cec8c8"
             android:textSize="10sp"
             app:layout_constraintBottom_toTopOf="@+id/chartValueEveryHour"
-            app:layout_constraintEnd_toEndOf="@+id/chartValueEveryHour" />
+            app:layout_constraintEnd_toEndOf="@+id/chartValueEveryHour"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <!-- 색상표
     * 노랑 : #EAE674

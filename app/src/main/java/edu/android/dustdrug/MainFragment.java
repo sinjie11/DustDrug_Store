@@ -364,14 +364,26 @@ public class MainFragment extends Fragment {
 
 
         int cnt = 24 - calendar;
-
+        Log.i(TAG, "calendar : " + calendar);
         Log.i(TAG, "calendar : " + cnt);
-        for (int x = 0; x < cnt; x++) {
-            for (int k = 25; k >= 2; --k) {
-                if (k == 25)
-                    xAxis[1] = xAxis[k - 1];
-                else
-                    xAxis[k] = xAxis[k - 1];
+
+        if (cnt == 23) {
+            for (int x = 0; x < 1; x++) {
+                for (int k = 1; k < 25; k++) {
+                    if (k == 1)
+                        xAxis[24] = xAxis[k];
+                    else
+                        xAxis[k - 1] = xAxis[k];
+                }
+            }
+        } else {
+            for (int x = 0; x < cnt; x++) {
+                for (int k = 25; k >= 2; k--) {
+                    if (k == 25)
+                        xAxis[1] = xAxis[k - 1];
+                    else
+                        xAxis[k] = xAxis[k - 1];
+                }
             }
         }
 
@@ -405,8 +417,7 @@ public class MainFragment extends Fragment {
                     dataset2.add(new Entry(list_pm25value[i], i + 1));
             }
 
-        }
-         else{ // bluetoothOn 연결이 되어 있지 않을때
+        } else { // bluetoothOn 연결이 되어 있지 않을때
 
             ArrayList<Entry> blueDataSet = new ArrayList<Entry>();
 
@@ -426,6 +437,7 @@ public class MainFragment extends Fragment {
         lineChart.animateY(1500);
         lineChart.setScaleEnabled(false);
         lineChart.getData().setHighlightEnabled(false);
+        lineChart.getXAxis().getSpaceBetweenLabels();
         Legend legend = lineChart.getLegend();
         legend.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
     }
@@ -872,59 +884,59 @@ public class MainFragment extends Fragment {
             textTime.setText("※ " + year + "년 " + month + "월 " + date + "일 " + calendar + "시 기준"); // 날짜, 시간 출력
 
             if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) == -1)
-                textShowValue.setText("미세먼지 데이터를 찾을 수 없습니다"); // 미세먼지(PM10)
+                textShowValue.setText("미세먼지\n데이터를\n찾을 수 없습니다"); // 미세먼지(PM10)
             else
-                textShowValue.setText("미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
+                textShowValue.setText("미세먼지\n" + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
 
 
             String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
 
             mainActivity.iWantGoHomeSave(dustDrugDAOImple.data.getLocality(), dustDrugDAOImple.data.getSubLocality(), dustDrugDAOImple.data.getThoroughfare());//셰어 프레퍼런스저장
             if (gradePm10.equals("1")) {
-                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0 );
+                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0);
                 textValueGrade.setCompoundDrawablePadding(10); // 미세먼지 등급 이미지 변경
                 textValueGrade.setTextColor(Color.parseColor("#3785c3")); // 글자색 변경(이미지 색상과 동일)
                 textValueGrade.setText("좋음");
 
             } else if (gradePm10.equals("2")) {
-                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_usually, 0 );
+                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_usually, 0);
                 textValueGrade.setCompoundDrawablePadding(10);
                 textValueGrade.setTextColor(Color.parseColor("#66bb46"));
                 textValueGrade.setText("보통");
 
             } else if (gradePm10.equals("3")) {
-                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_bad, 0 );
+                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_bad, 0);
                 textValueGrade.setCompoundDrawablePadding(10);
                 textValueGrade.setTextColor(Color.parseColor("##d88829"));
                 textValueGrade.setText("나쁨");
 
             } else if (gradePm10.equals("4")) {
-                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0 );
+                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0);
                 textValueGrade.setCompoundDrawablePadding(10);
                 textValueGrade.setTextColor(Color.parseColor("#da4f4a"));
                 textValueGrade.setText("매우나쁨");
 
             } else {
                 if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 30 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 0) {
-                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0 );
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#3785c3"));
                     textValueGrade.setText("좋음");
 
                 } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 80 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 31) {
-                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_usually, 0 );
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_usually, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#66bb46"));
                     textValueGrade.setText("보통");
 
                 } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 150 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 81) {
-                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0 );
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("##d88829"));
                     textValueGrade.setText("나쁨");
 
                 } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 151) {
-                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0 );
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#da4f4a"));
                     textValueGrade.setText("매우나쁨");
@@ -932,9 +944,9 @@ public class MainFragment extends Fragment {
             }
 
             if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm25Value()) == -1)
-                textShowValuePm25.setText("초미세먼지 데이터를 찾을 수 없습니다"); // 초미세먼지(PM2.5)
+                textShowValuePm25.setText("초미세먼지\n데이터를\n찾을 수 없습니다"); // 초미세먼지(PM2.5)
             else
-                textShowValuePm25.setText("초미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
+                textShowValuePm25.setText("초미세먼지\n" + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
 
 
             for (int i = 0; i < 24; i++) { // 그래프 수치
