@@ -138,13 +138,11 @@ public class MainFragment extends Fragment {
 
     public MainFragment() {
         // Required empty public constructor
-
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -167,13 +165,14 @@ public class MainFragment extends Fragment {
         textTime = view.findViewById(R.id.textTime);
         textShowValuePm25 = view.findViewById(R.id.textShowValuePm25);
 
+
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.YELLOW, Color.RED); // 새로고침 색상 변경
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() { // 새로고침 시 권한부여 및 좌표 받아오기
 
-                showLocationInfo(); // 위도경도 불러오기
+                showLocationInfo(); // 위도, 경도 불러오기
                 startLocationService();
                 showLineChart(); // 새로고침 할때도 LineChart 메소드 다시 불러옴
                 getAddress(); // 좌표 주소로 변환 시 구 동
@@ -195,6 +194,17 @@ public class MainFragment extends Fragment {
                 } // end try-catch
             }
         });
+
+        try {
+
+            if (dustDrugDAOImple.data.getStationName() != null) {
+                soohyungHatesDujin();
+            }
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        list = mainActivity.iWantGoHomeRead();//세어 프레퍼런트 불러오기
 
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -228,18 +238,6 @@ public class MainFragment extends Fragment {
                 }
             }
         });
-
-        try {
-
-            if (dustDrugDAOImple.data.getStationName() != null) {
-                soohyungHatesDujin();
-            }
-
-        } catch (Exception e) {
-
-        }
-
-        list = mainActivity.iWantGoHomeRead();//세어 프레퍼런트 불러오기
 
         return view;
     }
