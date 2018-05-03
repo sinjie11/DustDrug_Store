@@ -155,7 +155,6 @@ public class MainFragment extends Fragment {
         lineChart.setDescription(" ");
         showLineChart(); // Line Graph 를 보여주는 메소드를 불러옵니다.
 
-        showLineChart(); // Line Graph를 보여주는 메소드를 불러옵니다.
         mainActivity = (MainActivity) getContext();
         textLocation = view.findViewById(R.id.textLocation);
         textShowValue = view.findViewById(R.id.textShowValue);
@@ -882,25 +881,52 @@ public class MainFragment extends Fragment {
 
             mainActivity.iWantGoHomeSave(dustDrugDAOImple.data.getLocality(), dustDrugDAOImple.data.getSubLocality(), dustDrugDAOImple.data.getThoroughfare());//셰어 프레퍼런스저장
             if (gradePm10.equals("1")) {
+                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0 );
+                textValueGrade.setCompoundDrawablePadding(10); // 미세먼지 등급 이미지 변경
+                textValueGrade.setTextColor(Color.parseColor("#3785c3")); // 글자색 변경(이미지 색상과 동일)
                 textValueGrade.setText("좋음");
 
             } else if (gradePm10.equals("2")) {
+                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_usually, 0 );
+                textValueGrade.setCompoundDrawablePadding(10);
+                textValueGrade.setTextColor(Color.parseColor("#66bb46"));
                 textValueGrade.setText("보통");
 
             } else if (gradePm10.equals("3")) {
+                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_bad, 0 );
+                textValueGrade.setCompoundDrawablePadding(10);
+                textValueGrade.setTextColor(Color.parseColor("##d88829"));
                 textValueGrade.setText("나쁨");
 
             } else if (gradePm10.equals("4")) {
+                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0 );
+                textValueGrade.setCompoundDrawablePadding(10);
+                textValueGrade.setTextColor(Color.parseColor("#da4f4a"));
                 textValueGrade.setText("매우나쁨");
 
             } else {
                 if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 30 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 0) {
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0 );
+                    textValueGrade.setCompoundDrawablePadding(10);
+                    textValueGrade.setTextColor(Color.parseColor("#3785c3"));
                     textValueGrade.setText("좋음");
+
                 } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 80 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 31) {
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_usually, 0 );
+                    textValueGrade.setCompoundDrawablePadding(10);
+                    textValueGrade.setTextColor(Color.parseColor("#66bb46"));
                     textValueGrade.setText("보통");
+
                 } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 150 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 81) {
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0 );
+                    textValueGrade.setCompoundDrawablePadding(10);
+                    textValueGrade.setTextColor(Color.parseColor("##d88829"));
                     textValueGrade.setText("나쁨");
+
                 } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 151) {
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0 );
+                    textValueGrade.setCompoundDrawablePadding(10);
+                    textValueGrade.setTextColor(Color.parseColor("#da4f4a"));
                     textValueGrade.setText("매우나쁨");
                 }
             }

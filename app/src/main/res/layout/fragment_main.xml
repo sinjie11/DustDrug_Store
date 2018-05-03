@@ -84,7 +84,7 @@
             android:foregroundGravity="center"
             android:gravity="center"
             android:hint="미세먼지 값(PM10)"
-            android:textColor="#ea0f0c"
+            android:textColor="#cb1ad6"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
@@ -100,7 +100,6 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:hint="미세먼지 등급"
-            android:textColor="#02874b"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -117,11 +116,11 @@
             android:gravity="center"
             android:hint="날짜 및 시간"
             android:textSize="20sp"
-            android:textColor="#996710"
+            android:textColor="#f70000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textLocation" />
-
+        <!--#996710-->
         <TextView
             android:id="@+id/textShowValuePm25"
             android:layout_width="wrap_content"
@@ -131,7 +130,7 @@
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:hint="초미세먼지 값(PM2.5)"
-            android:textColor="#1317d7"
+            android:textColor="#0deaf0"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
