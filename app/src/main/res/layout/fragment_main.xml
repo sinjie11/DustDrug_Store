@@ -149,7 +149,6 @@
             app:layout_constraintBottom_toTopOf="@+id/chartValueEveryHour"
             app:layout_constraintEnd_toEndOf="@+id/chartValueEveryHour" />
 
-
         <!-- 색상표
     * 노랑 : #EAE674
     * 연두 : #7CE923 , #C6E5B6

@@ -12,7 +12,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class AirQulity_API {
-    String AuthenticationKey ="2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D";
+//    String AuthenticationKey = "2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D"; // 내꺼
+    String AuthenticationKey = "x8wVPw0ebqpfGHvFnY1u0ESYkwICViliP26eUlnenbgGWPAes0aX0sNMb47qg22efyWm4e3UDMB%2FUAOmIQUIaQ%3D%3D"; // 두진이꺼
     private Gson gson = new Gson();
 
 

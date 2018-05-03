@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -189,6 +188,7 @@ public class MainFragment extends Fragment {
             }
         });
 
+
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,7 +232,6 @@ public class MainFragment extends Fragment {
 
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
