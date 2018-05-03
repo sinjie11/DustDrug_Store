@@ -64,11 +64,11 @@ public class MainFragment extends Fragment {
      *
      * - 대기질 예보 정보 : 매 시간 22분, 57분
      *
-     *  ※ Grade 값
-     *    좋음    : 1   ( pm10 => 0 ~ 30 , pm2.5 => 0 ~ 15 )
-     *    보통   : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
-     *    나쁨   : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
-     *  매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
+     * ※ Grade 값
+     *      좋음     : 1   ( pm10 => 0 ~ 30 , pm2.5 => 0 ~ 15 )
+     *      보통     : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
+     *      나쁨     : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
+     *      매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
      *
      * ※ JSON 방식 호출 방법 : URL 제일 뒷 부분에 다음 파라미터(&_returnType=json)를 추가하여 호출
      */
@@ -158,7 +158,7 @@ public class MainFragment extends Fragment {
         showLineChart(); // Line Graph 를 보여주는 메소드를 불러옵니다.
 
         showLineChart(); // Line Graph를 보여주는 메소드를 불러옵니다.
-        mainActivity=(MainActivity) getContext();
+        mainActivity = (MainActivity) getContext();
         textLocation = view.findViewById(R.id.textLocation);
         textShowValue = view.findViewById(R.id.textShowValue);
         btnBlueTooth = view.findViewById(R.id.btnBlueTooth);
@@ -166,6 +166,7 @@ public class MainFragment extends Fragment {
         textValueGrade = view.findViewById(R.id.textValueGrade);
         textTime = view.findViewById(R.id.textTime);
         textShowValuePm25 = view.findViewById(R.id.textShowValuePm25);
+
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -226,13 +227,18 @@ public class MainFragment extends Fragment {
                 }
             }
         });
-        try{
-        if(dustDrugDAOImple.data.getStationName()!=null){
-            soohyungHatesDujin();
-        }}catch (Exception e){
+
+        try {
+
+            if (dustDrugDAOImple.data.getStationName() != null) {
+                soohyungHatesDujin();
+            }
+
+        } catch (Exception e) {
 
         }
-       list=mainActivity.iWantGoHomeRead();//세어 프레퍼런트 불러오기
+
+        list = mainActivity.iWantGoHomeRead();//세어 프레퍼런트 불러오기
 
         return view;
     }
@@ -305,7 +311,7 @@ public class MainFragment extends Fragment {
     }
 
     /**
-     *  GPS 관련...
+     * GPS 관련...
      */
     public void startLocationService() { // GPS 권한 체크여부
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -351,8 +357,6 @@ public class MainFragment extends Fragment {
 
     public void showLineChart() {
 
-        int max = 0;
-
         String[] xAxis = new String[]
                 {"", "1시", "2시", "3시", "4시",
                         "5시", "6시", "7시", "8시", "9시",
@@ -360,78 +364,78 @@ public class MainFragment extends Fragment {
                         "15시", "16시", "17시", "18시", "19시",
                         "20시", "21시", "22시", "23시", "24시"};
 
-            ArrayList<ILineDataSet> lines = new ArrayList<ILineDataSet>();
+        ArrayList<ILineDataSet> lines = new ArrayList<ILineDataSet>();
 
-            if (!bluetoothOn) { //bluetoothOn 연결이 되어 있지 않을때
-                ArrayList<Entry> dataset1 = new ArrayList<Entry>();
-                if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
-                    for (int k = calendar; k < xAxis.length - 1; k++) {
-                        list_pm10value[k] = 0;
-                    }
-
-                    for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                        dataset1.add(new Entry(list_pm10value[i], i + 1));
-                    }
-
-                } else {
-
-                    for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                        dataset1.add(new Entry(list_pm10value[i], i + 1));
-                    }
+        if (!bluetoothOn) { //bluetoothOn 연결이 되어 있지 않을때
+            ArrayList<Entry> dataset1 = new ArrayList<Entry>();
+            if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
+                for (int k = calendar; k < xAxis.length - 1; k++) {
+                    list_pm10value[k] = 0;
                 }
 
-                ArrayList<Entry> dataset2 = new ArrayList<Entry>();
-                if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
-                    for (int k = calendar; k < xAxis.length - 1; k++) {
-                        list_pm25value[k] = 0;
-                    }
-
-                    for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                        dataset2.add(new Entry(list_pm25value[i], i + 1));
-                    }
-
-                } else {
-
-                    for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                        dataset2.add(new Entry(list_pm25value[i], i + 1));
-                    }
+                for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                    dataset1.add(new Entry(list_pm10value[i], i + 1));
                 }
 
-                LineDataSet lineDataSet1 = new LineDataSet(dataset1, "미세먼지");
-                lineDataSet1.setColor(Color.parseColor("#cb1ad6"));
-                lineDataSet1.setCircleColor(Color.parseColor("#cb1ad6"));
-                lineDataSet1.setDrawCubic(true);
-                lines.add(lineDataSet1);
+            } else {
 
-                LineDataSet lineDataSet2 = new LineDataSet(dataset2, "초미세먼지");
-                lineDataSet2.setColor(Color.parseColor("#0deaf0"));
-                lineDataSet2.setCircleColor(Color.parseColor("#0deaf0"));
-                lineDataSet2.setDrawCubic(true);
-                lines.add(lineDataSet2);
-
-            } else { //bluetoothOn 연결이 되어 있지 않을때
-
-                ArrayList<Entry> blueDataSet = new ArrayList<Entry>();
-
-                for (int i = 1; i < calendar + 1; i++) {
-                    blueDataSet.add(new Entry(Float.parseFloat(reciveData.split("/")[i]), i));
+                for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                    dataset1.add(new Entry(list_pm10value[i], i + 1));
                 }
-
-                LineDataSet lineDataSet = new LineDataSet(blueDataSet, "초미세먼지 테스트");
-                lineDataSet = new LineDataSet(blueDataSet, "초미세먼지");
-                lineDataSet.setColor(Color.parseColor("#0deaf0"));
-                lineDataSet.setCircleColor(Color.parseColor("#0deaf0"));
-                lineDataSet.setDrawCubic(true);
-                lines.add(lineDataSet);
             }
 
-            lineChart.setData(new LineData(xAxis, lines));
-            lineChart.animateY(1500);
-            lineChart.setScaleEnabled(false);
-            lineChart.getData().setHighlightEnabled(false);
-            Legend legend = lineChart.getLegend();
-            legend.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
+            ArrayList<Entry> dataset2 = new ArrayList<Entry>();
+            if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
+                for (int k = calendar; k < xAxis.length - 1; k++) {
+                    list_pm25value[k] = 0;
+                }
+
+                for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                    dataset2.add(new Entry(list_pm25value[i], i + 1));
+                }
+
+            } else {
+
+                for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                    dataset2.add(new Entry(list_pm25value[i], i + 1));
+                }
+            }
+
+            LineDataSet lineDataSet1 = new LineDataSet(dataset1, "미세먼지");
+            lineDataSet1.setColor(Color.parseColor("#cb1ad6"));
+            lineDataSet1.setCircleColor(Color.parseColor("#cb1ad6"));
+            lineDataSet1.setDrawCubic(true);
+            lines.add(lineDataSet1);
+
+            LineDataSet lineDataSet2 = new LineDataSet(dataset2, "초미세먼지");
+            lineDataSet2.setColor(Color.parseColor("#0deaf0"));
+            lineDataSet2.setCircleColor(Color.parseColor("#0deaf0"));
+            lineDataSet2.setDrawCubic(true);
+            lines.add(lineDataSet2);
+
+        } else { // bluetoothOn 연결이 되어 있지 않을때
+
+            ArrayList<Entry> blueDataSet = new ArrayList<Entry>();
+
+            for (int i = 1; i < calendar + 1; i++) {
+                blueDataSet.add(new Entry(Float.parseFloat(reciveData.split("/")[i]), i));
+            }
+
+            LineDataSet lineDataSet = new LineDataSet(blueDataSet, "초미세먼지 테스트");
+            lineDataSet = new LineDataSet(blueDataSet, "초미세먼지");
+            lineDataSet.setColor(Color.parseColor("#0deaf0"));
+            lineDataSet.setCircleColor(Color.parseColor("#0deaf0"));
+            lineDataSet.setDrawCubic(true);
+            lines.add(lineDataSet);
         }
+
+        lineChart.setData(new LineData(xAxis, lines));
+        lineChart.animateY(1500);
+        lineChart.setScaleEnabled(false);
+        lineChart.getData().setHighlightEnabled(false);
+        Legend legend = lineChart.getLegend();
+        legend.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
+    }
 
 
     // GPS 위도 경도 값 불러오기 끝
@@ -847,15 +851,16 @@ public class MainFragment extends Fragment {
             }
         }
     }
-    public void soohyungHatesDujin(){ //수치 갱신
+
+    public void soohyungHatesDujin() { //수치 갱신
         try {
-            if(dustDrugDAOImple.data.getStationName()!=null) {
+            if (dustDrugDAOImple.data.getStationName() != null) {
                 textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
                 Log.i(TAG, "textLocation : " + list.get(0).getLocality());
                 textLocation.append(" ");
                 textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
                 Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
-            }else if(dustDrugDAOImple.data.getStationName()==null){
+            } else if (dustDrugDAOImple.data.getStationName() == null) {
                 textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
                 Log.i(TAG, "textLocation : " + list.get(0).getLocality());
                 textLocation.append(" ");
@@ -878,7 +883,7 @@ public class MainFragment extends Fragment {
 
             String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
 
-            mainActivity.iWantGoHomeSave(dustDrugDAOImple.data.getLocality(),dustDrugDAOImple.data.getSubLocality(),dustDrugDAOImple.data.getThoroughfare());//셰어 프레퍼런스저장
+            mainActivity.iWantGoHomeSave(dustDrugDAOImple.data.getLocality(), dustDrugDAOImple.data.getSubLocality(), dustDrugDAOImple.data.getThoroughfare());//셰어 프레퍼런스저장
             if (gradePm10.equals("1")) {
                 textValueGrade.setText("좋음");
 
@@ -892,13 +897,13 @@ public class MainFragment extends Fragment {
                 textValueGrade.setText("매우나쁨");
 
             } else {
-                if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())<30 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())>0){
+                if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 30 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 0) {
                     textValueGrade.setText("좋음");
-                }else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())<80 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())>31){
+                } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 80 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 31) {
                     textValueGrade.setText("보통");
-                }else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())<150 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())>81){
+                } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 150 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 81) {
                     textValueGrade.setText("나쁨");
-                }else if ( Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value())>151){
+                } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 151) {
                     textValueGrade.setText("매우나쁨");
                 }
             }
