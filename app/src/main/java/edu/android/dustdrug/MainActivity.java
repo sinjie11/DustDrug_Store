@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
     }
 
     // 블루투스 승인 요청 코드
