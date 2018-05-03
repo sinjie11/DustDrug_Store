@@ -17,6 +17,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class SearchFragment extends Fragment {
     String param3;
     EditText editText;
     AirQulity_API airQulity_api;
+    Button button;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -72,23 +74,34 @@ public class SearchFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), 1)); // 시 구분선
         Si si = new Si();
         si.execute();
-        editText.addTextChangedListener(new TextWatcher() {
+        button =view.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+            public void onClick(View v) {
                 IsFuckingCandy isFuckingCandy = new IsFuckingCandy();
-                isFuckingCandy.execute();
+                    isFuckingCandy.execute();
             }
         });
+        //살리고 싶지만 트래픽 때문에 어쩔수 없이 죽인 채팅 치는 와중에 검색되는 리스너
+//        editText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                if (s.toString().length() >= 2) {
+//                    IsFuckingCandy isFuckingCandy = new IsFuckingCandy();
+//                    isFuckingCandy.execute();
+//                }
+//            }
+//        });
         return view;
     }
 
@@ -670,8 +683,12 @@ public class SearchFragment extends Fragment {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO 검색 리스트 클릭시 작업
-                    Toast.makeText(getContext(), lists.get(getAdapterPosition()).sggName, Toast.LENGTH_SHORT).show();
+                    address=new Address(null);
+                    address.setLocality(lists.get(getAdapterPosition()).sidoName);
+                    address.setSubLocality(lists.get(getAdapterPosition()).sggName);
+                    address.setThoroughfare(lists.get(getAdapterPosition()).umdName);
+                    list.add(address);
+                    mainActivity.backMainFtagment(list);
                 }
             });
 
