@@ -3,6 +3,7 @@ package edu.android.dustdrug;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,6 +24,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +41,7 @@ import android.widget.Toast;
  */
 public class FirstFragment extends Fragment {
 
-    private TextView textView, textView2;
+    private TextView textView;
     private static final int REQ_CODE_PERMISSION = 1;
     private Thread loadingThread;
     private DustDrugDAOImple daoImple;
@@ -311,7 +320,6 @@ public class FirstFragment extends Fragment {
             // doInBackground() 시작하기 전에 UI 업데이트
             daoImple = DustDrugDAOImple.getInstence();
             super.onPreExecute();
-
         }
 
         @Override

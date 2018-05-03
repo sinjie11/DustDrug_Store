@@ -2,12 +2,12 @@ package edu.android.dustdrug;
 
 import android.Manifest;
 import android.app.Activity;
+import android.arch.lifecycle.LifecycleOwner;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -58,17 +58,17 @@ public class MainFragment extends Fragment {
 
     /**
      * # 참고 사항 #
-     * <p>
+     *
      * - 실시간 정보 : 10분(매 시간 시간자료 갱신은 20분 전후로 반영됨)
-     * <p>
+     *
      * - 대기질 예보 정보 : 매 시간 22분, 57분
-     * <p>
-     * ※ Grade 값
-     * 좋음    : 1   ( pm10 => 0 ~ 30 , pm2.5 => 0 ~ 15 )
-     * 보통   : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
-     * 나쁨   : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
-     * 매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
-     * <p>
+     *
+     *  ※ Grade 값
+     *    좋음    : 1   ( pm10 => 0 ~ 30 , pm2.5 => 0 ~ 15 )
+     *    보통   : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
+     *    나쁨   : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
+     *  매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
+     *
      * ※ JSON 방식 호출 방법 : URL 제일 뒷 부분에 다음 파라미터(&_returnType=json)를 추가하여 호출
      */
 
@@ -76,21 +76,18 @@ public class MainFragment extends Fragment {
     private DustDrugDAOImple dustDrugDAOImple;
     public double longtitude;
     public double latitude;
-    private List<Address> list;
     private SwipeRefreshLayout swipeRefreshLayout;
     private SearchFragment searchFragment;
     private LocationManager locationManager;
     private Location location;
     private LineChart lineChart; // 그래프(jar 파일 사용)
+    private List<Address> list;
 
     public TextView textLocation, textShowValue, textValueGrade, textTime, textShowValuePm25;
-
-    private Context context;
-
-
     public ImageButton btnBlueTooth, btnSearch;
 
-    Activity root = getActivity();
+    public int pm10value;
+    public int pm10Grade;
 
     public int calendar;
     public int year;
@@ -99,10 +96,6 @@ public class MainFragment extends Fragment {
     public int[] list_pm10value = new int[24];
     public int[] list_pm25value = new int[24];
 
-//    public String locality;
-//    public String sublocality;
-//    private String time;
-//    public SharedPreferences sharedPreferences;
 
     private static final int REQUEST_CONNECT_DEVICE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
@@ -138,28 +131,6 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        Log.i(TAG, "onViewStateRestored");
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -188,33 +159,31 @@ public class MainFragment extends Fragment {
             @Override
             public void onRefresh() { // 새로고침 시 권한부여 및 좌표 받아오기
 
+                showLocationInfo(); // 위도경도 불러오기
+                startLocationService();
+                showLineChart(); // 새로고침 할때도 LineChart 메소드 다시 불러옴
+                getAddress(); // 좌표 주소로 변환 시 구 동
+
                 try {
-                    showFragmentData();
+                    if (list.size() > 0) {
+                        textLocation.setText(list.get(0).getLocality()); // 시,도 정보
+                        textLocation.append(" ");
+                        textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
+                        SexyAss sexyAss = new SexyAss();
+                        sexyAss.execute();
+
+                    } else {
+                        Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (NullPointerException e) {
                     e.getMessage();
-                }
+                } // end try-catch
             }
         });
-
-        try {
-            showFragmentData();
-        } catch (NullPointerException e) {
-            e.getMessage();
-        }
-
-
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 화면 되돌아왔을 때 필요한 정보들을 취합 -> MainActivity의 메소드 호출
-                // ((MainActivity) context).method(...)
-//                sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = sharedPreferences.edit();
-//                editor.putString("time", textTime.getText().toString());
-//                Log.i("TAG", "sharedPreferences - MainFragment : " + textTime.getText().toString());
-//                editor.commit();
-
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 searchFragment = new SearchFragment();
@@ -247,30 +216,9 @@ public class MainFragment extends Fragment {
         return view;
     }
 
-    public void showFragmentData() {
-        startLocationService(); // GPS 권한 불러옴
-        showLineChart(); // LineChart 메소드 불러옴
-
-        showLocationInfo(); // 위도경도 불러오기
-        getAddress(); // 좌표 주소로 변환 시 구 동
-        if (list.size() > 0) {
-            textLocation.setText(list.get(0).getLocality().toString()); // 시,도 정보
-            Log.i("TAG", "시 도 정보 : " + list.get(0).getLocality().toString());
-            textLocation.append(" ");
-            textLocation.append(list.get(0).getSubLocality().toString()); // 구,군 정보
-
-            SexyAss sexyAss = new SexyAss();
-            sexyAss.execute();
-
-        } else {
-            Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
-        }
-
-    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
     }
 
     @Override
@@ -336,7 +284,7 @@ public class MainFragment extends Fragment {
     }
 
     /**
-     * GPS 관련...
+     *  GPS 관련...
      */
     public void startLocationService() { // GPS 권한 체크여부
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -443,7 +391,7 @@ public class MainFragment extends Fragment {
     }
 
 
-    //pgs 위도 경도 값 불러오기 끝
+    // GPS 위도 경도 값 불러오기 끝
 
     public void getAddress() { // 주소값 불러오기
         list = GeoCoding.getlatitude(latitude, longtitude, getContext());
@@ -451,11 +399,10 @@ public class MainFragment extends Fragment {
 
     }
 
-    class SexyAss extends AsyncTask {
+    public class SexyAss extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object[] objects) { // 인터넷 사용을 위한 쓰래드
-
             if (list.get(0).getThoroughfare() == null) { // 이름이 없을 시 "구" 로 검색
                 dustDrugDAOImple.fuckTM(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(), dustDrugDAOImple.data.getTmY());
@@ -475,17 +422,16 @@ public class MainFragment extends Fragment {
             super.onPostExecute(o);
             try {
                 textLocation.setText(list.get(0).getLocality()); // 시, 도
+                Log.i(TAG, "textLocation : " +  list.get(0).getLocality());
                 textLocation.append(" ");
                 textLocation.append(list.get(0).getSubLocality()); // 구,군
+                Log.i(TAG, "textSubLocation : " +  list.get(0).getSubLocality());
 
-                year = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(0, 4)); // 년
-                Log.i(TAG, "year : " + year);
+            year = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(0, 4)); // 년
 
-                month = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(5, 7)); // 월
-                Log.i(TAG, "month : " + month);
+            month = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(5, 7)); // 월
 
-                date = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(8, 10)); // 일
-                Log.i(TAG, "date : " + date);
+            date = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(8, 10)); // 일
 
                 calendar = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(11, 13)); // 시(時)
 
@@ -493,13 +439,9 @@ public class MainFragment extends Fragment {
 
                 textShowValue.setText("미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
 
-
-                Log.i(TAG, "PM10 = " + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value());
-
-
-                String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
-                if (gradePm10.equals("1")) {
-                    textValueGrade.setText("좋음");
+            String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
+            if (gradePm10.equals("1")) {
+                textValueGrade.setText("좋음");
 
                 } else if (gradePm10.equals("2")) {
                     textValueGrade.setText("보통");
@@ -516,11 +458,9 @@ public class MainFragment extends Fragment {
 
                 textShowValuePm25.setText("초미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
 
-                for (int i = 0; i < 24; i++) { // 그래프 수치 pm10
-                    list_pm10value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm10Value());
-                    Log.i("TAG", "현재 수치 : " + list_pm10value[i]);
-
-                }
+            for (int i = 0; i < 24; i++) { // 그래프 수치
+                list_pm10value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm10Value());
+            }
 
                 for (int i = 0; i < 24; i++) { // 그래프 수치 pm25
                     list_pm25value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm25Value());
@@ -839,28 +779,29 @@ public class MainFragment extends Fragment {
                     Log.i(TAG, "받기 시작2");
                     int bytesAvailable = mmInStream.available();   // 수신 데이터 확인
                     Log.i(TAG, "bytesAvailable : " + bytesAvailable);
-                    if (bytesAvailable > 0) {      // 데이터가 수신된 경우
+                    if(bytesAvailable > 0){      // 데이터가 수신된 경우
 
                         Log.i(TAG, "bytesAvailable 뭘까?" + bytesAvailable);
                         byte[] packetBytes = new byte[bytesAvailable];
 
                         mmInStream.read(packetBytes);
 
-                        for (int i = 0; i < bytesAvailable; i++) {
+                        for(int i = 0; i < bytesAvailable; i++){
                             Log.i(TAG, "For문이여 돌아라~~");
                             byte b = packetBytes[i];
-                            if (b == mCharDelimiter) {
+                            if(b == mCharDelimiter){
                                 byte[] encodedBytes = new byte[readBufferPosition];
                                 System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
                                 final String data = new String(encodedBytes, "UTF-8");
                                 readBufferPosition = 0;
                                 Log.i(TAG, "DATA : " + data);
-                                if (!data.equals("")) {
+                                if(!data.equals("")){
                                     dddata = data;
                                     Log.i(TAG, "dddata : " + dddata);
                                     interrupt();
                                 }
-                            } else {
+                            }
+                            else{
                                 readBuffer[readBufferPosition++] = b;
                             }
                         }

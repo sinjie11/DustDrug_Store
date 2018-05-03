@@ -516,7 +516,6 @@ public class SearchFragment extends Fragment {
                         Log.i("s1",list.get(0).getSubLocality()+"구");
                         Log.i("s1",list.get(0).getThoroughfare()+"동");
                         mainActivity.backMainFtagment(list);
-
                     }
                 });
 
