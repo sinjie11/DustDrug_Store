@@ -2,7 +2,6 @@ package edu.android.dustdrug;
 
 import android.Manifest;
 import android.app.Activity;
-import android.arch.lifecycle.LifecycleOwner;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -51,13 +50,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
 
 public class MainFragment extends Fragment {
     public static final String TAG = "edu.android";
+
     /**
      * # 참고 사항 #
      *
@@ -84,6 +83,8 @@ public class MainFragment extends Fragment {
     private Location location;
     private LineChart lineChart; // 그래프(jar 파일 사용)
     private List<Address> list;
+    private MainFragment mainFragment;
+
     private MainActivity mainActivity;
     public TextView textLocation, textShowValue, textValueGrade, textTime, textShowValuePm25;
     public ImageButton btnBlueTooth, btnSearch;
@@ -97,7 +98,6 @@ public class MainFragment extends Fragment {
     public int date;
     public int[] list_pm10value = new int[24];
     public int[] list_pm25value = new int[24];
-
 
     private static final int REQUEST_CONNECT_DEVICE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
@@ -116,12 +116,21 @@ public class MainFragment extends Fragment {
     private static final int STATE_CONNECTING = 2; // now initiating an outgoing
     // connection
     private static final int STATE_CONNECTED = 3; // now connected to a remote device
+
     //블루투스 관련
     private char mCharDelimiter = '\n';
     private String mStrDelimiter = "\n";
     private int readBufferPosition;
     private byte[] readBuffer;
-    private String dddata = null;
+    private String reciveData = ""; //블루투스 받은 데이터 저장 공간
+    private boolean bluetoothOn = false; //블루투스 데이터 받고 리플레쉬 했을 경우 채크 변수
+
+    private void refresh() {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.detach(this).attach(this).commit();
+        bluetoothOn = true;
+    }
+
 
     // RFCOMM Protocol
     private static final UUID MY_UUID = UUID
@@ -146,6 +155,8 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         lineChart = view.findViewById(R.id.chartValueEveryHour);
         lineChart.setDescription(" ");
+        showLineChart(); // Line Graph 를 보여주는 메소드를 불러옵니다.
+
         showLineChart(); // Line Graph를 보여주는 메소드를 불러옵니다.
         mainActivity=(MainActivity) getContext();
         textLocation = view.findViewById(R.id.textLocation);
@@ -156,7 +167,6 @@ public class MainFragment extends Fragment {
         textTime = view.findViewById(R.id.textTime);
         textShowValuePm25 = view.findViewById(R.id.textShowValuePm25);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() { // 새로고침 시 권한부여 및 좌표 받아오기
@@ -177,11 +187,13 @@ public class MainFragment extends Fragment {
                     } else {
                         Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
                     }
+                    bluetoothOn = false;
                 } catch (NullPointerException e) {
                     e.getMessage();
                 } // end try-catch
             }
         });
+
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -340,9 +352,7 @@ public class MainFragment extends Fragment {
     public void showLineChart() {
 
         int max = 0;
-        Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH");
-        int x = Integer.parseInt(simpleDateFormat.toString());
+
         String[] xAxis = new String[]
                 {"", "1시", "2시", "3시", "4시",
                         "5시", "6시", "7시", "8시", "9시",
@@ -350,56 +360,78 @@ public class MainFragment extends Fragment {
                         "15시", "16시", "17시", "18시", "19시",
                         "20시", "21시", "22시", "23시", "24시"};
 
-        ArrayList<Entry> dataset1 = new ArrayList<Entry>();
+            ArrayList<ILineDataSet> lines = new ArrayList<ILineDataSet>();
 
-        if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
-            for (int k = calendar; k < xAxis.length - 1; k++) {
-                list_pm10value[k] = 0;
+            if (!bluetoothOn) { //bluetoothOn 연결이 되어 있지 않을때
+                ArrayList<Entry> dataset1 = new ArrayList<Entry>();
+                if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
+                    for (int k = calendar; k < xAxis.length - 1; k++) {
+                        list_pm10value[k] = 0;
+                    }
+
+                    for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                        dataset1.add(new Entry(list_pm10value[i], i + 1));
+                    }
+
+                } else {
+
+                    for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                        dataset1.add(new Entry(list_pm10value[i], i + 1));
+                    }
+                }
+
+                ArrayList<Entry> dataset2 = new ArrayList<Entry>();
+                if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
+                    for (int k = calendar; k < xAxis.length - 1; k++) {
+                        list_pm25value[k] = 0;
+                    }
+
+                    for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                        dataset2.add(new Entry(list_pm25value[i], i + 1));
+                    }
+
+                } else {
+
+                    for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                        dataset2.add(new Entry(list_pm25value[i], i + 1));
+                    }
+                }
+
+                LineDataSet lineDataSet1 = new LineDataSet(dataset1, "미세먼지");
+                lineDataSet1.setColor(Color.parseColor("#cb1ad6"));
+                lineDataSet1.setCircleColor(Color.parseColor("#cb1ad6"));
+                lineDataSet1.setDrawCubic(true);
+                lines.add(lineDataSet1);
+
+                LineDataSet lineDataSet2 = new LineDataSet(dataset2, "초미세먼지");
+                lineDataSet2.setColor(Color.parseColor("#0deaf0"));
+                lineDataSet2.setCircleColor(Color.parseColor("#0deaf0"));
+                lineDataSet2.setDrawCubic(true);
+                lines.add(lineDataSet2);
+
+            } else { //bluetoothOn 연결이 되어 있지 않을때
+
+                ArrayList<Entry> blueDataSet = new ArrayList<Entry>();
+
+                for (int i = 1; i < calendar + 1; i++) {
+                    blueDataSet.add(new Entry(Float.parseFloat(reciveData.split("/")[i]), i));
+                }
+
+                LineDataSet lineDataSet = new LineDataSet(blueDataSet, "초미세먼지 테스트");
+                lineDataSet = new LineDataSet(blueDataSet, "초미세먼지");
+                lineDataSet.setColor(Color.parseColor("#0deaf0"));
+                lineDataSet.setCircleColor(Color.parseColor("#0deaf0"));
+                lineDataSet.setDrawCubic(true);
+                lines.add(lineDataSet);
             }
-            for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                dataset1.add(new Entry(list_pm10value[i], i + 1));
-            }
-        } else {
-            for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                dataset1.add(new Entry(list_pm10value[i], i + 1));
-            }
+
+            lineChart.setData(new LineData(xAxis, lines));
+            lineChart.animateY(1500);
+            lineChart.setScaleEnabled(false);
+            lineChart.getData().setHighlightEnabled(false);
+            Legend legend = lineChart.getLegend();
+            legend.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
         }
-
-        ArrayList<Entry> dataset2 = new ArrayList<Entry>();
-
-        if (calendar < 24) { // 해당시간대 k 이후는 0으로 초기화합니다. 24시가 되면 그날의 1시부터 24시까지 모두 나옵니다
-            for (int k = calendar; k < xAxis.length - 1; k++) {
-                list_pm25value[k] = 0;
-            }
-            for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                dataset2.add(new Entry(list_pm25value[i], i + 1));
-            }
-        } else {
-            for (int i = 0; i < calendar; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                dataset2.add(new Entry(list_pm25value[i], i + 1));
-            }
-        }
-
-        ArrayList<ILineDataSet> lines = new ArrayList<ILineDataSet>();
-
-        LineDataSet lineDataSet1 = new LineDataSet(dataset1, "미세먼지");
-        lineDataSet1.setColor(Color.parseColor("#cb1ad6"));
-        lineDataSet1.setCircleColor(Color.parseColor("#cb1ad6"));
-        lineDataSet1.setDrawCubic(true);
-        lines.add(lineDataSet1);
-        LineDataSet lineDataSet2 = new LineDataSet(dataset2, "초미세먼지");
-        lineDataSet2.setColor(Color.parseColor("#0deaf0"));
-        lineDataSet2.setCircleColor(Color.parseColor("#0deaf0"));
-        lineDataSet2.setDrawCubic(true);
-        lines.add(lineDataSet2);
-
-        lineChart.setData(new LineData(xAxis, lines));
-        lineChart.animateY(1500);
-        lineChart.setScaleEnabled(false);
-        lineChart.getData().setHighlightEnabled(false);
-        Legend legend = lineChart.getLegend();
-        legend.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
-    }
 
 
     // GPS 위도 경도 값 불러오기 끝
@@ -584,7 +616,12 @@ public class MainFragment extends Fragment {
 
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket);
-        mConnectedThread.start();
+        if (mConnectedThread.isAlive()) {
+            mConnectedThread.interrupt();
+        } else {
+            mConnectedThread.start();
+        }
+
 
         setState(STATE_CONNECTED);
     }
@@ -673,7 +710,11 @@ public class MainFragment extends Fragment {
                     Log.e(TAG, "unable to close() socket during connection failure", e2);
                 }
                 // 연결중? 혹은 연결 대기상태인 메소드를 호출한다.
-                start();
+                if (isInterrupted()) {
+                    start();
+                } else {
+                    interrupt();
+                }
                 return;
             }
 
@@ -742,29 +783,28 @@ public class MainFragment extends Fragment {
                     Log.i(TAG, "받기 시작2");
                     int bytesAvailable = mmInStream.available();   // 수신 데이터 확인
                     Log.i(TAG, "bytesAvailable : " + bytesAvailable);
-                    if(bytesAvailable > 0){      // 데이터가 수신된 경우
-
+                    if (bytesAvailable > 0) {      // 데이터가 수신된 경우
                         Log.i(TAG, "bytesAvailable 뭘까?" + bytesAvailable);
                         byte[] packetBytes = new byte[bytesAvailable];
-
                         mmInStream.read(packetBytes);
 
-                        for(int i = 0; i < bytesAvailable; i++){
+                        for (int i = 0; i < bytesAvailable; i++) {
                             Log.i(TAG, "For문이여 돌아라~~");
                             byte b = packetBytes[i];
-                            if(b == mCharDelimiter){
+                            if (b == mCharDelimiter) {
                                 byte[] encodedBytes = new byte[readBufferPosition];
                                 System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
                                 final String data = new String(encodedBytes, "UTF-8");
                                 readBufferPosition = 0;
                                 Log.i(TAG, "DATA : " + data);
-                                if(!data.equals("")){
-                                    dddata = data;
-                                    Log.i(TAG, "dddata : " + dddata);
+                                if (!data.equals("")) {
+                                    reciveData = data;
+                                    Log.i(TAG, "reciveData : " + reciveData);
+                                    Toast.makeText(getContext(), "수신 완료", Toast.LENGTH_SHORT).show();
+                                    refresh();
                                     interrupt();
                                 }
-                            }
-                            else{
+                            } else {
                                 readBuffer[readBufferPosition++] = b;
                             }
                         }
