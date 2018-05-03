@@ -168,6 +168,7 @@ public class MainFragment extends Fragment {
         textShowValuePm25 = view.findViewById(R.id.textShowValuePm25);
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
+        swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.YELLOW, Color.RED); // 새로고침 색상 변경
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() { // 새로고침 시 권한부여 및 좌표 받아오기
@@ -909,7 +910,6 @@ public class MainFragment extends Fragment {
             }
 
             textShowValuePm25.setText("초미세먼지 : " + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
-
             for (int i = 0; i < 24; i++) { // 그래프 수치
                 list_pm10value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm10Value());
             }

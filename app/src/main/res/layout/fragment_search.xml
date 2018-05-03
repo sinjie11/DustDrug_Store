@@ -49,12 +49,12 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="56dp"
-        android:layout_height="52dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="16dp"
-        android:text="이쁜버튼"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/adress_select"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/editText" />
 
 </android.support.constraint.ConstraintLayout>
