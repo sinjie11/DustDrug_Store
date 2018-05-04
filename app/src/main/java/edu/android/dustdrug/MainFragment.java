@@ -13,6 +13,7 @@ import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,9 +31,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -121,7 +125,7 @@ public class MainFragment extends Fragment {
     private byte[] readBuffer;
     private String reciveData = ""; //블루투스 받은 데이터 저장 공간
     private boolean bluetoothOn = false; //블루투스 데이터 받고 리플레쉬 했을 경우 채크 변수
-
+    private ImageView gbView;
     private void refresh() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.detach(this).attach(this).commit();
@@ -160,7 +164,17 @@ public class MainFragment extends Fragment {
         textValueGrade = view.findViewById(R.id.textValueGrade);
         textTime = view.findViewById(R.id.textTime);
         textShowValuePm25 = view.findViewById(R.id.textShowValuePm25);
+        gbView = view.findViewById(R.id.gbView);
+        GlideDrawableImageViewTarget gifimage = new GlideDrawableImageViewTarget(gbView);
+        Glide.with(this).load(R.drawable.gbb).into(gifimage);
 
+        gbView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://dak.gg/profile/Suhyeoney/2018-02/as"));
+                startActivity(intent);
+            }
+        });
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.YELLOW, Color.RED); // 새로고침 색상 변경
@@ -893,7 +907,6 @@ public class MainFragment extends Fragment {
 
     public void soohyungHatesDujin() { //수치 갱신
         try {
-            
                 textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
                 Log.i(TAG, "textLocation : " + list.get(0).getLocality());
                 textLocation.append(" ");
