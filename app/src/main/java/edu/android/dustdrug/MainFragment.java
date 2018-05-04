@@ -176,21 +176,7 @@ public class MainFragment extends Fragment {
                 showLineChart(); // 새로고침 할때도 LineChart 메소드 다시 불러옴
                 getAddress(); // 좌표 주소로 변환 시 구 동
 
-                try {
-                    if (list.size() > 0) {
-                        textLocation.setText(list.get(0).getLocality()); // 시,도 정보
-                        textLocation.append(" ");
-                        textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
-                        SexyAss sexyAss = new SexyAss();
-                        sexyAss.execute();
-
-                    } else {
-                        Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
-                    }
-                    bluetoothOn = false;
-                } catch (NullPointerException e) {
-                    e.getMessage();
-                } // end try-catch
+                todayIsOver();
             }
         });
 
@@ -203,9 +189,23 @@ public class MainFragment extends Fragment {
         } catch (Exception e) {
             e.getMessage();
         }
-        list = mainActivity.iWantGoHomeRead();//세어 프레퍼런트 불러오기
+        // TODO
+        try{
+            if(null == dustDrugDAOImple.data.getStationName()) {
+                //세어 프레퍼런트 불러오기
+            }
 
-
+        }catch (Exception e){
+            list = mainActivity.iWantGoHomeRead();
+        }
+        if (list.size() > 0) {
+            Log.i("s1", list.get(0).getLocality());
+            Log.i("s1", list.get(0).getSubLocality());
+            Log.i("s1", list.get(0).getThoroughfare());
+        }
+        Log.i("async", "MainFragment #200");
+        SexyAss sexyAss = new SexyAss();
+        sexyAss.execute();
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -450,10 +450,10 @@ public class MainFragment extends Fragment {
 
     }
 
-    public class SexyAss extends AsyncTask {
+    public class SexyAss extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Object doInBackground(Object[] objects) { // 인터넷 사용을 위한 쓰래드
+        protected Void doInBackground(Void... params) { // 인터넷 사용을 위한 쓰래드
             if (list.get(0).getThoroughfare() == null) { // 이름이 없을 시 "구" 로 검색
                 dustDrugDAOImple.fuckTM(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(), dustDrugDAOImple.data.getTmY());
@@ -469,8 +469,7 @@ public class MainFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Object o) { // 데이터 수치 갱신
-            super.onPostExecute(o);
+        protected void onPostExecute(Void result) { // 데이터 수치 갱신
             soohyungHatesDujin();//수치를 갱신해주는 메서드
         }
 
@@ -478,8 +477,9 @@ public class MainFragment extends Fragment {
 
     public void getSearchFragmentAddress(List<Address> list) {
         this.list = list;
-        SexyAss sexyAss = new SexyAss();
-        sexyAss.execute();
+        Log.i("async", "MainFragment #474");
+//        SexyAss sexyAss = new SexyAss();
+//        sexyAss.execute();
     }
 
     private void enableBluetooth() {
@@ -858,19 +858,19 @@ public class MainFragment extends Fragment {
 
     public void soohyungHatesDujin() { //수치 갱신
         try {
-            if (dustDrugDAOImple.data.getStationName() != null) {
+
+            textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
+            Log.i(TAG, "textLocation : " + list.get(0).getLocality());
+            textLocation.append(" ");
+            textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
+            Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
+             /*else if (dustDrugDAOImple.data.getStationName() == null) {
                 textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
                 Log.i(TAG, "textLocation : " + list.get(0).getLocality());
                 textLocation.append(" ");
                 textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
                 Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
-            } else if (dustDrugDAOImple.data.getStationName() == null) {
-                textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
-                Log.i(TAG, "textLocation : " + list.get(0).getLocality());
-                textLocation.append(" ");
-                textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
-                Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
-            }
+            }*/
 
 
             year = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(0, 4)); // 년
@@ -962,6 +962,25 @@ public class MainFragment extends Fragment {
         } catch (IndexOutOfBoundsException e) {
             e.getMessage();
         }
+    }
+
+    private void todayIsOver() {//시구군정보의 api를 가져올때 사요
+        try {
+            if (list.size() > 0) {
+                textLocation.setText(list.get(0).getLocality()); // 시,도 정보
+                textLocation.append(" ");
+                textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
+
+                Log.i("async", "MainFragment #967");
+                SexyAss sexyAss = new SexyAss();
+                sexyAss.execute();
+            } else {
+                Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
+            }
+            bluetoothOn = false;
+        } catch (NullPointerException e) {
+            e.getMessage();
+        } // end try-catch
     }
 
 }

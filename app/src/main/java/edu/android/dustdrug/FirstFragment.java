@@ -306,8 +306,6 @@ public class FirstFragment extends Fragment {
                 Log.i(TAG, "FirstFragment - 5초");
                 publishProgress(5);
 
-                endLoding();
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -326,11 +324,12 @@ public class FirstFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             // doInBackground()가 끝났을 때 UI 업데이트
-            FragmentManager manager = getActivity().getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            mainFragment = MainFragment.newInstance();
-            transaction.replace(R.id.fragment_container, mainFragment);
-            transaction.commit();
+            endLoding();
+//            FragmentManager manager = getActivity().getSupportFragmentManager();
+//            FragmentTransaction transaction = manager.beginTransaction();
+//            mainFragment = MainFragment.newInstance();
+//            transaction.replace(R.id.fragment_container, mainFragment);
+//            transaction.commit();
         }
 
         @Override
