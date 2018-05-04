@@ -57,7 +57,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@+id/textLocation"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/btnimage_bluetooth" />
+            app:srcCompat="@drawable/btnimage_bluetooth_gray" />
 
         <ImageButton
             android:id="@+id/btnSearch"

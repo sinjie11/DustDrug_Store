@@ -291,22 +291,20 @@ public class FirstFragment extends Fragment {
                 publishProgress(1);
 
                 Thread.sleep(500);
-                Log.i(TAG, "FirstFragment - 1.5초");
+                Log.i(TAG, "FirstFragment - 2초");
                 publishProgress(2);
 
                 Thread.sleep(500);
-                Log.i(TAG, "FirstFragment - 2초");
+                Log.i(TAG, "FirstFragment - 3초");
                 publishProgress(3);
 
                 Thread.sleep(500);
-                Log.i(TAG, "FirstFragment - 2.5초");
+                Log.i(TAG, "FirstFragment - 4초");
                 publishProgress(4);
 
                 Thread.sleep(500);
-                Log.i(TAG, "FirstFragment - 3초");
+                Log.i(TAG, "FirstFragment - 5초");
                 publishProgress(5);
-
-                endLoding();
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -326,11 +324,12 @@ public class FirstFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             // doInBackground()가 끝났을 때 UI 업데이트
-            FragmentManager manager = getActivity().getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            mainFragment = MainFragment.newInstance();
-            transaction.replace(R.id.fragment_container, mainFragment);
-            transaction.commit();
+            endLoding();
+//            FragmentManager manager = getActivity().getSupportFragmentManager();
+//            FragmentTransaction transaction = manager.beginTransaction();
+//            mainFragment = MainFragment.newInstance();
+//            transaction.replace(R.id.fragment_container, mainFragment);
+//            transaction.commit();
         }
 
         @Override

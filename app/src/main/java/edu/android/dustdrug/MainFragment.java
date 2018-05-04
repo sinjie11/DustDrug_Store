@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -44,9 +43,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -193,6 +190,7 @@ public class MainFragment extends Fragment {
                 } catch (NullPointerException e) {
                     e.getMessage();
                 } // end try-catch
+                todayIsOver();
             }
         });
 
@@ -205,9 +203,25 @@ public class MainFragment extends Fragment {
         } catch (Exception e) {
             e.getMessage();
         }
-        list = mainActivity.iWantGoHomeRead();//세어 프레퍼런트 불러오기
+        // TODO
+        try{
+            if(null == dustDrugDAOImple.data.getStationName()) {
+                //세어 프레퍼런트 불러오기
+            }
 
-
+        } catch (Exception e){
+            list = mainActivity.iWantGoHomeRead();
+        }
+        if (list.size() > 0) {
+//            Log.i("s1", list.get(0).getLocality());
+//            Log.i("s1", list.get(0).getSubLocality());
+//            Log.i("s1", list.get(0).getThoroughfare());
+        }
+        Log.i("async", "MainFragment #200");
+        if (list.get(0).getLocality() != null) {
+            SexyAss sexyAss = new SexyAss();
+            sexyAss.execute();
+        }
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -419,7 +433,7 @@ public class MainFragment extends Fragment {
                     dataset2.add(new Entry(list_pm25value[i], i + 1));
             }
 
-        } else { // bluetoothOn 연결이 되어 있을 때
+        } else { // bluetoothOn 연결이 되어 있지 않을때
 
             ArrayList<Entry> blueDataSet = new ArrayList<Entry>();
 
@@ -472,10 +486,10 @@ public class MainFragment extends Fragment {
 
     }
 
-    public class SexyAss extends AsyncTask {
+    public class SexyAss extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Object doInBackground(Object[] objects) { // 인터넷 사용을 위한 쓰래드
+        protected Void doInBackground(Void... params) { // 인터넷 사용을 위한 쓰래드
             if (list.get(0).getThoroughfare() == null) { // 이름이 없을 시 "구" 로 검색
                 dustDrugDAOImple.fuckTM(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(), dustDrugDAOImple.data.getTmY());
@@ -491,8 +505,7 @@ public class MainFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Object o) { // 데이터 수치 갱신
-            super.onPostExecute(o);
+        protected void onPostExecute(Void result) { // 데이터 수치 갱신
             soohyungHatesDujin();//수치를 갱신해주는 메서드
         }
 
@@ -500,8 +513,9 @@ public class MainFragment extends Fragment {
 
     public void getSearchFragmentAddress(List<Address> list) {
         this.list = list;
-        SexyAss sexyAss = new SexyAss();
-        sexyAss.execute();
+        Log.i("async", "MainFragment #474");
+//        SexyAss sexyAss = new SexyAss();
+//        sexyAss.execute();
     }
 
     private void enableBluetooth() {
@@ -560,11 +574,10 @@ public class MainFragment extends Fragment {
         connect(device);
     }
 
-    // Bluetooth 상태 set
     private synchronized void setState(int state) {
         Log.d(TAG, "setState() " + mState + " -> " + state);
         mState = state;
-        if (state == STATE_CONNECTED) {
+        if (state == STATE_CONNECTED) { // 3
             Log.i(TAG, "연결 됨");
         }
     }
@@ -830,7 +843,7 @@ public class MainFragment extends Fragment {
                                 if (!data.equals("")) {
                                     reciveData = data;
                                     Log.i(TAG, "reciveData : " + reciveData);
-//                                    Toast.makeText(getContext(), "수신 완료", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "수신 완료", Toast.LENGTH_SHORT).show();
                                     refresh();
                                     interrupt();
                                 }
@@ -880,19 +893,19 @@ public class MainFragment extends Fragment {
 
     public void soohyungHatesDujin() { //수치 갱신
         try {
-            if (dustDrugDAOImple.data.getStationName() != null) {
+
+            textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
+            Log.i(TAG, "textLocation : " + list.get(0).getLocality());
+            textLocation.append(" ");
+            textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
+            Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
+             /*else if (dustDrugDAOImple.data.getStationName() == null) {
                 textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
                 Log.i(TAG, "textLocation : " + list.get(0).getLocality());
                 textLocation.append(" ");
                 textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
                 Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
-            } else if (dustDrugDAOImple.data.getStationName() == null) {
-                textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
-                Log.i(TAG, "textLocation : " + list.get(0).getLocality());
-                textLocation.append(" ");
-                textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
-                Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
-            }
+            }*/
 
 
             year = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(0, 4)); // 년
@@ -967,7 +980,6 @@ public class MainFragment extends Fragment {
 
             if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm25Value()) == -1)
                 textShowValuePm25.setText("초미세먼지\n데이터를\n찾을 수 없습니다"); // 초미세먼지(PM2.5)
-
             else
                 textShowValuePm25.setText("초미세먼지\n" + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
 
@@ -985,6 +997,25 @@ public class MainFragment extends Fragment {
         } catch (IndexOutOfBoundsException e) {
             e.getMessage();
         }
+    }
+
+    private void todayIsOver() {//시구군정보의 api를 가져올때 사요
+        try {
+            if (list.size() > 0) {
+                textLocation.setText(list.get(0).getLocality()); // 시,도 정보
+                textLocation.append(" ");
+                textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
+
+                Log.i("async", "MainFragment #967");
+                SexyAss sexyAss = new SexyAss();
+                sexyAss.execute();
+            } else {
+                Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
+            }
+            bluetoothOn = false;
+        } catch (NullPointerException e) {
+            e.getMessage();
+        } // end try-catch
     }
 
 }
