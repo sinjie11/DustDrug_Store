@@ -843,7 +843,7 @@ public class MainFragment extends Fragment {
                                 if (!data.equals("")) {
                                     reciveData = data;
                                     Log.i(TAG, "reciveData : " + reciveData);
-                                    Toast.makeText(getContext(), "수신 완료", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getContext(), "수신 완료", Toast.LENGTH_SHORT).show();
                                     refresh();
                                     interrupt();
                                 }
@@ -994,7 +994,7 @@ public class MainFragment extends Fragment {
             }
 
             showLineChart();
-        } catch (IndexOutOfBoundsException e) {
+        } catch (Exception e) {
             e.getMessage();
         }
     }
