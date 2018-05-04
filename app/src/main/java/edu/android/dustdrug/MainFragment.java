@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -44,9 +43,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -204,10 +201,10 @@ public class MainFragment extends Fragment {
 //            Log.i("s1", list.get(0).getThoroughfare());
         }
         Log.i("async", "MainFragment #200");
-
-        SexyAss sexyAss = new SexyAss();
-        sexyAss.execute();
-
+        if (list.get(0).getLocality() != null) {
+            SexyAss sexyAss = new SexyAss();
+            sexyAss.execute();
+        }
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -540,11 +537,10 @@ public class MainFragment extends Fragment {
         connect(device);
     }
 
-    // Bluetooth 상태 set
     private synchronized void setState(int state) {
         Log.d(TAG, "setState() " + mState + " -> " + state);
         mState = state;
-        if (state == STATE_CONNECTED) {
+        if (state == STATE_CONNECTED) { // 3
             Log.i(TAG, "연결 됨");
         }
     }
