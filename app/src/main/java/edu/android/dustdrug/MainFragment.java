@@ -893,13 +893,13 @@ public class MainFragment extends Fragment {
 
     public void soohyungHatesDujin() { //수치 갱신
         try {
-
-            textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
-            Log.i(TAG, "textLocation : " + list.get(0).getLocality());
-            textLocation.append(" ");
-            textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
-            Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
-             /*else if (dustDrugDAOImple.data.getStationName() == null) {
+            
+                textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
+                Log.i(TAG, "textLocation : " + list.get(0).getLocality());
+                textLocation.append(" ");
+                textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
+                Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
+            /*else if (dustDrugDAOImple.data.getStationName() == null) {
                 textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
                 Log.i(TAG, "textLocation : " + list.get(0).getLocality());
                 textLocation.append(" ");
