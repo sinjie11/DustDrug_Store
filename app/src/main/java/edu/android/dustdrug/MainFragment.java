@@ -181,6 +181,8 @@ public class MainFragment extends Fragment {
                         textLocation.setText(list.get(0).getLocality()); // 시,도 정보
                         textLocation.append(" ");
                         textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
+                        textLocation.append(" ");
+
                         SexyAss sexyAss = new SexyAss();
                         sexyAss.execute();
 
@@ -402,7 +404,7 @@ public class MainFragment extends Fragment {
         lineDataSet2.setDrawCubic(true);
         lines.add(lineDataSet2);
 
-        if (!bluetoothOn) { //bluetoothOn 연결이 되어 있지 않을때
+        if (!bluetoothOn) { //bluetoothOn 연결이 되어 있지 않을 때
             for (int k = 0; k < 24; k++) { // 해당 시간대까지 그래프를 출력하도록 합니다
                 if (list_pm10value[k] == -1)
                     list_pm10value[k] = 0;
@@ -417,20 +419,40 @@ public class MainFragment extends Fragment {
                     dataset2.add(new Entry(list_pm25value[i], i + 1));
             }
 
-        } else { // bluetoothOn 연결이 되어 있지 않을때
+        } else { // bluetoothOn 연결이 되어 있을 때
 
             ArrayList<Entry> blueDataSet = new ArrayList<Entry>();
 
-            for (int i = 1; i < calendar + 1; i++) {
-                blueDataSet.add(new Entry(Float.parseFloat(reciveData.split("/")[i]), i));
+            int cnt_bluetooth = 24 - calendar;
+            for (int x = 0; x < cnt_bluetooth; x++) {
+                for (int k = 25; k >= 2; k--) {
+                    if (k == 25) {
+                        reciveData.split("/")[1] = reciveData.split("/")[k - 1];
+                    } else {
+                        reciveData.split("/")[k] = reciveData.split("/")[k - 1];
+                    }
+                }
             }
-
-            LineDataSet lineDataSet = new LineDataSet(blueDataSet, "초미세먼지 테스트");
-            lineDataSet = new LineDataSet(blueDataSet, "초미세먼지");
+            try {
+                for (int i = 1; i < 25; i++)
+                    blueDataSet.add(new Entry(Float.parseFloat(reciveData.split("/")[i]), i));
+                int idx = reciveData.split("/")[24].indexOf(".");
+                textShowValuePm25.setText("초미세먼지\n" + reciveData.split("/")[24].substring(0,idx) + " ㎍/㎥"); // 초미세먼지(PM2.5)
+            } catch (NumberFormatException e) {
+                e.getMessage();
+            }
+            LineDataSet lineDataSet = new LineDataSet(blueDataSet, "초미세먼지");
             lineDataSet.setColor(Color.parseColor("#0deaf0"));
             lineDataSet.setCircleColor(Color.parseColor("#0deaf0"));
             lineDataSet.setDrawCubic(true);
             lines.add(lineDataSet);
+
+            for (int k = 0; k < 24; k++) { // 해당 시간대까지 그래프를 출력하도록 합니다
+                if (list_pm10value[k] == -1)
+                    list_pm10value[k] = 0;
+                else
+                    dataset1.add(new Entry(list_pm10value[k], k + 1));
+            }
         }
 
         lineChart.setData(new LineData(xAxis, lines));
@@ -808,7 +830,7 @@ public class MainFragment extends Fragment {
                                 if (!data.equals("")) {
                                     reciveData = data;
                                     Log.i(TAG, "reciveData : " + reciveData);
-                                    Toast.makeText(getContext(), "수신 완료", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getContext(), "수신 완료", Toast.LENGTH_SHORT).show();
                                     refresh();
                                     interrupt();
                                 }
@@ -945,6 +967,7 @@ public class MainFragment extends Fragment {
 
             if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm25Value()) == -1)
                 textShowValuePm25.setText("초미세먼지\n데이터를\n찾을 수 없습니다"); // 초미세먼지(PM2.5)
+
             else
                 textShowValuePm25.setText("초미세먼지\n" + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
 

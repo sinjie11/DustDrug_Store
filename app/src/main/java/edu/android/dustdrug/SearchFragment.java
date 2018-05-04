@@ -513,13 +513,12 @@ public class SearchFragment extends Fragment {
                         address.setThoroughfare(param3);
                         Log.i("s1",address.getLocality());
                         list.add(address);
-                        Log.i("s1",list.get(0).getLocality()+"시");
-                        Log.i("s1",list.get(0).getSubLocality()+"구");
-                        Log.i("s1",list.get(0).getThoroughfare()+"동");
+                        Log.i("s1",list.get(0).getLocality());
+                        Log.i("s1",list.get(0).getSubLocality());
+                        Log.i("s1",list.get(0).getThoroughfare());
                         mainActivity.backMainFtagment(list);
                     }
                 });
-
             }
         }
     }
@@ -553,7 +552,7 @@ public class SearchFragment extends Fragment {
         else if (name.equals("세종")){name="세종특별자치시";}
         else if (name.equals("세종특별자치시")){name="세종";}
         else if (name.equals("전남")){name="전라남도";}
-        else if (name.equals("전라남도")){name="잔남";}
+        else if (name.equals("전라남도")){name="전남";}
         else if (name.equals("전북")){name="전라북도";}
         else if (name.equals("전라북도")){name="전북";}
         else if (name.equals("충남")){name="충청남도";}
