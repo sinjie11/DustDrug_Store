@@ -195,17 +195,19 @@ public class MainFragment extends Fragment {
                 //세어 프레퍼런트 불러오기
             }
 
-        }catch (Exception e){
+        } catch (Exception e){
             list = mainActivity.iWantGoHomeRead();
         }
         if (list.size() > 0) {
-            Log.i("s1", list.get(0).getLocality());
-            Log.i("s1", list.get(0).getSubLocality());
-            Log.i("s1", list.get(0).getThoroughfare());
+//            Log.i("s1", list.get(0).getLocality());
+//            Log.i("s1", list.get(0).getSubLocality());
+//            Log.i("s1", list.get(0).getThoroughfare());
         }
         Log.i("async", "MainFragment #200");
+
         SexyAss sexyAss = new SexyAss();
         sexyAss.execute();
+
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
