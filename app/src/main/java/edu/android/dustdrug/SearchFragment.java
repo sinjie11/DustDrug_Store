@@ -553,7 +553,7 @@ public class SearchFragment extends Fragment {
         else if (name.equals("세종")){name="세종특별자치시";}
         else if (name.equals("세종특별자치시")){name="세종";}
         else if (name.equals("전남")){name="전라남도";}
-        else if (name.equals("전라남도")){name="잔남";}
+        else if (name.equals("전라남도")){name="전남";}
         else if (name.equals("전북")){name="전라북도";}
         else if (name.equals("전라북도")){name="전북";}
         else if (name.equals("충남")){name="충청남도";}

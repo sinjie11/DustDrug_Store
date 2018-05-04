@@ -282,28 +282,28 @@ public class FirstFragment extends Fragment {
         protected Void doInBackground(Void... voids) {// 예시 이부분에 imple 을 생성하면됨
 
             try {
-                Thread.sleep(500);
-                Log.i(TAG, "FirstFragment - 0.5초");
+                Thread.sleep(700);
+                Log.i(TAG, "FirstFragment - 0.7초");
                 publishProgress(0);
 
-                Thread.sleep(500);
+                Thread.sleep(700);
                 Log.i(TAG, "FirstFragment - 1초");
                 publishProgress(1);
 
-                Thread.sleep(500);
-                Log.i(TAG, "FirstFragment - 1.5초");
+                Thread.sleep(700);
+                Log.i(TAG, "FirstFragment - 2초");
                 publishProgress(2);
 
-                Thread.sleep(500);
-                Log.i(TAG, "FirstFragment - 2초");
+                Thread.sleep(700);
+                Log.i(TAG, "FirstFragment - 3초");
                 publishProgress(3);
 
-                Thread.sleep(500);
-                Log.i(TAG, "FirstFragment - 2.5초");
+                Thread.sleep(700);
+                Log.i(TAG, "FirstFragment - 4초");
                 publishProgress(4);
 
-                Thread.sleep(500);
-                Log.i(TAG, "FirstFragment - 3초");
+                Thread.sleep(700);
+                Log.i(TAG, "FirstFragment - 5초");
                 publishProgress(5);
 
                 endLoding();
