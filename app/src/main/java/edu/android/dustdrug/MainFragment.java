@@ -126,6 +126,7 @@ public class MainFragment extends Fragment {
     private String reciveData = ""; //블루투스 받은 데이터 저장 공간
     private boolean bluetoothOn = false; //블루투스 데이터 받고 리플레쉬 했을 경우 채크 변수
     private ImageView gbView;
+
     private void refresh() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.detach(this).attach(this).commit();
@@ -218,12 +219,12 @@ public class MainFragment extends Fragment {
             e.getMessage();
         }
         // TODO
-        try{
-            if(null == dustDrugDAOImple.data.getStationName()) {
+        try {
+            if (null == dustDrugDAOImple.data.getStationName()) {
                 //세어 프레퍼런트 불러오기
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             list = mainActivity.iWantGoHomeRead();
         }
         if (list.size() > 0) {
@@ -447,7 +448,7 @@ public class MainFragment extends Fragment {
                     dataset2.add(new Entry(list_pm25value[i], i + 1));
             }
 
-        } else { // bluetoothOn 연결이 되어 있지 않을때
+        } else { // bluetoothOn 연결이 되어 있을 때
 
             ArrayList<Entry> blueDataSet = new ArrayList<Entry>();
 
@@ -465,7 +466,12 @@ public class MainFragment extends Fragment {
                 for (int i = 1; i < 25; i++)
                     blueDataSet.add(new Entry(Float.parseFloat(reciveData.split("/")[i]), i));
                 int idx = reciveData.split("/")[24].indexOf(".");
-                textShowValuePm25.setText("초미세먼지\n" + reciveData.split("/")[24].substring(0,idx) + " ㎍/㎥"); // 초미세먼지(PM2.5)
+                textShowValuePm25.setText("초미세먼지\n" + reciveData.split("/")[24].substring(0, idx) + " ㎍/㎥"); // 초미세먼지(PM2.5)
+                textLocation.setText("블루투스 측정");
+                textShowValue.setText(" ");
+                textValueGrade.setText(" ");
+                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+
             } catch (NumberFormatException e) {
                 e.getMessage();
             }
@@ -475,12 +481,7 @@ public class MainFragment extends Fragment {
             lineDataSet.setDrawCubic(true);
             lines.add(lineDataSet);
 
-            for (int k = 0; k < 24; k++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                if (list_pm10value[k] == -1)
-                    list_pm10value[k] = 0;
-                else
-                    dataset1.add(new Entry(list_pm10value[k], k + 1));
-            }
+
         }
 
         lineChart.setData(new LineData(xAxis, lines));
@@ -907,11 +908,11 @@ public class MainFragment extends Fragment {
 
     public void soohyungHatesDujin() { //수치 갱신
         try {
-                textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
-                Log.i(TAG, "textLocation : " + list.get(0).getLocality());
-                textLocation.append(" ");
-                textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
-                Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
+            textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
+            Log.i(TAG, "textLocation : " + list.get(0).getLocality());
+            textLocation.append(" ");
+            textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
+            Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
             /*else if (dustDrugDAOImple.data.getStationName() == null) {
                 textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
                 Log.i(TAG, "textLocation : " + list.get(0).getLocality());
