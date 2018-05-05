@@ -999,7 +999,7 @@ public class MainFragment extends Fragment {
                 textValueGrade.setCompoundDrawablePadding(10);
                 textValueGrade.setTextColor(Color.parseColor("#FFFFFF"));
                 textValueGrade.setText("등급 확인 불가"); // 미세먼지(PM10)
-            
+
                 if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 30 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 0) {
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
@@ -1023,6 +1023,7 @@ public class MainFragment extends Fragment {
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#da4f4a"));
                     textValueGrade.setText("매우나쁨");
+                    
                 } else {
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_no, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
