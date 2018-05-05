@@ -1023,7 +1023,7 @@ public class MainFragment extends Fragment {
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#da4f4a"));
                     textValueGrade.setText("매우나쁨");
-                    
+
                 } else {
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_no, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
