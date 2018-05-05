@@ -39,7 +39,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -996,7 +995,11 @@ public class MainFragment extends Fragment {
                 textValueGrade.setText("매우나쁨");
 
             } else {
-
+                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_no, 0);
+                textValueGrade.setCompoundDrawablePadding(10);
+                textValueGrade.setTextColor(Color.parseColor("#FFFFFF"));
+                textValueGrade.setText("등급 확인 불가"); // 미세먼지(PM10)
+            
                 if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 30 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 0) {
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
@@ -1010,7 +1013,7 @@ public class MainFragment extends Fragment {
                     textValueGrade.setText("보통");
 
                 } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 150 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 81) {
-                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0);
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_bad, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("##d88829"));
                     textValueGrade.setText("나쁨");
@@ -1020,7 +1023,13 @@ public class MainFragment extends Fragment {
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#da4f4a"));
                     textValueGrade.setText("매우나쁨");
+                } else {
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_no, 0);
+                    textValueGrade.setCompoundDrawablePadding(10);
+                    textValueGrade.setTextColor(Color.parseColor("#FFFFFF"));
+                    textValueGrade.setText("등급 확인 불가"); // 미세먼지(PM10)
                 }
+
             }
 
             if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm25Value()) == -1) {
@@ -1052,7 +1061,7 @@ public class MainFragment extends Fragment {
                 textLocation.append(" ");
                 textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
 
-                Log.i("async", "MainFragment #1050");
+                Log.i("async", "MainFragment #1063");
                 AddressSearch addressSearch = new AddressSearch();
                 addressSearch.execute();
 
