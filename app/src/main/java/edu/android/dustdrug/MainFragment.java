@@ -60,17 +60,17 @@ public class MainFragment extends Fragment {
 
     /**
      * # 참고 사항 #
-     * <p>
+     *
      * - 실시간 정보 : 10분(매 시간 시간자료 갱신은 20분 전후로 반영됨)
-     * <p>
+     *
      * - 대기질 예보 정보 : 매 시간 22분, 57분
-     * <p>
+     *
      * ※ Grade 값
      * 좋음     : 1   ( pm10 => 0 ~ 30 , pm2.5 => 0 ~ 15 )
      * 보통     : 2   ( pm10 => 31 ~ 80 , pm2.5 => 16 ~ 50 )
      * 나쁨     : 3   ( pm10 => 81 ~ 150 , pm2.5 => 51 ~ 100 )
      * 매우나쁨 : 4   ( pm10 => 151 ~ , pm2.5 => 101 ~ )
-     * <p>
+     *
      * ※ JSON 방식 호출 방법 : URL 제일 뒷 부분에 다음 파라미터(&_returnType=json)를 추가하여 호출
      */
 
@@ -134,7 +134,7 @@ public class MainFragment extends Fragment {
     }
 
 
-    // RFCOMM Protocol
+    // RfComm Protocol
     private static final UUID MY_UUID = UUID
             .fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -184,7 +184,7 @@ public class MainFragment extends Fragment {
             public void onRefresh() { // 새로고침 시 권한부여 및 좌표 받아오기
 
                 showLocationInfo(); // 위도, 경도 불러오기
-                startLocationService();
+                startLocationService(); // GPS 권한 체크여부
                 showLineChart(); // 새로고침 할때도 LineChart 메소드 다시 불러옴
                 getAddress(); // 좌표 주소로 변환 시 구 동
 
@@ -201,10 +201,13 @@ public class MainFragment extends Fragment {
                     } else {
                         Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
                     }
+
                     bluetoothOn = false;
+
                 } catch (NullPointerException e) {
                     e.getMessage();
                 } // end try-catch
+
                 todayIsOver();
             }
         });
@@ -215,28 +218,25 @@ public class MainFragment extends Fragment {
                 soohyungHatesDujin();
             }
 
-        } catch (Exception e) {
-            e.getMessage();
-        }
-        // TODO
-        try {
+            // SharedPreference 값 불러오기
             if (null == dustDrugDAOImple.data.getStationName()) {
-                //세어 프레퍼런트 불러오기
+
             }
 
         } catch (Exception e) {
             list = mainActivity.iWantGoHomeRead();
         }
+
         if (list.size() > 0) {
-//            Log.i("s1", list.get(0).getLocality());
-//            Log.i("s1", list.get(0).getSubLocality());
-//            Log.i("s1", list.get(0).getThoroughfare());
+
         }
-        Log.i("async", "MainFragment #200");
+
+        Log.i("async", "MainFragment #234");
         if (list.get(0).getLocality() != null) {
             SexyAss sexyAss = new SexyAss();
             sexyAss.execute();
         }
+
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -322,6 +322,7 @@ public class MainFragment extends Fragment {
         if (requestCode == REQ_CODE_PERMISSION) {
             if (grantResults.length == 3 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 return;
+
             } else {
                 Toast.makeText(getContext(), "Make the authorization get allowed", Toast.LENGTH_SHORT).show();
             }
@@ -349,6 +350,7 @@ public class MainFragment extends Fragment {
             // TODO: Consider calling
             return;
         }
+
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60 * 1000, 0, locationListener);
     }
@@ -368,9 +370,10 @@ public class MainFragment extends Fragment {
                 if (ActivityCompat
                         .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
                     Toast.makeText(getContext(), "새로고침이 필요합니다.(아래로 끌어당겨주세요)", Toast.LENGTH_LONG).show();
+
                 } else if (ActivityCompat
                         .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
-                    Toast.makeText(getContext(), "GPS 가 안되면 근접거리라도 수신예정...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "GPS 가 수신 되지 않고 있습니다. 확인해주세요.", Toast.LENGTH_LONG).show();
                 }
                 swipeRefreshLayout.setRefreshing(false);
                 ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
@@ -401,19 +404,23 @@ public class MainFragment extends Fragment {
         if (cnt == 23) {
             for (int x = 0; x < 1; x++) {
                 for (int k = 1; k < 25; k++) {
-                    if (k == 1)
+                    if (k == 1) {
                         xAxis[24] = xAxis[k];
-                    else
+                    } else {
                         xAxis[k - 1] = xAxis[k];
+                    }
                 }
             }
+
         } else {
             for (int x = 0; x < cnt; x++) {
                 for (int k = 25; k >= 2; k--) {
-                    if (k == 25)
+                    if (k == 25) {
                         xAxis[1] = xAxis[k - 1];
-                    else
+
+                    } else {
                         xAxis[k] = xAxis[k - 1];
+                    }
                 }
             }
         }
@@ -435,17 +442,21 @@ public class MainFragment extends Fragment {
 
         if (!bluetoothOn) { //bluetoothOn 연결이 되어 있지 않을 때
             for (int k = 0; k < 24; k++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                if (list_pm10value[k] == -1)
+                if (list_pm10value[k] == -1) {
                     list_pm10value[k] = 0;
-                else
+
+                } else {
                     dataset1.add(new Entry(list_pm10value[k], k + 1));
+                }
             }
 
             for (int i = 0; i < 24; i++) { // 해당 시간대까지 그래프를 출력하도록 합니다
-                if (list_pm25value[i] == -1)
+                if (list_pm25value[i] == -1) {
                     list_pm25value[i] = 0;
-                else
+
+                } else {
                     dataset2.add(new Entry(list_pm25value[i], i + 1));
+                }
             }
 
         } else { // bluetoothOn 연결이 되어 있을 때
@@ -462,10 +473,12 @@ public class MainFragment extends Fragment {
                     }
                 }
             }
+
             try {
                 for (int i = 1; i < 25; i++)
                     blueDataSet.add(new Entry(Float.parseFloat(reciveData.split("/")[i]), i));
                 int idx = reciveData.split("/")[24].indexOf(".");
+
                 textShowValuePm25.setText("초미세먼지\n" + reciveData.split("/")[24].substring(0, idx) + " ㎍/㎥"); // 초미세먼지(PM2.5)
                 textLocation.setText("블루투스 측정");
                 textShowValue.setText(" ");
@@ -475,12 +488,12 @@ public class MainFragment extends Fragment {
             } catch (NumberFormatException e) {
                 e.getMessage();
             }
+
             LineDataSet lineDataSet = new LineDataSet(blueDataSet, "초미세먼지");
             lineDataSet.setColor(Color.parseColor("#0deaf0"));
             lineDataSet.setCircleColor(Color.parseColor("#0deaf0"));
             lineDataSet.setDrawCubic(true);
             lines.add(lineDataSet);
-
 
         }
 
@@ -494,11 +507,8 @@ public class MainFragment extends Fragment {
     }
 
     // GPS 위도 경도 값 불러오기 끝
-
     public void getAddress() { // 주소값 불러오기
         list = GeoCoding.getlatitude(latitude, longtitude, getContext());
-
-
     }
 
     public class SexyAss extends AsyncTask<Void, Void, Void> {
@@ -520,8 +530,8 @@ public class MainFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Void result) { // 데이터 수치 갱신
-            soohyungHatesDujin();//수치를 갱신해주는 메서드
+        protected void onPostExecute(Void result) {
+            soohyungHatesDujin(); // 데이터 수치 를 갱신 해주는 메서드
         }
 
     } // end class SexyAss extends AsyncTask
@@ -529,8 +539,6 @@ public class MainFragment extends Fragment {
     public void getSearchFragmentAddress(List<Address> list) {
         this.list = list;
         Log.i("async", "MainFragment #474");
-//        SexyAss sexyAss = new SexyAss();
-//        sexyAss.execute();
     }
 
     private void enableBluetooth() {
@@ -560,7 +568,7 @@ public class MainFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "requestCode는" + requestCode);
+        Log.i(TAG, "requestCode 는" + requestCode);
         Log.i(TAG, "resultCode" + resultCode);
 
         switch (requestCode) {
@@ -574,6 +582,7 @@ public class MainFragment extends Fragment {
                 if (requestCode == Activity.RESULT_OK) {
                     scanDevice();
                     Log.i(TAG, "REQUEST_CONNECT_DEVICE = " + REQUEST_ENABLE_BT);
+
                 } else {
                     Toast.makeText(getContext(), "블루투스를 활성화 시켜주세요.", Toast.LENGTH_SHORT).show();
                 }
@@ -622,7 +631,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    // ConnectThread 초기화 device의 모든 연결 제거
+    // ConnectThread 초기화 device 의 모든 연결 제거
     public synchronized void connect(BluetoothDevice device) {
         Log.d(TAG, "connect to: " + device);
 
@@ -676,6 +685,7 @@ public class MainFragment extends Fragment {
         mConnectedThread = new ConnectedThread(socket);
         if (mConnectedThread.isAlive()) {
             mConnectedThread.interrupt();
+
         } else {
             mConnectedThread.start();
         }
@@ -704,26 +714,27 @@ public class MainFragment extends Fragment {
     // 값을 쓰는 부분(보내는 부분)
     public void write(byte[] out) { // Create temporary object
         ConnectedThread r; // Synchronize a copy of the ConnectedThread
+
         synchronized (this) {
             if (mState != STATE_CONNECTED)
                 return;
             r = mConnectedThread;
         }
-        // Perform the write unsynchronized
+        // Perform the write unSynchronized
 //         r.write(out);
 
     }
 
-    // 연결 실패했을때
+    // 연결실패 했을때
     private void connectionFailed() {
         setState(STATE_LISTEN);
-        Log.d(TAG, "BluetoothServie - stop");
+        Log.d(TAG, "BluetoothService - stop");
     }
 
     // 연결을 잃었을 때
     private void connectionLost() {
         setState(STATE_LISTEN);
-        Log.d(TAG, "BluetoothServie - stop");
+        Log.d(TAG, "BluetoothService - stop");
     }
 
     private class ConnectThread extends Thread {
@@ -753,7 +764,7 @@ public class MainFragment extends Fragment {
 
             // BluetoothSocket 연결 시도
             try {
-                // BluetoothSocket 연결 시도에 대한 return 값은 succes 또는 exception이다.
+                // BluetoothSocket 연결 시도에 대한 return 값은 success 또는 exception 이다.
                 mmSocket.connect();
                 Log.d(TAG, "Connect Success");
 
@@ -761,27 +772,28 @@ public class MainFragment extends Fragment {
                 connectionFailed(); // 연결 실패시 불러오는 메소드
                 Log.d(TAG, "Connect Fail");
 
-                // socket을 닫는다.
+                // socket 을 닫는다.
                 try {
                     mmSocket.close();
                 } catch (IOException e2) {
                     Log.e(TAG, "unable to close() socket during connection failure", e2);
                 }
-                // 연결중? 혹은 연결 대기상태인 메소드를 호출한다.
+                // 연결 중 혹은 연결 대기상태인 메소드를 호출한다.
                 if (isInterrupted()) {
                     start();
+
                 } else {
                     interrupt();
                 }
                 return;
             }
 
-            // ConnectThread 클래스를 reset한다.
+            // ConnectThread 클래스를 reset 한다.
             synchronized (this) {
                 mConnectThread = null;
             }
 
-            // ConnectThread를 시작한다.
+            // ConnectThread 를 시작한다.
             connected(mmSocket, mmDevice);
         }
 
@@ -806,7 +818,7 @@ public class MainFragment extends Fragment {
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
 
-            // BluetoothSocket의 inputstream 과 outputstream을 얻는다.
+            // BluetoothSocket 의 InputStream 과 OutputStream 을 얻는다.
             try {
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
@@ -829,32 +841,35 @@ public class MainFragment extends Fragment {
             Log.i(TAG, "Send : " + send);
             try {
                 mmOutStream.write(send.getBytes());
-                Log.i(TAG, "데이터 보넴 성공1");
+                Log.i(TAG, "데이터 보냄 성공1");
                 mmOutStream.write(send.getBytes());
-                Log.i(TAG, "데이터 보넴 성공2");
+                Log.i(TAG, "데이터 보냄 성공2");
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.i(TAG, "데이터 보넴 실패" + e.getMessage());
+                Log.i(TAG, "데이터 보냄 실패" + e.getMessage());
             }
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Log.i(TAG, "받기 시작2");
                     int bytesAvailable = mmInStream.available();   // 수신 데이터 확인
                     Log.i(TAG, "bytesAvailable : " + bytesAvailable);
+
                     if (bytesAvailable > 0) {      // 데이터가 수신된 경우
                         Log.i(TAG, "bytesAvailable 뭘까?" + bytesAvailable);
                         byte[] packetBytes = new byte[bytesAvailable];
                         mmInStream.read(packetBytes);
 
                         for (int i = 0; i < bytesAvailable; i++) {
-                            Log.i(TAG, "For문이여 돌아라~~");
+                            Log.i(TAG, "For 문이여 돌아라~~");
                             byte b = packetBytes[i];
+
                             if (b == mCharDelimiter) {
                                 byte[] encodedBytes = new byte[readBufferPosition];
                                 System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
                                 final String data = new String(encodedBytes, "UTF-8");
                                 readBufferPosition = 0;
                                 Log.i(TAG, "DATA : " + data);
+
                                 if (!data.equals("")) {
                                     reciveData = data;
                                     Log.i(TAG, "reciveData : " + reciveData);
@@ -862,6 +877,7 @@ public class MainFragment extends Fragment {
                                     refresh();
                                     interrupt();
                                 }
+
                             } else {
                                 readBuffer[readBufferPosition++] = b;
                             }
@@ -878,7 +894,7 @@ public class MainFragment extends Fragment {
                     connectionLost();
                     break;
                 }
-                //break;
+
             }
         }
 
@@ -906,37 +922,25 @@ public class MainFragment extends Fragment {
         }
     }
 
-    public void soohyungHatesDujin() { //수치 갱신
+    public void soohyungHatesDujin() { // 수치 갱신
         try {
             textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
-            Log.i(TAG, "textLocation : " + list.get(0).getLocality());
             textLocation.append(" ");
             textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
-            Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
-            /*else if (dustDrugDAOImple.data.getStationName() == null) {
-                textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
-                Log.i(TAG, "textLocation : " + list.get(0).getLocality());
-                textLocation.append(" ");
-                textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
-                Log.i(TAG, "textSubLocation : " + list.get(0).getSubLocality());
-            }*/
-
 
             year = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(0, 4)); // 년
-
             month = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(5, 7)); // 월
-
             date = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(8, 10)); // 일
 
             calendar = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(11, 13)); // 시(時)
-            Log.i(TAG, "calendar 수형헤이트두진 : " + calendar);
             textTime.setText("※ " + year + "년 " + month + "월 " + date + "일 " + calendar + "시 기준"); // 날짜, 시간 출력
 
-            if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) == -1)
+            if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) == -1) {
                 textShowValue.setText("미세먼지\n데이터를\n찾을 수 없습니다"); // 미세먼지(PM10)
-            else
-                textShowValue.setText("미세먼지\n" + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
 
+            } else {
+                textShowValue.setText("미세먼지\n" + dustDrugDAOImple.data.getDetailData().get(0).getPm10Value() + " ㎍/㎥"); // 미세먼지(PM10)
+            }
 
             String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
 
@@ -1013,7 +1017,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void todayIsOver() {//시구군정보의 api를 가져올때 사요
+    private void todayIsOver() { // 시, 도, 구, 군의 API 정보를 가져올 때 사용
         try {
             if (list.size() > 0) {
                 textLocation.setText(list.get(0).getLocality()); // 시,도 정보

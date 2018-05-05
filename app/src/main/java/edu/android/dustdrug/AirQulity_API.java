@@ -12,13 +12,13 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class AirQulity_API {
-//    String AuthenticationKey = "2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D"; // 내꺼
-    String AuthenticationKey = "x8wVPw0ebqpfGHvFnY1u0ESYkwICViliP26eUlnenbgGWPAes0aX0sNMb47qg22efyWm4e3UDMB%2FUAOmIQUIaQ%3D%3D"; // 두진이꺼
+    String AuthenticationKey = "2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D"; // 인증키 1(My)
+//    String AuthenticationKey = "x8wVPw0ebqpfGHvFnY1u0ESYkwICViliP26eUlnenbgGWPAes0aX0sNMb47qg22efyWm4e3UDMB%2FUAOmIQUIaQ%3D%3D"; // 인증키 2
     private Gson gson = new Gson();
 
 
     public ArrayList<GetAPIGsonTM.List> getFackTm(String original) { // 동이름이 있을 시 동을 tm 주소로 바꿔주는 메서드  검색 시 원하는 위차를 tm 좌표로 받아오는 메서드
-        for (int i = 0; i <= 9; i++) {//동 이름에 숫자가 있을때 바꿔줌
+        for (int i = 0; i <= 9; i++) {// 동 이름에 숫자가 있을때 바꿔줌
             original = original.replace(String.valueOf(i), "");
         }
 
