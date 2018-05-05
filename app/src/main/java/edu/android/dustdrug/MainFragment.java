@@ -54,7 +54,6 @@ import java.util.UUID;
 /**
  * A simple {@link Fragment} subclass.
  */
-
 public class MainFragment extends Fragment {
     public static final String TAG = "edu.android";
 
@@ -87,7 +86,7 @@ public class MainFragment extends Fragment {
     private MainFragment mainFragment;
 
     private MainActivity mainActivity;
-    public TextView textLocation, textShowValue, textValueGrade, textTime, textShowValuePm25;
+    public TextView textLocation, textShowValue, textValueGrade, textTime, textShowValuePm25, textInfo;
     public ImageButton btnBlueTooth, btnSearch;
 
     public int pm10value;
@@ -127,7 +126,7 @@ public class MainFragment extends Fragment {
     private boolean bluetoothOn = false; //블루투스 데이터 받고 리플레쉬 했을 경우 채크 변수
     private ImageView gbView;
 
-    private void refresh() {
+    private void refresh() { // 블루투스 새로고침
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.detach(this).attach(this).commit();
         bluetoothOn = true;
@@ -153,10 +152,8 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         dustDrugDAOImple = DustDrugDAOImple.getInstence();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        lineChart = view.findViewById(R.id.chartValueEveryHour);
-        lineChart.setDescription(" ");
-        showLineChart(); // Line Graph 를 보여주는 메소드를 불러옵니다.
 
+        lineChart = view.findViewById(R.id.chartValueEveryHour);
         mainActivity = (MainActivity) getContext();
         textLocation = view.findViewById(R.id.textLocation);
         textShowValue = view.findViewById(R.id.textShowValue);
@@ -165,9 +162,18 @@ public class MainFragment extends Fragment {
         textValueGrade = view.findViewById(R.id.textValueGrade);
         textTime = view.findViewById(R.id.textTime);
         textShowValuePm25 = view.findViewById(R.id.textShowValuePm25);
+        textInfo = view.findViewById(R.id.textInfo);
         gbView = view.findViewById(R.id.gbView);
+
+        lineChart.setDescription(" ");
+        showLineChart(); // Line Graph 를 보여주는 메소드를 불러옵니다.
+
+        resourceDataInfo(); // 자료제공 내용
+
+        btnBlueTooth.setVisibility(View.GONE); // 블루투스 버튼 이미지 보이지 않게 설정. (VISIBLE: 보임, GONE : 보이지 않음)
         GlideDrawableImageViewTarget gifimage = new GlideDrawableImageViewTarget(gbView);
         Glide.with(this).load(R.drawable.gbb).into(gifimage);
+
 
         gbView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,8 +201,10 @@ public class MainFragment extends Fragment {
                         textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
                         textLocation.append(" ");
 
-                        SexyAss sexyAss = new SexyAss();
-                        sexyAss.execute();
+                        resourceDataInfo(); // 자료제공 정보
+
+                        AddressSearch addressSearch = new AddressSearch();
+                        addressSearch.execute();
 
                     } else {
                         Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
@@ -208,14 +216,14 @@ public class MainFragment extends Fragment {
                     e.getMessage();
                 } // end try-catch
 
-                todayIsOver();
+                getAddressInfo();
             }
         });
 
         try {
 
             if (dustDrugDAOImple.data.getStationName() != null) {
-                soohyungHatesDujin();
+                updatingData();
             }
 
             // SharedPreference 값 불러오기
@@ -224,17 +232,17 @@ public class MainFragment extends Fragment {
             }
 
         } catch (Exception e) {
-            list = mainActivity.iWantGoHomeRead();
+            list = mainActivity.sharedPrefRead();
         }
 
         if (list.size() > 0) {
 
         }
 
-        Log.i("async", "MainFragment #234");
+        Log.i("async", "MainFragment #244");
         if (list.get(0).getLocality() != null) {
-            SexyAss sexyAss = new SexyAss();
-            sexyAss.execute();
+            AddressSearch addressSearch = new AddressSearch();
+            addressSearch.execute();
         }
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -340,10 +348,8 @@ public class MainFragment extends Fragment {
         return result;
     }
 
-    /**
-     * GPS 관련...
-     */
-    public void startLocationService() { // GPS 권한 체크여부
+    // GPS 권한 체크여부
+    public void startLocationService() {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -355,7 +361,8 @@ public class MainFragment extends Fragment {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60 * 1000, 0, locationListener);
     }
 
-    public void showLocationInfo() { // 권한 부여, 위도, 경도 받아오는 메소드
+    // GPS 권한 부여, 위도, 경도 받아오는 메소드
+    public void showLocationInfo() {
 
         try {
             if (hasPermissions(permissions)) {
@@ -366,7 +373,9 @@ public class MainFragment extends Fragment {
                 textLocation.setText("경도 : " + longtitude + "\n" + "위도 : " + latitude);
 
                 swipeRefreshLayout.setRefreshing(false);
+
             } else {
+
                 if (ActivityCompat
                         .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
                     Toast.makeText(getContext(), "새로고침이 필요합니다.(아래로 끌어당겨주세요)", Toast.LENGTH_LONG).show();
@@ -375,6 +384,7 @@ public class MainFragment extends Fragment {
                         .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
                     Toast.makeText(getContext(), "GPS 가 수신 되지 않고 있습니다. 확인해주세요.", Toast.LENGTH_LONG).show();
                 }
+
                 swipeRefreshLayout.setRefreshing(false);
                 ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
             }
@@ -387,7 +397,7 @@ public class MainFragment extends Fragment {
 
     }
 
-    public void showLineChart() {
+    public void showLineChart() { // LineChart 를 표시 하는 메소드
 
         String[] xAxis = new String[]
                 {"", "1시", "2시", "3시", "4시",
@@ -406,6 +416,7 @@ public class MainFragment extends Fragment {
                 for (int k = 1; k < 25; k++) {
                     if (k == 1) {
                         xAxis[24] = xAxis[k];
+
                     } else {
                         xAxis[k - 1] = xAxis[k];
                     }
@@ -428,6 +439,7 @@ public class MainFragment extends Fragment {
         ArrayList<ILineDataSet> lines = new ArrayList<ILineDataSet>();
         ArrayList<Entry> dataset1 = new ArrayList<Entry>();
         ArrayList<Entry> dataset2 = new ArrayList<Entry>();
+
         LineDataSet lineDataSet1 = new LineDataSet(dataset1, "미세먼지");
         lineDataSet1.setColor(Color.parseColor("#cb1ad6"));
         lineDataSet1.setCircleColor(Color.parseColor("#cb1ad6"));
@@ -477,13 +489,13 @@ public class MainFragment extends Fragment {
             try {
                 for (int i = 1; i < 25; i++)
                     blueDataSet.add(new Entry(Float.parseFloat(reciveData.split("/")[i]), i));
-                int idx = reciveData.split("/")[24].indexOf(".");
+                    int idx = reciveData.split("/")[24].indexOf(".");
 
-                textShowValuePm25.setText("초미세먼지\n" + reciveData.split("/")[24].substring(0, idx) + " ㎍/㎥"); // 초미세먼지(PM2.5)
-                textLocation.setText("블루투스 측정");
-                textShowValue.setText(" ");
-                textValueGrade.setText(" ");
-                textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    textShowValuePm25.setText("초미세먼지\n" + reciveData.split("/")[24].substring(0, idx) + " ㎍/㎥"); // 초미세먼지(PM2.5)
+                    textLocation.setText("블루투스 측정");
+                    textShowValue.setText(" ");
+                    textValueGrade.setText(" ");
+                    textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
             } catch (NumberFormatException e) {
                 e.getMessage();
@@ -506,24 +518,25 @@ public class MainFragment extends Fragment {
         legend.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
     }
 
-    // GPS 위도 경도 값 불러오기 끝
-    public void getAddress() { // 주소값 불러오기
+    // GPS 위도 경도 값 불러오기
+    public void getAddress() {
         list = GeoCoding.getlatitude(latitude, longtitude, getContext());
     }
 
-    public class SexyAss extends AsyncTask<Void, Void, Void> {
+    public class AddressSearch extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Void doInBackground(Void... params) { // 인터넷 사용을 위한 쓰래드
+        protected Void doInBackground(Void... params) { // 인터넷 사용을 위한 쓰레드
+
             if (list.get(0).getThoroughfare() == null) { // 이름이 없을 시 "구" 로 검색
-                dustDrugDAOImple.fuckTM(list);
+                dustDrugDAOImple.changeAddressTmConvert(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(), dustDrugDAOImple.data.getTmY());
-                dustDrugDAOImple.kimKwangSukInthespiritofforgetting(dustDrugDAOImple.data.getStationName());
+                dustDrugDAOImple.measurementCallGetData(dustDrugDAOImple.data.getStationName());
 
             } else { // "동" 으로 검색
-                dustDrugDAOImple.fuckTM(list);
+                dustDrugDAOImple.changeAddressTmConvert(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(), dustDrugDAOImple.data.getTmY());
-                dustDrugDAOImple.kimKwangSukInthespiritofforgetting(dustDrugDAOImple.data.getStationName());
+                dustDrugDAOImple.measurementCallGetData(dustDrugDAOImple.data.getStationName());
             }
 
             return null;
@@ -531,14 +544,14 @@ public class MainFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void result) {
-            soohyungHatesDujin(); // 데이터 수치 를 갱신 해주는 메서드
+            updatingData(); // 데이터 수치를 갱신 해주는 메소드
         }
 
     } // end class SexyAss extends AsyncTask
 
     public void getSearchFragmentAddress(List<Address> list) {
         this.list = list;
-        Log.i("async", "MainFragment #474");
+        Log.i("async", "MainFragment #553");
     }
 
     private void enableBluetooth() {
@@ -589,7 +602,6 @@ public class MainFragment extends Fragment {
                 break;
         }
     }
-
 
     private void getDeviceInfo(Intent data) {
         String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
@@ -922,11 +934,13 @@ public class MainFragment extends Fragment {
         }
     }
 
-    public void soohyungHatesDujin() { // 수치 갱신
+    public void updatingData() { // 데이터 수치 갱신
         try {
             textLocation.setText(dustDrugDAOImple.data.getLocality().toString()); // 시, 도
             textLocation.append(" ");
             textLocation.append(dustDrugDAOImple.data.getSubLocality().toString()); // 구,군
+
+            resourceDataInfo(); // 자료제공 내용
 
             year = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(0, 4)); // 년
             month = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getDataTime().substring(5, 7)); // 월
@@ -944,7 +958,7 @@ public class MainFragment extends Fragment {
 
             String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
 
-            mainActivity.iWantGoHomeSave(dustDrugDAOImple.data.getLocality(), dustDrugDAOImple.data.getSubLocality(), dustDrugDAOImple.data.getThoroughfare());//셰어 프레퍼런스저장
+            mainActivity.sharedPrefSave(dustDrugDAOImple.data.getLocality(), dustDrugDAOImple.data.getSubLocality(), dustDrugDAOImple.data.getThoroughfare());//셰어 프레퍼런스저장
             if (gradePm10.equals("1")) {
                 textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0);
                 textValueGrade.setCompoundDrawablePadding(10); // 미세먼지 등급 이미지 변경
@@ -970,6 +984,7 @@ public class MainFragment extends Fragment {
                 textValueGrade.setText("매우나쁨");
 
             } else {
+
                 if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 30 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 0) {
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
@@ -996,11 +1011,11 @@ public class MainFragment extends Fragment {
                 }
             }
 
-            if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm25Value()) == -1)
+            if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm25Value()) == -1) {
                 textShowValuePm25.setText("초미세먼지\n데이터를\n찾을 수 없습니다"); // 초미세먼지(PM2.5)
-            else
+            } else {
                 textShowValuePm25.setText("초미세먼지\n" + dustDrugDAOImple.data.getDetailData().get(0).getPm25Value() + " ㎍/㎥"); // 초미세먼지(PM2.5)
-
+            }
 
             for (int i = 0; i < 24; i++) { // 그래프 수치
                 list_pm10value[i] = Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(23 - i).getPm10Value());
@@ -1012,12 +1027,13 @@ public class MainFragment extends Fragment {
             }
 
             showLineChart();
+
         } catch (Exception e) {
             e.getMessage();
         }
     }
 
-    private void todayIsOver() { // 시, 도, 구, 군의 API 정보를 가져올 때 사용
+    public void getAddressInfo() { // 시, 도, 구, 군의 API 정보를 가져올 때 사용
         try {
             if (list.size() > 0) {
                 textLocation.setText(list.get(0).getLocality()); // 시,도 정보
@@ -1025,15 +1041,24 @@ public class MainFragment extends Fragment {
                 textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
 
                 Log.i("async", "MainFragment #967");
-                SexyAss sexyAss = new SexyAss();
-                sexyAss.execute();
+                AddressSearch addressSearch = new AddressSearch();
+                addressSearch.execute();
+
             } else {
                 Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
             }
+
             bluetoothOn = false;
+
         } catch (NullPointerException e) {
             e.getMessage();
         } // end try-catch
     }
 
+    public void resourceDataInfo() { // 자료제공 정보 메소드
+        textInfo.setText(" ※ DustDrug는 이용자분과 가장 가까운 위치에 있는 측정소의" + "\n");
+        textInfo.append("  실시간 정보를 보여 드립니다." + "\n");
+        textInfo.append("  해당 자료는 한국환경공단(AirKorea)과 기상청에서 제공하는" + "\n");
+        textInfo.append("  실시간 측정자료 이며, 실제 대기농도 수치와 다를 수 있습니다.");
+    }
 }

@@ -12,12 +12,14 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class AirQulity_API {
+    public static final String TAG = "edu.android";
+
     String AuthenticationKey = "2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D"; // 인증키 1(My)
 //    String AuthenticationKey = "x8wVPw0ebqpfGHvFnY1u0ESYkwICViliP26eUlnenbgGWPAes0aX0sNMb47qg22efyWm4e3UDMB%2FUAOmIQUIaQ%3D%3D"; // 인증키 2
     private Gson gson = new Gson();
 
 
-    public ArrayList<GetAPIGsonTM.List> getFackTm(String original) { // 동이름이 있을 시 동을 tm 주소로 바꿔주는 메서드  검색 시 원하는 위차를 tm 좌표로 받아오는 메서드
+    public ArrayList<GetAPIGsonTM.List> getChangeTm(String original) { // 동이름이 있을 시 동을 tm 주소로 바꿔주는 메서드  검색 시 원하는 위차를 tm 좌표로 받아오는 메서드
         for (int i = 0; i <= 9; i++) {// 동 이름에 숫자가 있을때 바꿔줌
             original = original.replace(String.valueOf(i), "");
         }
@@ -26,24 +28,31 @@ public class AirQulity_API {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String json = null;
-        Log.i("s1","fuckTM " + uri);
+
         try {
             URL url = new URL(uri);
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
+
             InputStream is = url.openStream();
             reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             StringBuffer buffer = new StringBuffer();
+
             String line = "";
             while ((line = reader.readLine()) != null) {
                 buffer.append(line+"\n");
             }
+
             json = buffer.toString();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(json == null){Log.i("s1","json null임");}
+
+        if(json == null){
+            Log.i(TAG,"json null");
+        }
+
         GetAPIGsonTM getAPIGsonTM = gson.fromJson(json,GetAPIGsonTM.class);
 
 

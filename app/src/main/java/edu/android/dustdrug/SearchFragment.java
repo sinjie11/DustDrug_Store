@@ -1,7 +1,6 @@
 package edu.android.dustdrug;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.location.Address;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -11,8 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -21,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -34,9 +30,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import static edu.android.dustdrug.MainActivity.TAG;
-
 public class SearchFragment extends Fragment {
+    public static final String TAG = "edu.android";
 
     private OnFragmentInteractionListener mListener;
     private DustDrugDAOImple dustDrugDAOImple;
@@ -55,6 +50,7 @@ public class SearchFragment extends Fragment {
     EditText editText;
     AirQulity_API airQulity_api;
     Button button;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -63,26 +59,31 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mainActivity= (MainActivity) getActivity();
-        dustDrugDAOImple= dustDrugDAOImple.getInstence();
+        mainActivity = (MainActivity) getActivity();
+        dustDrugDAOImple = dustDrugDAOImple.getInstence();
         list = new ArrayList<>();
+
         View view = inflater.inflate(R.layout.fragment_search, container, false);
+        editText = view.findViewById(R.id.editText);
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        editText=view.findViewById(R.id.editText);
         Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), 1)); // 시 구분선
+
         Si si = new Si();
         si.execute();
-        button =view.findViewById(R.id.button);
+
+        button = view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IsFuckingCandy isFuckingCandy = new IsFuckingCandy();
-                    isFuckingCandy.execute();
+                AllItemSearch allItemSearch = new AllItemSearch();
+                allItemSearch.execute();
             }
         });
+
         //살리고 싶지만 트래픽 때문에 어쩔수 없이 죽인 채팅 치는 와중에 검색되는 리스너
 //        editText.addTextChangedListener(new TextWatcher() {
 //            @Override
@@ -108,29 +109,34 @@ public class SearchFragment extends Fragment {
 
     public ArrayList<CityList> getXmlData1() {// 도시 이름 데이터 가져오기
         ArrayList<CityList> lists = new ArrayList<>();
+        
         String api1 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getBorodCityList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D";
-//        Log.i("s1", "트라이위");
+
         try {
             URL url = new URL(api1); // 문자열로 된 요청 totalUrl 을 URL 객체로 생성.
-//            Log.i("s1", api1);
+
             InputStream is = url.openStream(); // url 위치로 InputStream 연결
 
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
+
             xpp.setInput(new InputStreamReader(is)); // InputStream 으로부터 xml 입력받음
+
             String tag = null;
+
             xpp.next();
+
             int eventType = xpp.getEventType();
             CityList cityList = new CityList();
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
 
                 switch (eventType) {
-                    case XmlPullParser.START_DOCUMENT://파싱 시작
+                    case XmlPullParser.START_DOCUMENT: // Parsing Start
                         break;
 
                     case XmlPullParser.START_TAG:
-                        tag = xpp.getName();//태그 이름 얻어오기
+                        tag = xpp.getName(); // tag 이름 얻어오기
 
                         if (tag.equals("brtcNm")) {
                             xpp.next();
@@ -147,7 +153,7 @@ public class SearchFragment extends Fragment {
                         break;
 
                     case XmlPullParser.END_TAG:
-                        tag = xpp.getName(); // 태그 이름 얻어오기
+                        tag = xpp.getName();
 
                         if (tag.equals("borodCity")) {
                             lists.add(cityList);
@@ -187,11 +193,11 @@ public class SearchFragment extends Fragment {
         }
     } // 도시 이름 리스트 끝
 
-    private class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {//리사이클러뷰 내용추가
+    private class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> { // RecyclerView 내용추가
 
         @NonNull
         @Override
-        public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {//뷰홀더 생성
+        public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) { // ViewHolder 생성
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemView = inflater.inflate(
                     android.R.layout.simple_list_item_1,
@@ -202,7 +208,7 @@ public class SearchFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {//뷰홀더의 객채에 적용될 UI
+        public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) { // ViewHolder 객채에 적용될 UI
             holder.textView.setText(cityLists.get(position).brtcNm);
         }
 
@@ -211,38 +217,41 @@ public class SearchFragment extends Fragment {
             return cityLists.size();
         }
 
-        class ItemViewHolder extends RecyclerView.ViewHolder {// 뷰홀더 만듬
+        class ItemViewHolder extends RecyclerView.ViewHolder { // ViewHolder 만듬
             TextView textView;
 
             public ItemViewHolder(final View itemView) {
                 super(itemView);
                 textView = (TextView) itemView;
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {//리스트에서 적용
+                    public void onClick(View v) { // 리스트 에서 적용
                         recyclerView.addItemDecoration(new DividerItemDecoration(itemView.getContext(), 1)); // recyclerView 구,동 구분선
                         param1 = textView.getText().toString();
-                        address=new Address(null);
-                        if(param1.equals("세종특별자치시")){
+                        address = new Address(null);
+
+                        if (param1.equals("세종특별자치시")) {
                             EupMyeonDong eupMyeonDong = new EupMyeonDong();
                             String[] fuckYours = {param1, ""};
                             eupMyeonDong.execute(fuckYours);
                             address.setLocality(param1);
                             address.setSubLocality("세종시");
-                        }else {
-                        Gugun Gugun = new Gugun();
-                        Gugun.execute(param1);
-                        address.setLocality(param1);}
+
+                        } else {
+                            Gugun Gugun = new Gugun();
+                            Gugun.execute(param1);
+                            address.setLocality(param1);
+                        }
                     }
                 });
 
             }
         }
-    }//리사이클러뷰 내용추가 끝
+    } // RecyclerView 내용추가 끝
 
-    class Si extends AsyncTask<Void, Void, Void> {//어씽크 테스트 클래스
+    class Si extends AsyncTask<Void, Void, Void> { // "시" AsyncTask 클래스
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -255,49 +264,63 @@ public class SearchFragment extends Fragment {
             ItemAdapter adapter = new ItemAdapter();
             recyclerView.setAdapter(adapter);
         }
-    }//어씽크 끝
+    } // end Si AsyncTask
 
-    public ArrayList<CityList2> getXmlData2(String cityname) {//시도 xml 받아오기
-        String cityName=changeCityName(cityname);
-        cityName=iLoveYourAss(cityName);
+    public ArrayList<CityList2> getXmlData2(String cityname) { // 시, 도 xml 받아오기
+        String cityName = changeCityName(cityname);
+        
+        cityName = uftConvertStr(cityName);
+        
         String api2 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getSiGunGuList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityName;
+        
         ArrayList<CityList2> cityList2s = new ArrayList<>();
+        
         try {
             URL url = new URL(api2); // 문자열로 된 요청 totalUrl 을 URL 객체로 생성.
+
             InputStream is = url.openStream(); // url 위치로 InputStream 연결
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is)); //InputStream 으로부터 xml 입력받음
+
+            xpp.setInput(new InputStreamReader(is)); // InputStream 으로부터 xml 입력받음
+
             String tag = null;
+
             xpp.next();
+
             int eventType = xpp.getEventType();
+
             CityList2 cityList2 = new CityList2();
-            int x= 0;
+
+            int x = 0;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 x++;
                 switch (eventType) {
-                    case XmlPullParser.START_DOCUMENT://파싱 시작
-//                        Log.i("s1","시작 ");
+                    case XmlPullParser.START_DOCUMENT: // Parsing 시작
                         break;
 
                     case XmlPullParser.START_TAG:
-                        tag = xpp.getName();//태그 이름 얻어오기
+                        tag = xpp.getName(); // tag 이름 얻어오기
                         if (tag.equals("signguCd")) {
                             xpp.next();
                             cityList2.setName(xpp.getText());
                         }
                         break;
+
                     case XmlPullParser.TEXT:
                         break;
 
                     case XmlPullParser.END_TAG:
-                        tag = xpp.getName(); // 태그 이름 얻어오기
+                        tag = xpp.getName();
+
                         if (tag.equals("siGunGuList")) {
                             cityList2s.add(cityList2);
                             cityList2 = new CityList2();
                         }
+
                         break;
                 }
+
                 eventType = xpp.next();
             }
 
@@ -319,9 +342,9 @@ public class SearchFragment extends Fragment {
         public void setName(String name) {
             this.name = name;
         }
-    }//시도 xml 받아오기끝
+    } // 시, 도 xml 받아오기끝
 
-    class Gugun extends AsyncTask<String, Void, Void> {//받아온 list 쓰기
+    class Gugun extends AsyncTask<String, Void, Void> { // 받아 온 list 쓰기
 
         @Override
         protected Void doInBackground(String... strings) {
@@ -340,7 +363,7 @@ public class SearchFragment extends Fragment {
     private class ItemAdapter2 extends RecyclerView.Adapter<ItemAdapter2.ItemViewHolder2> {
         @NonNull
         @Override
-        public ItemAdapter2.ItemViewHolder2 onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {//뷰홀더 생성
+        public ItemAdapter2.ItemViewHolder2 onCreateViewHolder(@NonNull ViewGroup parent, int viewType) { // ViewHolder 생성
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemView = inflater.inflate(
                     android.R.layout.simple_list_item_1,
@@ -351,7 +374,7 @@ public class SearchFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ItemAdapter2.ItemViewHolder2 holder, int position) {// 리스트 각 객채 추가
+        public void onBindViewHolder(@NonNull ItemAdapter2.ItemViewHolder2 holder, int position) { // List 각 객채 추가
             holder.textView.setText(cityList2s.get(position).getName());
         }
 
@@ -362,11 +385,13 @@ public class SearchFragment extends Fragment {
 
         class ItemViewHolder2 extends RecyclerView.ViewHolder {
             TextView textView;
+
             public ItemViewHolder2(View itemView) {
                 super(itemView);
                 textView = (TextView) itemView;
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -383,57 +408,58 @@ public class SearchFragment extends Fragment {
     }
 
     public ArrayList<CityList3> getXmlData3(String cityname, String sigunguname) {//동 xml 받아오기
-        String cityName=changeCityName(cityname);
-        cityName=iLoveYourAss(cityName);
-        sigunguname = iLoveYourAss(sigunguname);
+        String cityName = changeCityName(cityname);
+        cityName = uftConvertStr(cityName);
+        sigunguname = uftConvertStr(sigunguname);
+
         String api3 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getEupMyunDongList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D&brtcCd=" + cityName + "&signguCd=" + sigunguname;
-//        Log.i("s1", api3);
+
         ArrayList<CityList3> cityList3s = new ArrayList<>();
+
         try {
             URL url = new URL(api3); // 문자열로 된 요청 totalUrl 을 URL 객체로 생성.
-//            Log.i("s1",api2);
+
             InputStream is = url.openStream(); // url 위치로 InputStream 연결
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is)); //InputStream 으로부터 xml 입력받음
-            String tag = null;
-            xpp.next();
-            int eventType = xpp.getEventType();
-            CityList3 cityList3 = new CityList3();
-//            Log.i("s1","파싱S");
-            while (eventType != XmlPullParser.END_DOCUMENT) {
 
-//                Log.i("s1","와일");
+            xpp.setInput(new InputStreamReader(is)); //InputStream 으로부터 xml 입력받음
+
+            String tag = null;
+
+            xpp.next();
+
+            int eventType = xpp.getEventType();
+
+            CityList3 cityList3 = new CityList3();
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
-                    case XmlPullParser.START_DOCUMENT://파싱 시작
-//                        Log.i("s1","시작 ");
+                    case XmlPullParser.START_DOCUMENT: // Parsing Start
                         break;
 
                     case XmlPullParser.START_TAG:
-                        tag = xpp.getName();//태그 이름 얻어오기
+                        tag = xpp.getName(); // tag 이름 얻어오기
 
                         if (tag.equals("emdCd")) {
-//                            Log.i("s1", "nm");
                             xpp.next();
                             cityList3.setName(xpp.getText());
                         }
                         break;
                     case XmlPullParser.TEXT:
-//                        Log.i("s1","pull Parser");
                         break;
 
                     case XmlPullParser.END_TAG:
-//                        Log.i("s1","endTag");
-//                        Log.i("s1",cityList.getBrtcCd());
-                        tag = xpp.getName(); // 태그 이름 얻어오기
-//                        Log.i("s1",tag);
+                        tag = xpp.getName();
+
                         if (tag.equals("eupMyunDongList")) {
-//                            Log.i("s1","저장");
                             cityList3s.add(cityList3);
                             cityList3 = new CityList3();
                         }
+
                         break;
                 }
+
                 eventType = xpp.next();
             }
 
@@ -455,9 +481,9 @@ public class SearchFragment extends Fragment {
         public void setName(String name) {
             this.name = name;
         }
-    }//읍/면/동 xml 받아오기끝
+    } //읍/면/동 xml 받아오기끝
 
-    class EupMyeonDong extends AsyncTask<String[], Void, Void> {//받아온 list 쓰기
+    class EupMyeonDong extends AsyncTask<String[], Void, Void> { // 받아 온 list 쓰기
 
         @Override
         protected Void doInBackground(String[]... strings) {
@@ -477,7 +503,7 @@ public class SearchFragment extends Fragment {
     private class ItemAdapter3 extends RecyclerView.Adapter<ItemAdapter3.ItemViewHolder3> {
         @NonNull
         @Override
-        public ItemAdapter3.ItemViewHolder3 onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {//뷰홀더 생성
+        public ItemAdapter3.ItemViewHolder3 onCreateViewHolder(@NonNull ViewGroup parent, int viewType) { // ViewHolder 생성
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemView = inflater.inflate(
                     android.R.layout.simple_list_item_1,
@@ -488,7 +514,7 @@ public class SearchFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ItemAdapter3.ItemViewHolder3 holder, int position) {// 리스트 각 객채 추가
+        public void onBindViewHolder(@NonNull ItemAdapter3.ItemViewHolder3 holder, int position) { // List 에 각 객체 추가
             holder.textView.setText(cityList3s.get(position).getName());
         }
 
@@ -503,7 +529,7 @@ public class SearchFragment extends Fragment {
             public ItemViewHolder3(View itemView) {
                 super(itemView);
                 textView = (TextView) itemView;
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -511,12 +537,10 @@ public class SearchFragment extends Fragment {
                     public void onClick(View v) {
                         param3 = textView.getText().toString();
                         address.setThoroughfare(param3);
-                        Log.i("s1",address.getLocality());
+                        Log.i(TAG, address.getLocality());
+
                         list.add(address);
-                        Log.i("s1",list.get(0).getLocality());
-                        Log.i("s1",list.get(0).getSubLocality());
-                        Log.i("s1",list.get(0).getThoroughfare());
-                        mainActivity.backMainFtagment(list);
+                        mainActivity.backMainFragment(list);
                     }
                 });
             }
@@ -546,84 +570,123 @@ public class SearchFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    String changeCityName(String name){
-        if (name.equals("서울")){name="서울특별시";}
-        else if (name.equals("서울특별시")){name="서울";}
-        else if (name.equals("세종")){name="세종특별자치시";}
-        else if (name.equals("세종특별자치시")){name="세종";}
-        else if (name.equals("전남")){name="전라남도";}
-        else if (name.equals("전라남도")){name="전남";}
-        else if (name.equals("전북")){name="전라북도";}
-        else if (name.equals("전라북도")){name="전북";}
-        else if (name.equals("충남")){name="충청남도";}
-        else if (name.equals("충청남도")){name="충남";}
-        else if (name.equals("충북")){name="충청북도";}
-        else if (name.equals("충청북도")){name="충북";}
-        else if (name.equals("강원")){name="강원도";}
-        else if (name.equals("강원도")){name="강원";}
-        else if (name.equals("인천")){name="인천광역시";}
-        else if (name.equals("인천광역시")){name="인천";}
-        else if (name.equals("경기")){name="경기도";}
-        else if (name.equals("경기도")){name="경기";}
-        else if (name.equals("경남")){name="경상남도";}
-        else if (name.equals("경상남도")){name="경남";}
-        else if (name.equals("경북")){name="경상북도";}
-        else if (name.equals("경상북도")){name="경북";}
-        else if (name.equals("대전")){name="대전광역시";}
-        else if (name.equals("대전광역시")){name="대전";}
-        else if (name.equals("대구")){name="대구광역시";}
-        else if (name.equals("대구광역시")){name="대구";}
-        else if (name.equals("울산")){name="울산광역시";}
-        else if (name.equals("울산광역시")){name="울산";}
-        else if (name.equals("광주")){name="광주광역시";}
-        else if (name.equals("광주광역시")){name="광주";}
-        else if (name.equals("부산")){name="부산광역시";}
-        else if (name.equals("부산광역시")){name="부산";}
-        else if (name.equals("제주")){name="제주특별자치도";}
-        else if (name.equals("제주특별자치도")){name="제주";}
+    String changeCityName(String name) {
+        if (name.equals("서울")) {
+            name = "서울특별시";
+        } else if (name.equals("서울특별시")) {
+            name = "서울";
+        } else if (name.equals("세종")) {
+            name = "세종특별자치시";
+        } else if (name.equals("세종특별자치시")) {
+            name = "세종";
+        } else if (name.equals("전남")) {
+            name = "전라남도";
+        } else if (name.equals("전라남도")) {
+            name = "전남";
+        } else if (name.equals("전북")) {
+            name = "전라북도";
+        } else if (name.equals("전라북도")) {
+            name = "전북";
+        } else if (name.equals("충남")) {
+            name = "충청남도";
+        } else if (name.equals("충청남도")) {
+            name = "충남";
+        } else if (name.equals("충북")) {
+            name = "충청북도";
+        } else if (name.equals("충청북도")) {
+            name = "충북";
+        } else if (name.equals("강원")) {
+            name = "강원도";
+        } else if (name.equals("강원도")) {
+            name = "강원";
+        } else if (name.equals("인천")) {
+            name = "인천광역시";
+        } else if (name.equals("인천광역시")) {
+            name = "인천";
+        } else if (name.equals("경기")) {
+            name = "경기도";
+        } else if (name.equals("경기도")) {
+            name = "경기";
+        } else if (name.equals("경남")) {
+            name = "경상남도";
+        } else if (name.equals("경상남도")) {
+            name = "경남";
+        } else if (name.equals("경북")) {
+            name = "경상북도";
+        } else if (name.equals("경상북도")) {
+            name = "경북";
+        } else if (name.equals("대전")) {
+            name = "대전광역시";
+        } else if (name.equals("대전광역시")) {
+            name = "대전";
+        } else if (name.equals("대구")) {
+            name = "대구광역시";
+        } else if (name.equals("대구광역시")) {
+            name = "대구";
+        } else if (name.equals("울산")) {
+            name = "울산광역시";
+        } else if (name.equals("울산광역시")) {
+            name = "울산";
+        } else if (name.equals("광주")) {
+            name = "광주광역시";
+        } else if (name.equals("광주광역시")) {
+            name = "광주";
+        } else if (name.equals("부산")) {
+            name = "부산광역시";
+        } else if (name.equals("부산광역시")) {
+            name = "부산";
+        } else if (name.equals("제주")) {
+            name = "제주특별자치도";
+        } else if (name.equals("제주특별자치도")) {
+            name = "제주";
+        }
         return name;
     }
 
-    public int taeyeonGaneung(){//백키 눌렀을때 1단계 전으로 돌려주는 메서드
+    public int backIsClick() { // back 키 눌렀을때 이전단계로 돌려주는 메서드
 
-        if(param1==null){
+        if (param1 == null) {
             return 1;
-        }else if(param1!=null&&param2==null){
+        } else if (param1 != null && param2 == null) {
             Si si = new Si();
             si.execute();
-            param1=null;
+            param1 = null;
             return 0;
-        }else if(param2!=null){
+
+        } else if (param2 != null) {
             Gugun Gugun = new Gugun();
             Gugun.execute(param1);
-            param2=null;
+            param2 = null;
             return 0;
-        }else {
+
+        } else {
             return 0;
         }
     }
-    private String iLoveYourAss(String cityName){//String 변환 핵사어 로 변환 하는 메서드
+
+    public String uftConvertStr(String cityName) { // String 변환 , UTF-8 로 변환 하는 메소드
         String cityNameEncoded = null;
         try {
             cityNameEncoded = URLEncoder.encode(cityName, "UTF-8");
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return cityNameEncoded;
     }
 
-    public ArrayList<AirQulity_API.GetAPIGsonTM.List> taeyeonSatangMogajiNalagam(String fuckingCandy){//검색 시리스트 받아옴
-        airQulity_api=new AirQulity_API();
-        ArrayList<AirQulity_API.GetAPIGsonTM.List>lists=airQulity_api.getFackTm(fuckingCandy);
+    public ArrayList<AirQulity_API.GetAPIGsonTM.List> searchListCity(String listCity) {//검색 "시" 리스트 받아옴
+        airQulity_api = new AirQulity_API();
+        ArrayList<AirQulity_API.GetAPIGsonTM.List> lists = airQulity_api.getChangeTm(listCity);
         return lists;
     }
 
-    class IsFuckingCandy extends AsyncTask{//서치 아이템 어씽크
+    class AllItemSearch extends AsyncTask { // 검색 item 클래스
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            lists=taeyeonSatangMogajiNalagam(editText.getText().toString());
-         return null;
+            lists = searchListCity(editText.getText().toString());
+            return null;
         }
 
         @Override
@@ -633,23 +696,23 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    class SearchItem extends RecyclerView.Adapter<SerchItemViewHolder>{ // 검색 리사이클러뷰 어댑터
+    class SearchItem extends RecyclerView.Adapter<SearchItemViewHolder> { // 검색 RecyclerView Adapter
 
         @NonNull
         @Override
-        public SerchItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {//뷰홀더 생성
+        public SearchItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) { // ViewHolder 생성
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemView = inflater.inflate(
                     android.R.layout.simple_list_item_1,
                     parent, false);
 
-            SerchItemViewHolder serchItemViewHolder = new SerchItemViewHolder(itemView);
-            return serchItemViewHolder;
+            SearchItemViewHolder searchItemViewHolder = new SearchItemViewHolder(itemView);
+            return searchItemViewHolder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull SerchItemViewHolder holder, int position) {//리스트에 개채 추가
-            holder.textView.setText(lists.get(position).getSidoName()+" "+lists.get(position).getSggName()+" "+lists.get(position).getUmdName());
+        public void onBindViewHolder(@NonNull SearchItemViewHolder holder, int position) { // List 에 객체 추가
+            holder.textView.setText(lists.get(position).getSidoName() + " " + lists.get(position).getSggName() + " " + lists.get(position).getUmdName());
         }
 
         @Override
@@ -658,22 +721,24 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private class SerchItemViewHolder extends RecyclerView.ViewHolder{//서치아이템 뷰홀더
+    private class SearchItemViewHolder extends RecyclerView.ViewHolder { // 검색 ItemViewHolder
         TextView textView;
-        public SerchItemViewHolder(View itemView) {
+
+        public SearchItemViewHolder(View itemView) {
             super(itemView);
-            textView=(TextView) itemView;
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+            textView = (TextView) itemView;
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    address=new Address(null);
+                    address = new Address(null);
                     address.setLocality(lists.get(getAdapterPosition()).sidoName);
                     address.setSubLocality(lists.get(getAdapterPosition()).sggName);
                     address.setThoroughfare(lists.get(getAdapterPosition()).umdName);
                     list.add(address);
-                    mainActivity.backMainFtagment(list);
+                    mainActivity.backMainFragment(list);
                 }
             });
 

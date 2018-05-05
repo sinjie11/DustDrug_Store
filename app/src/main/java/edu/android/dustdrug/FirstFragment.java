@@ -62,7 +62,6 @@ public class FirstFragment extends Fragment {
 
     }
 
-
     public static final String TAG = "edu.android";
 
     @Override
@@ -80,8 +79,8 @@ public class FirstFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        FackMB fackMB = new FackMB();
-        fackMB.execute();
+        LoadingThread loadingThread = new LoadingThread();
+        loadingThread.execute();
         Log.i(TAG, "FirstFragment - fackMB execute");
 
     }
@@ -133,18 +132,18 @@ public class FirstFragment extends Fragment {
         Log.i(TAG, "FirstFragment - onLoding1");
     }
 
-    public void onLoding2() {
-        textView.setText("블루투스 정보를 수신 중입니다..");
-        Log.i(TAG, "FirstFragment - onLoding2");
-    }
+//    public void onLoding2() {
+//        textView.setText("블루투스 정보를 수신 중입니다..");
+//        Log.i(TAG, "FirstFragment - onLoding2");
+//    }
 
     public void onLoding3() {
-        textView.setText("미세먼지 정보를 수신 중입니다...");
+        textView.setText("주소 정보를 수신 중 입니다...");
         Log.i(TAG, "FirstFragment - onLoding3");
     }
 
     public void onLoding4() {
-        textView.setText("주소 정보를 수신 중입니다....");
+        textView.setText("미세먼지 정보를 수신 중입니다....");
         Log.i(TAG, "FirstFragment - onLoding4");
     }
 
@@ -185,7 +184,6 @@ public class FirstFragment extends Fragment {
             Log.i(TAG, "FirstFragment - onLocationChanged, location : " + location);
             longtitude = (int) location.getLongitude();
             latitude = (int) location.getLatitude();
-            //TODO : 저장;
         }
 
         @Override
@@ -247,14 +245,15 @@ public class FirstFragment extends Fragment {
             } else {
                 if (ActivityCompat
                         .shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
-      //              Toast.makeText(getContext(), "아래로 끌어 새로고침이 필요합니다.", Toast.LENGTH_LONG).show();
+
                 } else if (ActivityCompat
                         .shouldShowRequestPermissionRationale(getActivity(), permissions[1])) {
-     //               Toast.makeText(getContext(), "GPS가 안되서 근접한 거리라도...", Toast.LENGTH_LONG).show();
-                }
-                ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
 
+                }
+
+                ActivityCompat.requestPermissions(getActivity(), permissions, REQ_CODE_PERMISSION);
             }
+
         } catch (NullPointerException e) {
             e.getMessage();
             Toast.makeText(getContext(), "위치정보를 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
@@ -276,10 +275,10 @@ public class FirstFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    class FackMB extends AsyncTask<Void, Integer, Void> {
+    class LoadingThread extends AsyncTask<Void, Integer, Void> {
 
         @Override
-        protected Void doInBackground(Void... voids) {// 예시 이부분에 imple 을 생성하면됨
+        protected Void doInBackground(Void... voids) { // 이 부분에 DaoImple 을 생성해도 됨
 
             try {
                 Thread.sleep(500);
@@ -290,9 +289,9 @@ public class FirstFragment extends Fragment {
                 Log.i(TAG, "FirstFragment - 1초");
                 publishProgress(1);
 
-                Thread.sleep(500);
-                Log.i(TAG, "FirstFragment - 2초");
-                publishProgress(2);
+//                Thread.sleep(500);
+//                Log.i(TAG, "FirstFragment - 2초");
+//                publishProgress(2);
 
                 Thread.sleep(500);
                 Log.i(TAG, "FirstFragment - 3초");
@@ -325,15 +324,10 @@ public class FirstFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             // doInBackground()가 끝났을 때 UI 업데이트
             endLoding();
-//            FragmentManager manager = getActivity().getSupportFragmentManager();
-//            FragmentTransaction transaction = manager.beginTransaction();
-//            mainFragment = MainFragment.newInstance();
-//            transaction.replace(R.id.fragment_container, mainFragment);
-//            transaction.commit();
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) { //publishProgress(4); 를 호출 했을때 UI 작업
+        protected void onProgressUpdate(Integer... values) { //publishProgress(5); 를 호출 했을때 UI 작업
             switch (values[0]) {
                 case 0:
                     onLoding0();
@@ -341,9 +335,9 @@ public class FirstFragment extends Fragment {
                 case 1:
                     onLoding1();
                     break;
-                case 2:
-                    onLoding2();
-                    break;
+//                case 2:
+//                    onLoding2();
+//                    break;
                 case 3:
                     onLoding3();
                     break;

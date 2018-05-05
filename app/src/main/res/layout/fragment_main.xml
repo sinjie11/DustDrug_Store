@@ -76,45 +76,40 @@
 
         <TextView
             android:id="@+id/textShowValue"
-            android:layout_width="190dp"
-            android:layout_height="109dp"
-            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/maplestorylight"
             android:foregroundGravity="center"
             android:gravity="center"
             android:hint="미세먼지 값(PM10)"
             android:textColor="#cb1ad6"
             android:textSize="25sp"
-            app:layout_constraintBottom_toTopOf="@+id/textShowValuePm25"
             app:layout_constraintEnd_toStartOf="@+id/textValueGrade"
+            app:layout_constraintHorizontal_bias="0.15"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textLocation"
-            app:layout_constraintVertical_bias="0.347" />
+            app:layout_constraintTop_toBottomOf="@+id/textLocation" />
 
         <TextView
             android:id="@+id/textValueGrade"
-            android:layout_width="114dp"
-            android:layout_height="172dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/maplestorylight"
             android:gravity="center"
             android:hint="미세먼지 등급"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/textTime"
+            app:layout_constraintBottom_toBottomOf="@+id/textShowValue"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textLocation"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/textShowValue" />
 
         <TextView
             android:id="@+id/textTime"
-            android:layout_width="160dp"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/maplestorylight"
@@ -124,26 +119,24 @@
             android:textColor="#f70000"
             android:textSize="10sp"
             app:layout_constraintBottom_toTopOf="@+id/textMeasuring"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/chartValueEveryHour"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/textInfo" />
         <!--#996710-->
         <TextView
             android:id="@+id/textShowValuePm25"
-            android:layout_width="190dp"
-            android:layout_height="109dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="40dp"
             android:fontFamily="@font/maplestorylight"
             android:gravity="center"
             android:hint="초미세먼지 값(PM2.5)"
             android:textColor="#0deaf0"
             android:textSize="25sp"
-            app:layout_constraintBottom_toTopOf="@+id/chartValueEveryHour"
-            app:layout_constraintEnd_toStartOf="@+id/textValueGrade"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/textShowValue"
+            app:layout_constraintStart_toStartOf="@+id/textShowValue"
+            app:layout_constraintTop_toBottomOf="@+id/textShowValue" />
 
         <TextView
             android:id="@+id/textMeasuring"
@@ -152,7 +145,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/maplestorylight"
-            android:text="( 기준 : 근접 측정소 )"
+            android:text="( 기준 : 측정소 )"
             android:textColor="#cec8c8"
             android:textSize="10sp"
             app:layout_constraintBottom_toTopOf="@+id/chartValueEveryHour"
@@ -174,6 +167,21 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/gbb" />
+
+        <TextView
+            android:id="@+id/textInfo"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="40dp"
+            android:hint="자료제공 정보"
+            android:textSize="6sp"
+            android:textColor="#cec8c8"
+            app:layout_constraintBottom_toTopOf="@+id/chartValueEveryHour"
+            app:layout_constraintStart_toStartOf="@+id/chartValueEveryHour"
+            app:layout_constraintTop_toBottomOf="@+id/textShowValuePm25"
+            app:layout_constraintVertical_bias="1.0" />
 
         <!-- 색상표
     * 노랑 : #EAE674

@@ -12,6 +12,7 @@ import android.widget.SpinnerAdapter;
 import static edu.android.dustdrug.MainActivity.TAG;
 
 public class NothingSelectedSpinnerAdapter implements SpinnerAdapter, ListAdapter {
+    public static final String TAG = "edu.android";
 
     protected static final int EXTRA = 1;
     protected SpinnerAdapter adapter;

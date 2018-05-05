@@ -2,13 +2,16 @@ package edu.android.dustdrug;
 
 import android.location.Address;
 import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class DustDrugDAOImple {
+    public static final String TAG = "edu.android";
+
     private AirQulity_API airQulity_api = new AirQulity_API();
     private static DustDrugDAOImple instance = null;
-    public Data data ;
+    public Data data;
 
     private DustDrugDAOImple() {
     }
@@ -20,21 +23,24 @@ public class DustDrugDAOImple {
         return instance;
     }
 
-    public void fuckTM(List<Address> addresses) {//구또는 동을 TM 으로 변환
+    public void changeAddressTmConvert(List<Address> addresses) {//구또는 동을 TM 으로 변환
         data = new Data();
-        Log.i("s1","Thoroughfare"+addresses.get(0).getThoroughfare());
+        Log.i(TAG, "Thoroughfare" + addresses.get(0).getThoroughfare());
+        
         ArrayList<AirQulity_API.GetAPIGsonTM.List> list;
-        if (addresses.get(0).getThoroughfare()==null){
-            list = airQulity_api.getFackTm(addresses.get(0).getSubLocality());
-        }else{
+        if (addresses.get(0).getThoroughfare() == null) {
+            list = airQulity_api.getChangeTm(addresses.get(0).getSubLocality());
+            
+        } else {
 
-            list = airQulity_api.getFackTm(addresses.get(0).getThoroughfare());
+            list = airQulity_api.getChangeTm(addresses.get(0).getThoroughfare());
         }
+        
         data.setLocality(addresses.get(0).getLocality());
         data.setSubLocality(addresses.get(0).getSubLocality());
 
-        for (int i = 0 ; i<list.size();i++){
-            if(list.get(i).getSidoName().equals(data.getLocality())){
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getSidoName().equals(data.getLocality())) {
                 data.setThoroughfare(list.get(i).umdName);
                 data.setTmX(list.get(i).tmX);
                 data.setTmY(list.get(i).tmY);
@@ -48,8 +54,8 @@ public class DustDrugDAOImple {
         data.setStationName(list.get(0).stationName);
     }
 
-    public void kimKwangSukInthespiritofforgetting(String stationNmae) {//측정소 명으로 데이터 가져오기
-        ArrayList<AirQulity_API.GetAPIGsonMainData.List> list = airQulity_api.getDataclass(stationNmae);
+    public void measurementCallGetData(String stationName) {//측정소 명으로 데이터 가져오기
+        ArrayList<AirQulity_API.GetAPIGsonMainData.List> list = airQulity_api.getDataclass(stationName);
         for (int i = 0; i < list.size(); i++) {
             Data.DetailData detailData1 = new Data.DetailData();
             detailData1.setCoGrade(list.get(i).coGrade);
@@ -75,70 +81,70 @@ public class DustDrugDAOImple {
             detailData1.setSo2Value(list.get(i).so2Value);
             data.detailData.add(detailData1);
         }
-        Log.i("s1",data.toString());
+        Log.i(TAG, data.toString());
     }
 
 
     public static class Data {
 
-        private String locality; // 서울시
-        private String subLocality; //구
-        private String thoroughfare;//동
+        private String locality;     // 시
+        private String subLocality;  // 구
+        private String thoroughfare; // 동
         private double tmX;
         private double tmY;
-        private String stationName;//측정소명
+        private String stationName; // 측정소명
         private ArrayList<DetailData> detailData = new ArrayList<>();//상세 클래스
 
         public static class DetailData {
-//            private String dataTime;//시간
-//            private int coGrade;//일산화 등급
-//            private double coValue;//일산화 량
-//            private int khaiGrade;// 통합대기환경 지수
-//            private int khaiValue;//  통합대기환경 수치
-//            private String mangName;// 측정망
-//            private int no2Grade;// 이산화 질소 등급
-//            private double no2Value;// 이산화 질소량
-//            private int o3Grade;//오존 등급
-//            private double o3Value;//오존 량
-//            private int pm10Gradel; //미먼 등급
-//            private int pm10Grade1h; //밈먼등급 1시간 등급
-//            private int pm10Value; //미먼 측정치
-//            private int pm10Value24; // 미먼 24 시간 등급
-//            private int pm25Grade; // 초미먼 등급
-//            private int pm25Grade1h;//초미먼 1시간 등급
-//            private int pm25Value;//초미먼 값
-//            private int pm25Value24;//초미먼 24시간 값
-//            private int so2Grade;//이산화황 등급
-//            private double so2Value; // 이산화황 량
+//            private String dataTime;  // 날짜 및 시간
+//            private int coGrade;      // 일산화 등급
+//            private double coValue;   // 일산화 량
+//            private int khaiGrade;    // 통합대기환경 등급
+//            private int khaiValue;    // 통합대기환경 수치
+//            private String mangName;  // 측정망
+//            private int no2Grade;     // 이산화 질소 등급
+//            private double no2Value;  // 이산화 질소량
+//            private int o3Grade;      // 오존 등급
+//            private double o3Value;   // 오존 량
+//            private int pm10Gradel;   // 미세먼지 등급
+//            private int pm10Grade1h;  // 미세먼지 1시간 등급
+//            private int pm10Value;    // 미세먼지 값
+//            private int pm10Value24;  // 미세먼지 24시간 등급
+//            private int pm25Grade;    // 초미세먼지 등급
+//            private int pm25Grade1h;  // 초미세먼지 1시간 등급
+//            private int pm25Value;    // 초미세먼지 값
+//            private int pm25Value24;  // 초미세먼지 24시간 값
+//            private int so2Grade;     // 이산화황 등급
+//            private double so2Value;  // 이산화황 량
 
 
-            private String dataTime;//시간
-            private String coGrade;//일산화 등급
-            private String coValue;//일산화 량
-            private String khaiGrade;// 통합대기환경 지수
-            private String khaiValue;//  통합대기환경 수치
-            private String mangName;// 측정망
-            private String no2Grade;// 이산화 질소 등급
-            private String no2Value;// 이산화 질소량
-            private String o3Grade;//오존 등급
-            private String o3Value;//오존 량
-            private String pm10Gradel; //미먼 등급
-            private String pm10Grade1h; //밈먼등급 1시간 등급
-            private String pm10Value; //미먼 측정치
-            private String pm10Value24; // 미먼 24 시간 등급
-            private String pm25Grade; // 초미먼 등급
-            private String pm25Grade1h;//초미먼 1시간 등급
-            private String pm25Value;//초미먼 값
-            private String pm25Value24;//초미먼 24시간 값
-            private String so2Grade;//이산화황 등급
-            private String so2Value; // 이산화황 량
+            private String dataTime;    // 날짜 및 시간
+            private String coGrade;     // 일산화 등급
+            private String coValue;     // 일산화 량
+            private String khaiGrade;   // 통합대기환경 등급
+            private String khaiValue;   // 통합대기환경 수치
+            private String mangName;    // 측정망
+            private String no2Grade;    // 이산화 질소 등급
+            private String no2Value;    // 이산화 질소량
+            private String o3Grade;     // 오존 등급
+            private String o3Value;     // 오존 량
+            private String pm10Gradel;  // 미세먼지 등급
+            private String pm10Grade1h; // 미세먼지 1시간 등급
+            private String pm10Value;   // 미세먼지 값
+            private String pm10Value24; // 미세먼지 24시간 등급
+            private String pm25Grade;   // 초미세먼지 등급
+            private String pm25Grade1h; // 초미세먼지 1시간 등급
+            private String pm25Value;   // 초미세먼지 값
+            private String pm25Value24; // 초미세먼지 24시간 값
+            private String so2Grade;    // 이산화황 등급
+            private String so2Value;    // 이산화황 양
 
             public String getDataTime() {
                 return dataTime;
             }
 
             public void setDataTime(String dataTime) {
-                dataTime=dataTime.replace("-1","-");
+                dataTime = dataTime.replace("-1", "-");
                 this.dataTime = dataTime;
             }
 
