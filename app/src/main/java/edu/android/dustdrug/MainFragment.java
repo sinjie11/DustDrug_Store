@@ -39,6 +39,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -165,8 +166,10 @@ public class MainFragment extends Fragment {
         textInfo = view.findViewById(R.id.textInfo);
         gbView = view.findViewById(R.id.gbView);
 
+        textLocation.setTextColor(Color.parseColor("#FFFFFF"));
+
         lineChart.setDescription(" ");
-        showLineChart(); // Line Graph 를 보여주는 메소드를 불러옵니다.
+        showLineChart(); // LineChart 를 보여주는 메소드를 불러옵니다.
 
         resourceDataInfo(); // 자료제공 내용
 
@@ -443,12 +446,14 @@ public class MainFragment extends Fragment {
         LineDataSet lineDataSet1 = new LineDataSet(dataset1, "미세먼지");
         lineDataSet1.setColor(Color.parseColor("#cb1ad6"));
         lineDataSet1.setCircleColor(Color.parseColor("#cb1ad6"));
+        lineDataSet1.setValueTextColor(Color.WHITE);
         lineDataSet1.setDrawCubic(true);
         lines.add(lineDataSet1);
 
         LineDataSet lineDataSet2 = new LineDataSet(dataset2, "초미세먼지");
         lineDataSet2.setColor(Color.parseColor("#0deaf0"));
         lineDataSet2.setCircleColor(Color.parseColor("#0deaf0"));
+        lineDataSet2.setValueTextColor(Color.WHITE);
         lineDataSet2.setDrawCubic(true);
         lines.add(lineDataSet2);
 
@@ -512,10 +517,14 @@ public class MainFragment extends Fragment {
         lineChart.setData(new LineData(xAxis, lines));
         lineChart.animateY(1500);
         lineChart.setScaleEnabled(false);
+        lineChart.getAxisLeft().setTextColor(Color.WHITE);
         lineChart.getData().setHighlightEnabled(false);
         lineChart.getXAxis().getSpaceBetweenLabels();
+        lineChart.getXAxis().setTextColor(Color.parseColor("#FFFFFF"));
+
         Legend legend = lineChart.getLegend();
         legend.setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
+        legend.setTextColor(Color.parseColor("#FFFFFF"));
     }
 
     // GPS 위도 경도 값 불러오기
@@ -851,15 +860,18 @@ public class MainFragment extends Fragment {
             String send = "z";
             send += mStrDelimiter + mStrDelimiter;
             Log.i(TAG, "Send : " + send);
+
             try {
                 mmOutStream.write(send.getBytes());
                 Log.i(TAG, "데이터 보냄 성공1");
                 mmOutStream.write(send.getBytes());
                 Log.i(TAG, "데이터 보냄 성공2");
+
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.i(TAG, "데이터 보냄 실패" + e.getMessage());
             }
+
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Log.i(TAG, "받기 시작2");
@@ -1040,7 +1052,7 @@ public class MainFragment extends Fragment {
                 textLocation.append(" ");
                 textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
 
-                Log.i("async", "MainFragment #967");
+                Log.i("async", "MainFragment #1050");
                 AddressSearch addressSearch = new AddressSearch();
                 addressSearch.execute();
 
@@ -1056,9 +1068,9 @@ public class MainFragment extends Fragment {
     }
 
     public void resourceDataInfo() { // 자료제공 정보 메소드
-        textInfo.setText(" ※ DustDrug는 이용자분과 가장 가까운 위치에 있는 측정소의" + "\n");
-        textInfo.append("  실시간 정보를 보여 드립니다." + "\n");
-        textInfo.append("  해당 자료는 한국환경공단(AirKorea)과 기상청에서 제공하는" + "\n");
-        textInfo.append("  실시간 측정자료 이며, 실제 대기농도 수치와 다를 수 있습니다.");
+        textInfo.setText(" ※ DustDrug는 이용자분과 가장 가까운 위치에 있는" + "\n");
+        textInfo.append("   측정소의 실시간 정보를 보여 드립니다." + "\n");
+        textInfo.append("   해당 자료는 한국환경공단(AirKorea)과 기상청에서 제공하는" + "\n");
+        textInfo.append("   실시간 측정자료 이며, 실제 대기농도 수치와 다를 수 있습니다.");
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#000000"
     android:id="@+id/firstFragment"
     tools:context=".MainActivity">
 
@@ -16,12 +16,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.156"
-        app:srcCompat="@drawable/ic_mainlogo" />
+        app:srcCompat="@drawable/ic_mainlogo_df_black" />
 
 
     <ProgressBar
@@ -34,8 +35,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:foregroundGravity="center"
-        android:indeterminateTint="#1517b3"
+        android:indeterminateTint="#d76262"
         android:indeterminateTintMode="src_atop"
+        android:background="#000000"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="@+id/imageView2"
         app:layout_constraintHorizontal_bias="0.496"
@@ -54,7 +56,7 @@
         android:layout_marginTop="28dp"
         android:gravity="center"
         android:hint="수신 정보"
-        android:textColor="#ef6502"
+        android:textColor="#fff600"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
@@ -64,7 +66,7 @@
         app:layout_constraintVertical_bias="0.131" />
 
 
-    <!-- 색상표
+    <!-- RGB 일부 색상표
 * 노랑 : #EAE674
 * 연두 : #7CE923 , #C6E5B6
 * 하늘 : #88CFEE
@@ -74,6 +76,7 @@
 * 빨강 : #EF0A0A
 * 회색 : #CECACA
 * 흰색 : #FFFFFF
+* 검정 : #000000
 
 -->
 </android.support.constraint.ConstraintLayout>

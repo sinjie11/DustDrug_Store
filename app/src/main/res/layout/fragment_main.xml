@@ -4,7 +4,7 @@
     android:id="@+id/mainFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="#000000"
     tools:context=".MainActivity">
 
     <android.support.constraint.ConstraintLayout
@@ -20,7 +20,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@android:color/white"
+            android:background="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -40,6 +40,7 @@
             android:fontFamily="@font/maplestorylight"
             android:gravity="center"
             android:hint="주소"
+            android:textColorHint="#FFFFFF"
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +58,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@+id/textLocation"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/btnimage_bluetooth_blue" />
+            app:srcCompat="@drawable/btnimage_bluetooth_black" />
 
         <ImageButton
             android:id="@+id/btnSearch"
@@ -71,7 +72,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/btnimage_search" />
+            app:srcCompat="@drawable/btnimage_search_black" />
 
 
         <TextView
@@ -85,6 +86,7 @@
             android:foregroundGravity="center"
             android:gravity="center"
             android:hint="미세먼지 값(PM10)"
+            android:textColorHint="#FFFFFF"
             android:textColor="#cb1ad6"
             android:textSize="25sp"
             app:layout_constraintEnd_toStartOf="@+id/textValueGrade"
@@ -101,6 +103,7 @@
             android:fontFamily="@font/maplestorylight"
             android:gravity="center"
             android:hint="미세먼지 등급"
+            android:textColorHint="#FFFFFF"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/textShowValue"
             app:layout_constraintEnd_toEndOf="parent"
@@ -115,6 +118,7 @@
             android:fontFamily="@font/maplestorylight"
             android:foregroundGravity="center"
             android:hint="날짜 및 시간"
+            android:textColorHint="#FFFFFF"
             android:textAlignment="textEnd"
             android:textColor="#f70000"
             android:textSize="10sp"
@@ -132,6 +136,7 @@
             android:fontFamily="@font/maplestorylight"
             android:gravity="center"
             android:hint="초미세먼지 값(PM2.5)"
+            android:textColorHint="#FFFFFF"
             android:textColor="#0deaf0"
             android:textSize="25sp"
             app:layout_constraintEnd_toEndOf="@+id/textShowValue"
@@ -176,6 +181,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="40dp"
             android:hint="자료제공 정보"
+            android:textColorHint="#FFFFFF"
             android:textSize="6sp"
             android:textColor="#cec8c8"
             app:layout_constraintBottom_toTopOf="@+id/chartValueEveryHour"

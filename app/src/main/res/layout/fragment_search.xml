@@ -5,7 +5,7 @@
     android:id="@+id/searchFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="#000000"
     android:gravity="center"
     android:orientation="horizontal"
     tools:context=".SearchFragment">
@@ -41,6 +41,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/rounded_edittext"
         android:hint="- 주소 입력 -\nex) 서울 강남구 역삼1동"
+        android:textColorHint="#FFFFFF"
         android:inputType="textPersonName"
         android:textAlignment="center"
         android:textSize="16sp"

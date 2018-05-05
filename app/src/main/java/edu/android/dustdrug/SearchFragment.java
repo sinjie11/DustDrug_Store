@@ -1,6 +1,7 @@
 package edu.android.dustdrug;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Address;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -65,8 +66,10 @@ public class SearchFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         editText = view.findViewById(R.id.editText);
-
         recyclerView = view.findViewById(R.id.recyclerView);
+
+        editText.setTextColor(Color.parseColor("#FFFFFF"));
+
         recyclerView.setHasFixedSize(true);
         Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -210,6 +213,7 @@ public class SearchFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) { // ViewHolder 객채에 적용될 UI
             holder.textView.setText(cityLists.get(position).brtcNm);
+            holder.textView.setTextColor(Color.WHITE);
         }
 
         @Override
@@ -376,6 +380,7 @@ public class SearchFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ItemAdapter2.ItemViewHolder2 holder, int position) { // List 각 객채 추가
             holder.textView.setText(cityList2s.get(position).getName());
+            holder.textView.setTextColor(Color.WHITE);
         }
 
         @Override
@@ -516,6 +521,7 @@ public class SearchFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ItemAdapter3.ItemViewHolder3 holder, int position) { // List 에 각 객체 추가
             holder.textView.setText(cityList3s.get(position).getName());
+            holder.textView.setTextColor(Color.WHITE);
         }
 
         @Override
@@ -713,6 +719,7 @@ public class SearchFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull SearchItemViewHolder holder, int position) { // List 에 객체 추가
             holder.textView.setText(lists.get(position).getSidoName() + " " + lists.get(position).getSggName() + " " + lists.get(position).getUmdName());
+            holder.textView.setTextColor(Color.WHITE);
         }
 
         @Override
