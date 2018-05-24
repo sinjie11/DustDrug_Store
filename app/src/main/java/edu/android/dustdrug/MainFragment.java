@@ -517,6 +517,7 @@ public class MainFragment extends Fragment {
         lineChart.animateY(1500);
         lineChart.setScaleEnabled(false);
         lineChart.getAxisLeft().setTextColor(Color.WHITE);
+        lineChart.getAxisRight().setTextColor(Color.WHITE);
         lineChart.getData().setHighlightEnabled(false);
         lineChart.getXAxis().getSpaceBetweenLabels();
         lineChart.getXAxis().setTextColor(Color.parseColor("#FFFFFF"));
