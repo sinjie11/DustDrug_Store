@@ -1019,7 +1019,7 @@ public class MainFragment extends Fragment {
                     textValueGrade.setTextColor(Color.parseColor("##d88829"));
                     textValueGrade.setText("나쁨");
 
-                } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 151) {
+                } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 150) {
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#da4f4a"));
