@@ -111,9 +111,13 @@ public class SearchFragment extends Fragment {
     }
 
     public ArrayList<CityList> getXmlData1() {// 도시 이름 데이터 가져오기
+
         ArrayList<CityList> lists = new ArrayList<>();
-        
-        String api1 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getBorodCityList?ServiceKey=2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D";
+
+        String AuthenticationKey = "2WjM1G6ETI%2F3HKoHrAC9MhjgY3PufrijH35VWAgVnh3A5ZrEkBkXovDVizsiQoKm7FDHO2AmW4LG%2FA2oiF8new%3D%3D";
+
+        String api1 = "http://openapi.epost.go.kr/postal/retrieveLotNumberAdressAreaCdService/retrieveLotNumberAdressAreaCdService/getBorodCityList?ServiceKey="
+                + AuthenticationKey;
 
         try {
             URL url = new URL(api1); // 문자열로 된 요청 totalUrl 을 URL 객체로 생성.

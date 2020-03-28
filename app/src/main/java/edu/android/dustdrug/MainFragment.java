@@ -173,17 +173,32 @@ public class MainFragment extends Fragment {
         resourceDataInfo(); // 자료제공 내용
 
         btnBlueTooth.setVisibility(View.GONE); // 블루투스 버튼 이미지 보이지 않게 설정. (VISIBLE: 보임, GONE : 보이지 않음)
-        GlideDrawableImageViewTarget gifimage = new GlideDrawableImageViewTarget(gbView);
-        Glide.with(this).load(R.drawable.gbb).into(gifimage);
 
+        /**
+         * 2020.03.28 주석 처리
+         * GIF 이미지 사용 시 필요
+         */
+        /*GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(gbView);
+        Glide.with(this).load(R.drawable.gbb).into(gifImage);*/
 
-        gbView.setOnClickListener(new View.OnClickListener() {
+        /**
+         * 2020.03.28 추가
+         * JPG 이미지로 변경
+         */
+        GlideDrawableImageViewTarget jpgImage = new GlideDrawableImageViewTarget(gbView);
+        Glide.with(this).load(R.drawable.ic_pr_logo_black).into(jpgImage);
+
+        /**
+         * 2020.03.28 주석 처리
+         * 이미지 사용 시 클릭 이벤트 (URL이동)
+         */
+        /*gbView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://dak.gg/profile/Suhyeoney/2018-02/as"));
                 startActivity(intent);
             }
-        });
+        });*/
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mainFragment);
         swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.YELLOW, Color.RED); // 새로고침 색상 변경
@@ -191,8 +206,8 @@ public class MainFragment extends Fragment {
             @Override
             public void onRefresh() { // 새로고침 시 권한부여 및 좌표 받아오기
 
-                showLocationInfo(); // 위도, 경도 불러오기
                 startLocationService(); // GPS 권한 체크여부
+                showLocationInfo(); // 위도, 경도 불러오기
                 showLineChart(); // 새로고침 할때도 LineChart 메소드 다시 불러옴
                 getAddress(); // 좌표 주소로 변환 시 구 동
 
@@ -237,11 +252,8 @@ public class MainFragment extends Fragment {
             list = mainActivity.sharedPrefRead();
         }
 
-        if (list.size() > 0) {
-
-        }
-
         Log.i("async", "MainFragment #244");
+
         if (list.get(0).getLocality() != null) {
             AddressSearch addressSearch = new AddressSearch();
             addressSearch.execute();
@@ -372,7 +384,7 @@ public class MainFragment extends Fragment {
                 startLocationService();
                 longtitude = location.getLongitude();
                 latitude = location.getLatitude();
-                textLocation.setText("경도 : " + longtitude + "\n" + "위도 : " + latitude);
+                textLocation.setText(longtitude + "," + latitude);
 
                 swipeRefreshLayout.setRefreshing(false);
 
@@ -1079,7 +1091,7 @@ public class MainFragment extends Fragment {
     }
 
     public void resourceDataInfo() { // 자료제공 정보 메소드
-        textInfo.setText(" ※ DustDrug는 이용자분과 가장 가까운 위치에 있는" + "\n");
+        textInfo.setText(" ※ DustDrug는 본인과 가장 근접한 위치에 있는" + "\n");
         textInfo.append("   측정소의 실시간 정보를 보여 드립니다." + "\n");
         textInfo.append("   해당 자료는 한국환경공단(AirKorea)과 기상청에서 제공하는" + "\n");
         textInfo.append("   실시간 측정자료 이며, 실제 대기농도 수치와 다를 수 있습니다.");

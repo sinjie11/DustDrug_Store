@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,9 +45,12 @@ public class GeoCoding {
     }
 
     public static List<Address> getlatitude(double latitude, double longtitude, Context context) { //위도 경도 입력시 주소값 리턴
+
         double d1 = latitude;
         double d2 = longtitude;
+
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+
         try {
             Log.i(TAG, latitude + " " + longtitude);
             list = geocoder.getFromLocation(latitude, longtitude, 10);
@@ -54,16 +58,14 @@ public class GeoCoding {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (list != null) {
-            if (list.size() == 0) {
 
-            } else {
-
-            }
+        if (list.size() < 1) {
+            Toast.makeText(context, "위도, 경도 값을 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
         }
+
         return list;
 
-    } // 위도 경도 입셕시 주소값 리턴 끝
+    } // 위도 경도 입력시 주소값 리턴
 
     public String setText() {
         return str;

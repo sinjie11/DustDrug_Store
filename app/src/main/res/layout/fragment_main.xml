@@ -172,23 +172,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@drawable/gbb" />
+            app:srcCompat="@drawable/ic_pr_logo_black" />
 
         <TextView
             android:id="@+id/textInfo"
-            android:layout_width="200dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="8dp"
+            android:layout_width="202dp"
+            android:layout_height="85dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="40dp"
+            android:layout_marginBottom="8dp"
             android:hint="자료제공 정보"
-            android:textColorHint="#FFFFFF"
-            android:textSize="6sp"
             android:textColor="#cec8c8"
+            android:textColorHint="#FFFFFF"
+            android:textSize="10sp"
             app:layout_constraintBottom_toTopOf="@+id/chartValueEveryHour"
             app:layout_constraintStart_toStartOf="@+id/chartValueEveryHour"
             app:layout_constraintTop_toBottomOf="@+id/textShowValuePm25"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.449" />
 
         <!-- 색상표
     * 노랑 : #EAE674
