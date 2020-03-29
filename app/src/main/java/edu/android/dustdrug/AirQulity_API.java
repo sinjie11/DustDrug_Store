@@ -1,6 +1,7 @@
 package edu.android.dustdrug;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -61,7 +62,7 @@ public class AirQulity_API {
         }
 
         if(json == null){
-            Log.i(TAG,"json null");
+            Log.i(TAG,"API(json) null");
         }
 
         GetAPIGsonTM getAPIGsonTM = gson.fromJson(json, GetAPIGsonTM.class);
