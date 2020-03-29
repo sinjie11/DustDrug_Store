@@ -24,7 +24,11 @@ public class DustDrugDAOImple {
     }
 
     public void changeAddressTmConvert(List<Address> addresses) {//구또는 동을 TM 으로 변환
+
         data = new Data();
+
+        Log.i(TAG, "fullAddress---> " + addresses.get(0));
+        Log.i(TAG, "SidoName---> " + addresses.get(0).getAdminArea());
         Log.i(TAG, "Thoroughfare" + addresses.get(0).getThoroughfare());
         
         ArrayList<AirQulity_API.GetAPIGsonTM.List> list;
@@ -35,8 +39,17 @@ public class DustDrugDAOImple {
 
             list = airQulity_api.getChangeTm(addresses.get(0).getThoroughfare());
         }
-        
-        data.setLocality(addresses.get(0).getLocality());
+
+        /**
+         * 2020.03.29 추가
+         * 시도 값이 없을 때 API에 있는 시도 정보로 세팅
+         */
+        if (addresses.get(0).getLocality() != null) {
+            data.setLocality(addresses.get(0).getLocality());
+        } else {
+            data.setLocality(addresses.get(0).getAdminArea());
+        }
+
         data.setSubLocality(addresses.get(0).getSubLocality());
 
         for (int i = 0; i < list.size(); i++) {

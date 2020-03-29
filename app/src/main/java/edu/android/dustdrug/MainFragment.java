@@ -218,13 +218,11 @@ public class MainFragment extends Fragment {
                         textLocation.append(list.get(0).getSubLocality()); // 구,군 정보
                         textLocation.append(" ");
 
-                        resourceDataInfo(); // 자료제공 정보
-
                         AddressSearch addressSearch = new AddressSearch();
                         addressSearch.execute();
 
                     } else {
-                        Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "위치정보가 확인되지 않습니다.", Toast.LENGTH_SHORT).show();
                     }
 
                     bluetoothOn = false;
@@ -233,7 +231,6 @@ public class MainFragment extends Fragment {
                     e.getMessage();
                 } // end try-catch
 
-                getAddressInfo();
             }
         });
 
@@ -405,7 +402,7 @@ public class MainFragment extends Fragment {
 
         } catch (NullPointerException e) {
             e.getMessage();
-            Toast.makeText(getContext(), "위치정보를 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "위치정보가 확인되지 않습니다.", Toast.LENGTH_SHORT).show();
             swipeRefreshLayout.setRefreshing(false);
         }
 
@@ -1069,6 +1066,7 @@ public class MainFragment extends Fragment {
     }
 
     public void getAddressInfo() { // 시, 도, 구, 군의 API 정보를 가져올 때 사용
+
         try {
             if (list.size() > 0) {
                 textLocation.setText(list.get(0).getLocality()); // 시,도 정보
@@ -1080,7 +1078,7 @@ public class MainFragment extends Fragment {
                 addressSearch.execute();
 
             } else {
-                Toast.makeText(getContext(), "위도와 경도가 준비되지 않음", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "위치정보가 확인되지 않습니다.", Toast.LENGTH_SHORT).show();
             }
 
             bluetoothOn = false;
