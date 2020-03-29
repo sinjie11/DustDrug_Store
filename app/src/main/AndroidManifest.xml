@@ -16,7 +16,8 @@
         android:roundIcon="@drawable/ic_outerlogo_black"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">    <!-- 2020.03.29 추가 :  네트워크 트래픽 사용을 위함 -->
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">    <!-- 2020.03.29 추가 :  네트워크 트래픽 사용을 위함 -->
         <activity android:name=".MainActivity"
             android:screenOrientation="fullSensor">
             <intent-filter>
