@@ -123,11 +123,13 @@ public class FirstFragment extends Fragment {
 
     public void onLoding0() {
         textView.setText("Loading...");
+        textView.setTextSize(10);
         Log.i(TAG, "FirstFragment - onLoding0");
     }
 
     public void onLoding1() {
         textView.setText("GPS 정보를 수신중입니다.");
+        textView.setTextSize(10);
         showLocationInfo();
         Log.i(TAG, "FirstFragment - onLoding1");
     }
@@ -139,16 +141,19 @@ public class FirstFragment extends Fragment {
 
     public void onLoding3() {
         textView.setText("주소 정보를 수신 중 입니다...");
+        textView.setTextSize(10);
         Log.i(TAG, "FirstFragment - onLoding3");
     }
 
     public void onLoding4() {
         textView.setText("미세먼지 정보를 수신 중입니다....");
+        textView.setTextSize(10);
         Log.i(TAG, "FirstFragment - onLoding4");
     }
 
     public void onLoding5() {
         textView.setText("Loading...");
+        textView.setTextSize(10);
         Log.i(TAG, "FirstFragment - onLoding5");
     }
 

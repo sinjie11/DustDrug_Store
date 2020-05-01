@@ -57,7 +57,7 @@
         android:gravity="center"
         android:hint="수신 정보"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"
+        android:textSize="10sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="parent"

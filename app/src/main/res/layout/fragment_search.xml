@@ -44,7 +44,7 @@
         android:textColorHint="#FFFFFF"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        android:textSize="16sp"
+        android:textSize="8sp"
         app:layout_constraintEnd_toStartOf="@+id/button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
