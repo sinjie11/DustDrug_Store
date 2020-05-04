@@ -547,11 +547,12 @@ public class MainFragment extends Fragment {
         protected Void doInBackground(Void... params) { // 인터넷 사용을 위한 쓰레드
 
             if (list.get(0).getThoroughfare() == null) { // 이름이 없을 시 "구" 로 검색
+
                 dustDrugDAOImple.changeAddressTmConvert(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(), dustDrugDAOImple.data.getTmY());
                 dustDrugDAOImple.measurementCallGetData(dustDrugDAOImple.data.getStationName());
-
             } else { // "동" 으로 검색
+
                 dustDrugDAOImple.changeAddressTmConvert(list);
                 dustDrugDAOImple.getStationName(dustDrugDAOImple.data.getTmX(), dustDrugDAOImple.data.getTmY());
                 dustDrugDAOImple.measurementCallGetData(dustDrugDAOImple.data.getStationName());
@@ -573,9 +574,12 @@ public class MainFragment extends Fragment {
     }
 
     private void enableBluetooth() {
+
         if (btAdapter.isEnabled()) {
+
             scanDevice();
         } else {
+
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
@@ -587,51 +591,66 @@ public class MainFragment extends Fragment {
     }
 
     private boolean getDeviceState() {
+
         if (btAdapter == null) {
+
             Toast.makeText(getActivity(), "블루투스를 지원하지 않습니다.", Toast.LENGTH_SHORT).show();
             return false;
         } else {
+
             Toast.makeText(getActivity(), "블루투스를 지원 합니다.", Toast.LENGTH_SHORT).show();
             return true;
-
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(TAG, "requestCode 는" + requestCode);
         Log.i(TAG, "resultCode" + resultCode);
 
         switch (requestCode) {
             case REQUEST_CONNECT_DEVICE:
+
                 if (resultCode == Activity.RESULT_OK) {
+
                     getDeviceInfo(data);
                     Log.i(TAG, "REQUEST_CONNECT_DEVICE = " + REQUEST_CONNECT_DEVICE);
                 }
+
                 break;
             case REQUEST_ENABLE_BT:
+
                 if (requestCode == Activity.RESULT_OK) {
+
                     scanDevice();
                     Log.i(TAG, "REQUEST_CONNECT_DEVICE = " + REQUEST_ENABLE_BT);
-
                 } else {
+
                     Toast.makeText(getContext(), "블루투스를 활성화 시켜주세요.", Toast.LENGTH_SHORT).show();
                 }
+
                 break;
         }
     }
 
     private void getDeviceInfo(Intent data) {
+
         String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+
         BluetoothDevice device = btAdapter.getRemoteDevice(address);
         Log.i(TAG, "Get Device Info \n" + "address : " + address);
+
         connect(device);
     }
 
     private synchronized void setState(int state) {
+
         Log.d(TAG, "setState() " + mState + " -> " + state);
         mState = state;
+
         if (state == STATE_CONNECTED) { // 3
+
             Log.i(TAG, "연결 됨");
         }
     }
@@ -667,20 +686,23 @@ public class MainFragment extends Fragment {
 
         // Cancel any thread attempting to make a connection
         if (mState == STATE_CONNECTING) {
-            if (mConnectThread == null) {
 
-            } else {
+            if (mConnectThread != null) {
+
                 mConnectThread.cancel();
                 mConnectThread = null;
+            } else {
+
             }
         }
 
         // Cancel any thread currently running a connection
-        if (mConnectedThread == null) {
+        if (mConnectedThread != null) {
 
-        } else {
             mConnectedThread.cancel();
             mConnectedThread = null;
+        } else {
+
         }
 
         // Start the thread to connect with the given device
@@ -696,30 +718,33 @@ public class MainFragment extends Fragment {
         Log.d(TAG, "connected");
 
         // Cancel the thread that completed the connection
-        if (mConnectThread == null) {
+        if (mConnectThread != null) {
 
-        } else {
             mConnectThread.cancel();
             mConnectThread = null;
+        } else {
+
         }
 
         // Cancel any thread currently running a connection
-        if (mConnectedThread == null) {
+        if (mConnectedThread != null) {
 
-        } else {
             mConnectedThread.cancel();
             mConnectedThread = null;
+        } else {
+
         }
 
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket);
-        if (mConnectedThread.isAlive()) {
-            mConnectedThread.interrupt();
 
+        if (mConnectedThread.isAlive()) {
+
+            mConnectedThread.interrupt();
         } else {
+
             mConnectedThread.start();
         }
-
 
         setState(STATE_CONNECTED);
     }
@@ -729,11 +754,13 @@ public class MainFragment extends Fragment {
         Log.d(TAG, "BluetoothServie - stop");
 
         if (mConnectThread != null) {
+
             mConnectThread.cancel();
             mConnectThread = null;
         }
 
         if (mConnectedThread != null) {
+
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
@@ -746,10 +773,14 @@ public class MainFragment extends Fragment {
         ConnectedThread r; // Synchronize a copy of the ConnectedThread
 
         synchronized (this) {
-            if (mState != STATE_CONNECTED)
+            if (mState != STATE_CONNECTED) {
+
                 return;
+            }
+
             r = mConnectedThread;
         }
+
         // Perform the write unSynchronized
 //         r.write(out);
 
@@ -768,6 +799,7 @@ public class MainFragment extends Fragment {
     }
 
     private class ConnectThread extends Thread {
+
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
 
@@ -873,6 +905,7 @@ public class MainFragment extends Fragment {
             try {
                 mmOutStream.write(send.getBytes());
                 Log.i(TAG, "데이터 보냄 성공1");
+
                 mmOutStream.write(send.getBytes());
                 Log.i(TAG, "데이터 보냄 성공2");
 
@@ -979,62 +1012,65 @@ public class MainFragment extends Fragment {
 
             String gradePm10 = dustDrugDAOImple.data.getDetailData().get(0).getPm10Grade1h().toString(); // 미세먼지 등급(PM2.5)
 
-            mainActivity.sharedPrefSave(dustDrugDAOImple.data.getLocality(), dustDrugDAOImple.data.getSubLocality(), dustDrugDAOImple.data.getThoroughfare());//셰어 프레퍼런스저장
+            mainActivity.sharedPrefSave(dustDrugDAOImple.data.getLocality(), dustDrugDAOImple.data.getSubLocality(), dustDrugDAOImple.data.getThoroughfare()); // SharedPreference에 저장
+
             if (gradePm10.equals("1")) {
+
                 textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0);
                 textValueGrade.setCompoundDrawablePadding(10); // 미세먼지 등급 이미지 변경
                 textValueGrade.setTextColor(Color.parseColor("#3785c3")); // 글자색 변경(이미지 색상과 동일)
                 textValueGrade.setText("좋음");
-
             } else if (gradePm10.equals("2")) {
+
                 textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_usually, 0);
                 textValueGrade.setCompoundDrawablePadding(10);
                 textValueGrade.setTextColor(Color.parseColor("#66bb46"));
                 textValueGrade.setText("보통");
-
             } else if (gradePm10.equals("3")) {
+
                 textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_bad, 0);
                 textValueGrade.setCompoundDrawablePadding(10);
                 textValueGrade.setTextColor(Color.parseColor("##d88829"));
                 textValueGrade.setText("나쁨");
-
             } else if (gradePm10.equals("4")) {
+
                 textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0);
                 textValueGrade.setCompoundDrawablePadding(10);
                 textValueGrade.setTextColor(Color.parseColor("#da4f4a"));
                 textValueGrade.setText("매우나쁨");
-
             } else {
+
                 textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_no, 0);
                 textValueGrade.setCompoundDrawablePadding(10);
                 textValueGrade.setTextColor(Color.parseColor("#FFFFFF"));
                 textValueGrade.setText("등급 확인 불가"); // 미세먼지(PM10)
 
                 if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 30 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 0) {
+
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_good, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#3785c3"));
                     textValueGrade.setText("좋음");
-
                 } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 80 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 31) {
+
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_usually, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#66bb46"));
                     textValueGrade.setText("보통");
-
                 } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) < 150 && Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 81) {
+
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_bad, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("##d88829"));
                     textValueGrade.setText("나쁨");
-
                 } else if (Integer.parseInt(dustDrugDAOImple.data.getDetailData().get(0).getPm10Value()) > 150) {
+
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_verybad, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#da4f4a"));
                     textValueGrade.setText("매우나쁨");
-
                 } else {
+
                     textValueGrade.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.grade_no, 0);
                     textValueGrade.setCompoundDrawablePadding(10);
                     textValueGrade.setTextColor(Color.parseColor("#FFFFFF"));

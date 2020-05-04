@@ -198,6 +198,7 @@ public class AirQulity_API {
         ArrayList<List> list;
 
         class List {
+
             String coGrade;             // 일산화 등급
             String coValue;             // 일산화 량
             String dataTime;            // 시간
@@ -218,27 +219,9 @@ public class AirQulity_API {
             String pm25Value24;         // 초미세먼지 24시간 값
             String so2Grade;            // 이산화황 등급
             String so2Value;            // 이산화황 량
-//            int coGrade;//일산화 등급
-//            double coValue;//일산화 량
-//            String dataTime;//시간
-//            int khaiGrade;// 통합대기환경 지수
-//            int khaiValue;//  통합대기환경 수치
-//            String mangName;// 측정망
-//            int no2Grade;// 이산화 질소 등급
-//            double no2Value;// 이산화 질소량
-//            int o3Grade;//오존 등급
-//            double o3Value;//오존 량
-//            int pm10Gradel; //미먼 등급
-//            int pm10Grade1h; //밈먼등급 1시간 등급
-//            int pm10Value; //미먼 측정치
-//            int pm10Value24; // 미먼 24 시간 등급
-//            int pm25Grade; // 초미먼 등급
-//            int pm25Grade1h;//초미먼 1시간 등급
-//            int pm25Value;//초미먼 값
-//            int pm25Value24;//초미먼 24시간 값
-//            int so2Grade;//이산화황 등급
-//            double so2Value; // 이산화황 량
+
         }
+
     }
 
 }

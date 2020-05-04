@@ -27,9 +27,9 @@ public class DustDrugDAOImple {
 
         data = new Data();
 
-        Log.i(TAG, "fullAddress---> " + addresses.get(0));
-        Log.i(TAG, "SidoName---> " + addresses.get(0).getAdminArea());
-        Log.i(TAG, "Thoroughfare" + addresses.get(0).getThoroughfare());
+        Log.i(TAG, "fullAddress ---> " + addresses.get(0));
+        Log.i(TAG, "SidoName ---> " + addresses.get(0).getAdminArea());
+        Log.i(TAG, "Thoroughfare ---> " + addresses.get(0).getThoroughfare());
         
         ArrayList<AirQulity_API.GetAPIGsonTM.List> list;
         if (addresses.get(0).getThoroughfare() == null) {
@@ -68,8 +68,11 @@ public class DustDrugDAOImple {
     }
 
     public void measurementCallGetData(String stationName) {//측정소 명으로 데이터 가져오기
+
         ArrayList<AirQulity_API.GetAPIGsonMainData.List> list = airQulity_api.getDataclass(stationName);
+
         for (int i = 0; i < list.size(); i++) {
+
             Data.DetailData detailData1 = new Data.DetailData();
             detailData1.setCoGrade(list.get(i).coGrade);
             detailData1.setCoValue(list.get(i).coValue);
@@ -92,8 +95,10 @@ public class DustDrugDAOImple {
             detailData1.setPm25Value24(list.get(i).pm25Value24);
             detailData1.setSo2Grade(list.get(i).so2Grade);
             detailData1.setSo2Value(list.get(i).so2Value);
+
             data.detailData.add(detailData1);
         }
+
         Log.i(TAG, data.toString());
     }
 
@@ -109,27 +114,6 @@ public class DustDrugDAOImple {
         private ArrayList<DetailData> detailData = new ArrayList<>();//상세 클래스
 
         public static class DetailData {
-//            private String dataTime;  // 날짜 및 시간
-//            private int coGrade;      // 일산화 등급
-//            private double coValue;   // 일산화 량
-//            private int khaiGrade;    // 통합대기환경 등급
-//            private int khaiValue;    // 통합대기환경 수치
-//            private String mangName;  // 측정망
-//            private int no2Grade;     // 이산화 질소 등급
-//            private double no2Value;  // 이산화 질소량
-//            private int o3Grade;      // 오존 등급
-//            private double o3Value;   // 오존 량
-//            private int pm10Gradel;   // 미세먼지 등급
-//            private int pm10Grade1h;  // 미세먼지 1시간 등급
-//            private int pm10Value;    // 미세먼지 값
-//            private int pm10Value24;  // 미세먼지 24시간 등급
-//            private int pm25Grade;    // 초미세먼지 등급
-//            private int pm25Grade1h;  // 초미세먼지 1시간 등급
-//            private int pm25Value;    // 초미세먼지 값
-//            private int pm25Value24;  // 초미세먼지 24시간 값
-//            private int so2Grade;     // 이산화황 등급
-//            private double so2Value;  // 이산화황 량
-
 
             private String dataTime;    // 날짜 및 시간
             private String coGrade;     // 일산화 등급
@@ -157,6 +141,7 @@ public class DustDrugDAOImple {
             }
 
             public void setDataTime(String dataTime) {
+
                 dataTime = dataTime.replace("-1", "-");
                 this.dataTime = dataTime;
             }

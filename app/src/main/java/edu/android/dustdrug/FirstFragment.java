@@ -79,6 +79,7 @@ public class FirstFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         LoadingThread loadingThread = new LoadingThread();
         loadingThread.execute();
         Log.i(TAG, "FirstFragment - fackMB execute");
@@ -128,6 +129,7 @@ public class FirstFragment extends Fragment {
     }
 
     public void onLoding1() {
+
         textView.setText("GPS 정보를 수신중입니다.");
         textView.setTextSize(10);
         showLocationInfo();
@@ -186,6 +188,7 @@ public class FirstFragment extends Fragment {
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
+
             Log.i(TAG, "FirstFragment - onLocationChanged, location : " + location);
             longtitude = (int) location.getLongitude();
             latitude = (int) location.getLatitude();
@@ -214,8 +217,11 @@ public class FirstFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
         Log.i(TAG, "MainFragment - onRequestPermissionsResult start");
+
         if (requestCode == REQ_CODE_PERMISSION) {
+
             if (grantResults.length == 3 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 return;
             } else {

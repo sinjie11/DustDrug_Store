@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.Fragment;
@@ -32,10 +33,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         Log.i(TAG, "MainActivity - onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        geocoder = new Geocoder(this);
+
+        // 2020.05.04 추가 - orientation 에 따라 레이아웃 xml 동적으로 적용.
+        int configNum = getResources().getConfiguration().orientation;
+
+        if (configNum == Configuration.ORIENTATION_PORTRAIT) { // 세로
+
+            Log.i(TAG, "MainActivity - portrait");
+            setContentView(R.layout.activity_main);
+            geocoder = new Geocoder(this);
+        } else if(configNum == Configuration.ORIENTATION_LANDSCAPE) { // 가로
+
+            Log.i(TAG, "MainActivity - landscape");
+            setContentView(R.layout.activity_main_land);
+            geocoder = new Geocoder(this);
+        }
+
     }
 
     @Override
@@ -43,9 +59,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.i(TAG, "MainActivity - onStart");
     }
-
-    // TODO:
-
 
     /* Back 버튼 누를 시 App 종료 기능 */
     @Override
@@ -58,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             int result = ((SearchFragment) fragment).backIsClick();
 
             if (result == 1) {
+
                 sharedPreferences = getPreferences(Context.MODE_PRIVATE);
                 String time = sharedPreferences.getString("time", "");
 
@@ -67,10 +81,11 @@ public class MainActivity extends AppCompatActivity {
                 transaction.commit();
 
                 if (System.currentTimeMillis() > lastTimeBackPressed + 2000) {
+
                     lastTimeBackPressed = System.currentTimeMillis();
                     Toast.makeText(this, "뒤로 버튼 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-
                 } else { // back 키 2번 누르면 앱 종료
+
                     finish();
                     android.os.Process.killProcess(android.os.Process.myPid());
                     System.exit(0);
@@ -81,15 +96,16 @@ public class MainActivity extends AppCompatActivity {
             }
 
         } else if (fragment instanceof MainFragment) {
+
             if (System.currentTimeMillis() > lastTimeBackPressed + 2000) {
+
                 lastTimeBackPressed = System.currentTimeMillis();
                 Toast.makeText(this, "뒤로 버튼 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-
             } else { // back 키 2번 누르면 앱 종료
+
                 finish();
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
-
             }
         }
 
@@ -98,18 +114,21 @@ public class MainActivity extends AppCompatActivity {
 
     // 블루투스 승인 요청 코드 (fragment_main 에 btn_onclick 사용)
     public void blueToothPairing(View view) {
+
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+
         startActivity(discoverableIntent);
     }
 
     public void backMainFragment(List<Address> addressList) {//서치 에서 메인프레그 먼트로 주소를 보내줄때 사용
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, mainFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-        mainFragment.getSearchFragmentAddress(addressList);
 
+        mainFragment.getSearchFragmentAddress(addressList);
     }
 
 
@@ -118,30 +137,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Object getMainfragment() {//메인 프레그 먼트 생성
+
         Log.i(TAG, "MainActivity - getMainfragment");
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+
         if (fragment != mainFragment) {
+
             FragmentTransaction transaction = manager.beginTransaction();
             mainFragment = MainFragment.newInstance();
+
             transaction.replace(R.id.fragment_container, mainFragment);
             transaction.commit();
-            Log.i(TAG, "main fragment call");
+            Log.i(TAG, "mainFragment call");
         }
+
         return mainFragment;
     }
 
     // SharedPreference 에 저장
     public void sharedPrefSave(String si, String gu, String gun) {
+
         SharedPreferences pref = getPreferences(MODE_PRIVATE);
+
         boolean result1 = pref.edit().putString("si", si).commit(); // SharedPreference 에 "시" 데이터 저장
         boolean result2 = pref.edit().putString("gu", gu).commit(); // SharedPreference 에 "구" 데이터 저장
-        boolean result3 = pref.edit().putString("gun", gun) // SharedPreference 에 "군" 데이터 저장
-                .commit();
+        boolean result3 = pref.edit().putString("gun", gun).commit(); // SharedPreference 에 "군" 데이터 저장
     }
 
     // 저장된 SharedPreference 읽기
     List<Address> sharedPrefRead() {
+
         SharedPreferences pref = getPreferences(MODE_PRIVATE);
         String si = pref.getString("si", null);
         String gu = pref.getString("gu", null);
@@ -154,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         address.setSubLocality(gu);
         address.setThoroughfare(gun);
         list.add(address);
+
         return list;
     }
 

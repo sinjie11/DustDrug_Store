@@ -19,7 +19,8 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">    <!-- 2020.03.29 추가 :  네트워크 트래픽 사용을 위함 -->
         <activity android:name=".MainActivity"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="fullSensor"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"> <!-- 2020.05.04 화면 전환 사용을 위함 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
